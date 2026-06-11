@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream text-ink font-sans antialiased;
+}
+
+::selection {
+  @apply bg-brand text-white;
+}
+
+@layer components {
+  .container-site {
+    @apply mx-auto w-full max-w-site px-5 sm:px-8;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-brand px-8 py-3.5 text-sm font-semibold uppercase tracking-widest text-white transition-all duration-300 hover:bg-brand-dark hover:shadow-lg hover:shadow-brand/30 hover:-translate-y-0.5;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-brand px-8 py-3 text-sm font-semibold uppercase tracking-widest text-brand transition-all duration-300 hover:bg-brand hover:text-white hover:-translate-y-0.5;
+  }
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand;
+  }
+  .eyebrow-light {
+    @apply text-xs font-semibold uppercase tracking-[0.25em] text-brand-light;
+  }
+  .heading-xl {
+    @apply font-heading text-4xl leading-tight sm:text-5xl lg:text-6xl;
+  }
+  .heading-lg {
+    @apply font-heading text-3xl leading-tight sm:text-4xl lg:text-5xl;
+  }
+  .heading-md {
+    @apply font-heading text-2xl leading-snug sm:text-3xl;
+  }
+  .input-field {
+    @apply w-full rounded-lg border border-ink/15 bg-white px-4 py-3 text-ink placeholder:text-ink/40 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/25 transition;
+  }
+}
+
+.card-text-shadow {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 1);
+}
+
+.card-overlay-gradient {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 35%,
+    rgba(0, 0, 0, 0.6) 60%,
+    rgba(0, 0, 0, 0.1) 85%,
+    transparent 100%
+  );
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 50s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
