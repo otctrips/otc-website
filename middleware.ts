@@ -8,16 +8,20 @@ export function middleware(request: NextRequest) {
   const isProposalSubdomain =
     hostname === "proposal.otctrips.com" || hostname.startsWith("proposal.");
 
-  // On the proposal subdomain, rewrite /{slug} → /proposals/{slug} internally.
-  // This lets the existing /proposals/[slug] page handle the request, which
-  // already suppresses the site header/footer via SiteChrome.
   if (
     isProposalSubdomain &&
     pathname !== "/" &&
     !pathname.startsWith("/proposals/") &&
     !pathname.startsWith("/api")
   ) {
-    return NextResponse.rewrite(new URL(`/proposals${pathname}`, request.url));
+    // Rewrite /{slug} → /proposals/{slug} and mark this as a proposal subdomain
+    // request via a custom header so the layout can suppress the site chrome.
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-proposal-subdomain", "1");
+
+    return NextResponse.rewrite(new URL(`/proposals${pathname}`, request.url), {
+      request: { headers: requestHeaders },
+    });
   }
 
   return NextResponse.next();
