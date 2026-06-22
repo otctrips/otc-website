@@ -334,16 +334,6 @@ export default function ProposalPage() {
         </div>
       </section>
 
-      {/* ════════════════════════ INTRO ══════════════════════════════════════ */}
-      <section className="bg-cream px-5 py-20 sm:px-8">
-        <div className="mx-auto max-w-[700px] space-y-5 text-center text-lg leading-relaxed text-ink/70">
-          <p>Thank you for considering OTC Trips for your upcoming trip.</p>
-          <p>Below you&apos;ll find a detailed proposal outlining your trip itinerary, accommodation details, and pricing breakdown.</p>
-          <p>At OTC Trips, we specialize in building fully customized travel packages for group travel, handling all logistics so you can focus on enjoying the trip.</p>
-          <p>Feel free to reach out with any questions!</p>
-        </div>
-      </section>
-
       {/* ════════════════════════ HOTELS ══════════════════════════════════════ */}
       <section className="bg-cream px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
