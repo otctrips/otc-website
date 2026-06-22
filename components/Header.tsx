@@ -52,7 +52,7 @@ export default function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-ink/10 bg-cream/95 backdrop-blur"
+          ? "border-b border-white/20 bg-[#4D8397]"
           : "border-b border-transparent bg-gradient-to-b from-night/60 to-transparent"
       }`}
     >
@@ -63,7 +63,7 @@ export default function Header() {
             alt="OTC Trips"
             height={40}
             width={200}
-            style={{ width: "auto", height: "40px", filter: onDark ? "none" : "brightness(0)" }}
+            style={{ width: "auto", height: "40px" }}
             priority
           />
         </Link>
@@ -75,12 +75,10 @@ export default function Header() {
               href={link.href}
               className={`relative text-sm uppercase tracking-widest hover:underline hover:underline-offset-4 ${
                 isActive(link.href)
-                  ? onDark
-                    ? "font-bold text-white underline underline-offset-4"
-                    : "font-bold text-ink underline underline-offset-4"
+                  ? "font-bold text-white underline underline-offset-4"
                   : onDark
                     ? "font-medium text-white/90"
-                    : "font-medium text-ink"
+                    : "font-medium text-white/90"
               }`}
             >
               {link.label}
@@ -91,7 +89,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <Link
             href="/get-a-quote"
-            className="btn-primary hidden !px-6 !py-2.5 sm:inline-flex"
+            className={`btn-primary hidden !px-6 !py-2.5 sm:inline-flex${scrolled ? " !border-2 !border-white" : ""}`}
           >
             Plan Your Trip
           </Link>
