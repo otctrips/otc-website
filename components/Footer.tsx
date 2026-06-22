@@ -97,9 +97,7 @@ export default function Footer() {
       <div className="border-t border-cream/10">
         <div className="container-site py-6">
           <p className="text-center text-xs leading-relaxed text-cream/40">
-            © 2025 OTC Trips, LLC. All rights reserved. An Independent
-            Affiliate of A.S.A.P. Cruises Inc. Florida Seller of Travel No. FST
-            ST15578. California Seller of Travel No. 2090937-50
+            © 2026 OTC Trips, LLC. All rights reserved.
           </p>
         </div>
       </div>
