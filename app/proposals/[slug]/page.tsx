@@ -389,16 +389,16 @@ export default function ProposalPage() {
           </div>
 
           {/* Hotels grouped by destination */}
-          <div className="mt-14 space-y-16">
+          <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2">
             {DESTINATIONS.map((dest) => {
               const destHotels = HOTELS
                 .map((h, i) => ({ h, i }))
                 .filter(({ h }) => h.destination === dest);
 
               return (
-                <div key={dest}>
+                <div key={dest} className="flex flex-col gap-6">
                   {/* Destination label */}
-                  <div className="mb-8 flex items-center gap-5">
+                  <div className="flex items-center gap-5">
                     <div className="shrink-0">
                       <p className="eyebrow">Destination</p>
                       <h3 className="mt-1 font-heading text-2xl font-bold text-ink">{dest}</h3>
@@ -406,8 +406,7 @@ export default function ProposalPage() {
                     <div className="flex-1 border-t border-ink/15" />
                   </div>
 
-                  <div className="grid gap-6 lg:grid-cols-3">
-                    {destHotels.map(({ h, i }) => {
+                  {destHotels.map(({ h, i }) => {
                       const hotelActive = selectedHotel === i;
                       const activeDateData = hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
                       const lowestDate = h.dates.reduce((a, b) => a.pricePerPerson < b.pricePerPerson ? a : b);
@@ -539,8 +538,7 @@ export default function ProposalPage() {
                           </div>
                         </motion.div>
                       );
-                    })}
-                  </div>
+                  })}
                 </div>
               );
             })}
