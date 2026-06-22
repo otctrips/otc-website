@@ -693,7 +693,6 @@ export default function ProposalPage() {
                 <div>
                   <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
                     Due on Signing
-                    {dueDates && <span className="ml-1 font-normal normal-case tracking-normal text-ink/30">· {dueDates.signing}</span>}
                   </p>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
