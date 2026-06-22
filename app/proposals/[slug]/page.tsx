@@ -9,9 +9,14 @@ import Image from "next/image";
 const PROPOSAL = {
   groupName: "Alpha Chi Omega – Vanderbilt",
   destination: "Nashville, TN",
-  dates: "March 14–17, 2025",
   groupSize: 65,
 };
+
+const DATE_OPTIONS = [
+  { short: "March 14–17", range: "March 14 – 17, 2025", nights: 3, note: "Limited spots" },
+  { short: "March 21–24", range: "March 21 – 24, 2025", nights: 3, note: "Best value" },
+  { short: "March 28–31", range: "March 28 – 31, 2025", nights: 3, note: "Most popular" },
+];
 
 const HOTELS = [
   {
@@ -64,42 +69,12 @@ const HOTELS = [
   },
 ];
 
-const DATE_OPTIONS = [
-  {
-    range: "March 14 – 17, 2025",
-    nights: 3,
-    note: "Peak weekend — limited availability",
-    badge: "Limited Spots",
-    badgeClass: "bg-red-500/20 text-red-300",
-  },
-  {
-    range: "March 21 – 24, 2025",
-    nights: 3,
-    note: "Best value pricing in this window",
-    badge: "Best Value",
-    badgeClass: "bg-brand/25 text-brand-light",
-  },
-  {
-    range: "April 4 – 7, 2025",
-    nights: 3,
-    note: "Most popular with our groups",
-    badge: "Most Popular",
-    badgeClass: "bg-amber-500/20 text-amber-300",
-  },
-];
-
 const INCLUSIONS = [
   {
     label: "Group Air Coordination",
     sublabel: "Flights for the full group, everyone together",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="currentColor"
-        stroke="none"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
         <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
       </svg>
     ),
@@ -108,16 +83,7 @@ const INCLUSIONS = [
     label: "Hotel Room Block",
     sublabel: "Reserved exclusively for your group",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18z" />
         <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
         <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
@@ -129,16 +95,7 @@ const INCLUSIONS = [
     label: "Charter Bus Transportation",
     sublabel: "Door-to-door group transit",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
         <circle cx="7" cy="18" r="2" />
         <path d="M9 18h5" />
@@ -150,16 +107,7 @@ const INCLUSIONS = [
     label: "On-Site Coordinator",
     sublabel: "Your point of contact the entire trip",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx="12" cy="7" r="4" />
       </svg>
@@ -169,16 +117,7 @@ const INCLUSIONS = [
     label: "Individual Payment Collection",
     sublabel: "No organizer fronts any money",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
         <line x1="1" y1="10" x2="23" y2="10" />
       </svg>
@@ -188,16 +127,7 @@ const INCLUSIONS = [
     label: "24/7 Trip Support",
     sublabel: "A real person who answers at midnight",
     icon: (
-      <svg
-        width="28"
-        height="28"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.07 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
       </svg>
     ),
@@ -214,11 +144,11 @@ OTC Trips agrees to coordinate the group travel services described in this propo
 
 2. PAYMENT SCHEDULE
 
-A non-refundable deposit of 20% of the total estimated trip cost is due within seven (7) days of executing this Agreement. This deposit confirms the room block, transportation holds, and other reservations on behalf of the Client. The remaining balance is due in three (3) equal installments on the dates specified in the payment schedule provided with this Agreement. Individual travelers will receive separate payment links with their own installment schedules. No single individual is responsible for the total group cost.
+A non-refundable deposit of 20% of the total trip cost is due within seven (7) days of executing this Agreement. This deposit confirms the room block, transportation holds, and other reservations on behalf of the Client. The remaining balance is due in three (3) equal installments on the dates specified in the payment schedule provided with this Agreement. Individual travelers will receive separate payment links with their own installment schedules. No single individual is responsible for the total group cost.
 
 3. CANCELLATION POLICY
 
-Cancellations received more than 90 days prior to the trip departure date will forfeit the initial deposit only. Cancellations received 60–89 days prior to departure will forfeit 40% of the total estimated trip cost. Cancellations received 30–59 days prior to departure will forfeit 65% of the total estimated trip cost. Cancellations received fewer than 30 days prior to departure will forfeit 100% of the total estimated trip cost. Individual traveler name substitutions may be permitted subject to airline and hotel policies and will be accommodated at no additional charge up to 21 days before departure. OTC Trips reserves the right to pass through any cancellation fees imposed by third-party vendors (airlines, hotels, venues) that exceed the above schedule.
+Cancellations received more than 90 days prior to the trip departure date will forfeit the initial deposit only. Cancellations received 60–89 days prior to departure will forfeit 40% of the total trip cost. Cancellations received 30–59 days prior to departure will forfeit 65% of the total trip cost. Cancellations received fewer than 30 days prior to departure will forfeit 100% of the total trip cost. Individual traveler name substitutions may be permitted subject to airline and hotel policies and will be accommodated at no additional charge up to 21 days before departure. OTC Trips reserves the right to pass through any cancellation fees imposed by third-party vendors (airlines, hotels, venues) that exceed the above schedule.
 
 4. HEADCOUNT POLICY
 
@@ -272,11 +202,11 @@ function StarRating({ count }: { count: number }) {
   );
 }
 
-function Check({ white = false }: { white?: boolean }) {
+function Check({ white = false, size = 14 }: { white?: boolean; size?: number }) {
   return (
     <svg
-      width="14"
-      height="14"
+      width={size}
+      height={size}
       viewBox="0 0 24 24"
       fill="none"
       stroke={white ? "white" : "#4D8397"}
@@ -290,11 +220,7 @@ function Check({ white = false }: { white?: boolean }) {
 }
 
 const fmt = (n: number) =>
-  n.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
+  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -309,13 +235,21 @@ export default function ProposalPage() {
 
   useEffect(() => {
     setTodayStr(
-      new Date().toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })
+      new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
     );
   }, []);
+
+  function selectHotel(idx: number) {
+    if (selectedHotel !== idx) {
+      setSelectedHotel(idx);
+      setSelectedDate(null);
+    }
+  }
+
+  function selectDate(hotelIdx: number, dateIdx: number) {
+    if (selectedHotel !== hotelIdx) setSelectedHotel(hotelIdx);
+    setSelectedDate(dateIdx);
+  }
 
   const hotel = selectedHotel !== null ? HOTELS[selectedHotel] : null;
   const dateOpt = selectedDate !== null ? DATE_OPTIONS[selectedDate] : null;
@@ -325,8 +259,7 @@ export default function ProposalPage() {
   const installment = Math.round(remaining / 3);
   const finalPayment = remaining - installment * 2;
 
-  const canConfirm =
-    selectedHotel !== null && selectedDate !== null && agreed;
+  const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
 
   // ── Success state ──────────────────────────────────────────────────────────
   if (confirmed) {
@@ -339,16 +272,7 @@ export default function ProposalPage() {
           className="max-w-lg"
         >
           <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-brand/20">
-            <svg
-              width="44"
-              height="44"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#4D8397"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
@@ -359,9 +283,7 @@ export default function ProposalPage() {
             We&apos;ll be in touch within 24 hours with next steps and your
             individual payment links.
           </p>
-          <p className="mt-4 text-sm text-cream/40">
-            Questions? Text or call us any time.
-          </p>
+          <p className="mt-4 text-sm text-cream/40">Questions? Text or call us any time.</p>
         </motion.div>
       </div>
     );
@@ -369,7 +291,8 @@ export default function ProposalPage() {
 
   return (
     <div className="min-h-screen">
-      {/* ════════════════════════════════════════ HERO ════════════════════════ */}
+
+      {/* ════════════════════════ HERO ════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-night">
         <Image
           src="https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?q=80&w=2000&auto=format&fit=crop"
@@ -383,7 +306,6 @@ export default function ProposalPage() {
 
         <div className="relative px-5 pb-20 pt-10 sm:px-8">
           <div className="mx-auto max-w-site">
-            {/* Logo */}
             <div className="font-heading text-2xl font-bold tracking-wide text-white">
               OTC <span className="text-brand-light">TRIPS</span>
             </div>
@@ -412,70 +334,59 @@ export default function ProposalPage() {
                 className="mt-5 text-xl text-cream/65"
               >
                 Built exclusively for{" "}
-                <span className="font-semibold text-cream">
-                  {PROPOSAL.groupName}
-                </span>
+                <span className="font-semibold text-cream">{PROPOSAL.groupName}</span>
               </motion.p>
 
-              {/* Trip details bar */}
+              {/* Details bar — destination + group size only */}
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.38 }}
                 className="mt-10 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-cream/15 bg-white/5 px-6 py-3 text-sm backdrop-blur-sm"
               >
-                <span className="font-medium text-cream/85">
-                  {PROPOSAL.destination}
-                </span>
+                <span className="font-medium text-cream/85">{PROPOSAL.destination}</span>
                 <span className="text-cream/30">·</span>
-                <span className="font-medium text-cream/85">
-                  {PROPOSAL.dates}
-                </span>
-                <span className="text-cream/30">·</span>
-                <span className="font-medium text-cream/85">
-                  {PROPOSAL.groupSize} People
-                </span>
+                <span className="font-medium text-cream/85">{PROPOSAL.groupSize} People</span>
               </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ════════════════════════════════════════ HOTELS ═════════════════════ */}
+      {/* ════════════════════════ HOTELS ══════════════════════════════════════ */}
       <section className="bg-cream px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
           <div className="text-center">
-            <p className="eyebrow">Step 1 of 3</p>
+            <p className="eyebrow">Step 1 of 2</p>
             <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
               Choose Your Hotel
             </h2>
             <p className="mt-4 text-lg text-ink/60">
-              Three options negotiated specifically for your group. Select the
-              one that fits your vision.
+              Three options negotiated specifically for your group. Select the one that fits your vision and pick your dates.
             </p>
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {HOTELS.map((h, i) => {
-              const active = selectedHotel === i;
+              const hotelActive = selectedHotel === i;
+              const hotelTotal = h.pricePerPerson * PROPOSAL.groupSize;
+
               return (
                 <motion.div
                   key={h.name}
-                  layout
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  onClick={() => setSelectedHotel(i)}
-                  className={`relative cursor-pointer overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
-                    active
+                  className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                    hotelActive
                       ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
                       : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
                   }`}
                 >
-                  {/* Selected badge */}
+                  {/* Selected check badge */}
                   <AnimatePresence>
-                    {active && (
+                    {hotelActive && (
                       <motion.div
                         initial={{ scale: 0.5, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
@@ -488,7 +399,7 @@ export default function ProposalPage() {
                     )}
                   </AnimatePresence>
 
-                  {/* Image */}
+                  {/* Hotel image */}
                   <div className="relative h-52 overflow-hidden">
                     <Image
                       src={h.image}
@@ -499,52 +410,88 @@ export default function ProposalPage() {
                     />
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="font-heading text-xl font-bold text-ink">
-                      {h.name}
-                    </h3>
+                  {/* Card body */}
+                  <div className="flex flex-1 flex-col p-6">
+                    <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                     <div className="mt-1.5">
                       <StarRating count={h.stars} />
                     </div>
-                    <p className="mt-4 text-sm leading-relaxed text-ink/60">
-                      {h.description}
-                    </p>
+                    <p className="mt-4 text-sm leading-relaxed text-ink/60">{h.description}</p>
 
+                    {/* Inclusions */}
                     <ul className="mt-5 space-y-2">
                       {h.inclusions.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2 text-sm text-ink/70"
-                        >
-                          <span className="mt-0.5 shrink-0">
-                            <Check />
-                          </span>
+                        <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
+                          <span className="mt-0.5 shrink-0"><Check /></span>
                           {item}
                         </li>
                       ))}
                     </ul>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-ink/10 pt-5">
-                      <div>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-ink/35">
-                          Starting from
-                        </p>
-                        <p className="mt-1 font-heading text-3xl font-bold text-ink">
+                    {/* Price */}
+                    <div className="mt-6 border-t border-ink/10 pt-5">
+                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                        <span className="font-heading text-3xl font-bold text-ink">
                           ${h.pricePerPerson}
-                          <span className="ml-1 text-base font-normal text-ink/45">
-                            /person
-                          </span>
-                        </p>
+                          <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                        </span>
+                        <span className="text-sm text-ink/45">
+                          (Total: {fmt(hotelTotal)})
+                        </span>
                       </div>
+                    </div>
+
+                    {/* ── Date pills ─────────────────────────────────────── */}
+                    <div className="mt-5 border-t border-ink/10 pt-5">
+                      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                        Available Dates
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {DATE_OPTIONS.map((d, di) => {
+                          const dateActive = hotelActive && selectedDate === di;
+                          return (
+                            <motion.button
+                              key={d.short}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                selectDate(i, di);
+                              }}
+                              className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                dateActive
+                                  ? "bg-brand text-white shadow-sm shadow-brand/25"
+                                  : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
+                              }`}
+                            >
+                              <span>{d.short}</span>
+                              <span
+                                className={`ml-1.5 text-xs ${
+                                  dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
+                                }`}
+                              >
+                                · {d.note}
+                              </span>
+                            </motion.button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Select button */}
+                    <div className="mt-5 pt-1">
                       <motion.button
-                        whileTap={{ scale: 0.96 }}
-                        className={`rounded-full px-5 py-2.5 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
-                          active
+                        whileTap={{ scale: 0.97 }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          selectHotel(i);
+                        }}
+                        className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                          hotelActive
                             ? "bg-brand text-white"
                             : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
                         }`}
                       >
-                        {active ? "Selected ✓" : "Select Hotel"}
+                        {hotelActive ? "Selected ✓" : "Select This Hotel"}
                       </motion.button>
                     </div>
                   </div>
@@ -555,85 +502,7 @@ export default function ProposalPage() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════ DATES ══════════════════════ */}
-      <section className="bg-white px-5 py-24 sm:px-8">
-        <div className="mx-auto max-w-site">
-          <div className="text-center">
-            <p className="eyebrow">Step 2 of 3</p>
-            <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
-              Choose Your Dates
-            </h2>
-            <p className="mt-4 text-lg text-ink/60">
-              We&apos;ve held availability on three windows. Pick what works
-              best for your group.
-            </p>
-          </div>
-
-          <div className="mt-14 grid gap-5 sm:grid-cols-3">
-            {DATE_OPTIONS.map((opt, i) => {
-              const active = selectedDate === i;
-              return (
-                <motion.div
-                  key={opt.range}
-                  layout
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  onClick={() => setSelectedDate(i)}
-                  className={`cursor-pointer rounded-2xl border-2 p-7 transition-all duration-300 ${
-                    active
-                      ? "border-brand bg-brand/5 -translate-y-1 shadow-lg shadow-brand/10"
-                      : "border-ink/10 bg-white hover:border-brand/40 hover:-translate-y-0.5"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span
-                      className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${opt.badgeClass}`}
-                    >
-                      {opt.badge}
-                    </span>
-                    <AnimatePresence>
-                      {active && (
-                        <motion.div
-                          initial={{ scale: 0.5, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0.5, opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                          className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand"
-                        >
-                          <Check white />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                  <h3 className="mt-4 font-heading text-xl font-bold text-ink">
-                    {opt.range}
-                  </h3>
-                  <p className="mt-1 text-sm font-medium text-ink/45">
-                    {opt.nights} nights
-                  </p>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/60">
-                    {opt.note}
-                  </p>
-
-                  <button
-                    className={`mt-6 w-full rounded-full py-2.5 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
-                      active
-                        ? "bg-brand text-white"
-                        : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
-                    }`}
-                  >
-                    {active ? "Selected ✓" : "Select These Dates"}
-                  </button>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════════════════════ INCLUSIONS ═════════════════ */}
+      {/* ════════════════════════ WHAT'S INCLUDED ════════════════════════════ */}
       <section className="bg-night px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
           <div className="text-center">
@@ -657,9 +526,7 @@ export default function ProposalPage() {
                 className="rounded-2xl border border-cream/10 bg-white/5 p-7"
               >
                 <div className="text-brand-light">{item.icon}</div>
-                <h3 className="mt-4 font-heading text-lg font-bold text-white">
-                  {item.label}
-                </h3>
+                <h3 className="mt-4 font-heading text-lg font-bold text-white">{item.label}</h3>
                 <p className="mt-1.5 text-sm text-cream/50">{item.sublabel}</p>
               </motion.div>
             ))}
@@ -667,7 +534,7 @@ export default function ProposalPage() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════ PRICING SUMMARY ════════════ */}
+      {/* ════════════════════════ PRICING SUMMARY ════════════════════════════ */}
       <section className="bg-cream px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
           <div className="text-center">
@@ -676,7 +543,7 @@ export default function ProposalPage() {
               Your Trip Summary
             </h2>
             <p className="mt-4 text-lg text-ink/60">
-              Updates automatically as you make your selections above.
+              Updates as you make your selections above.
             </p>
           </div>
 
@@ -684,14 +551,8 @@ export default function ProposalPage() {
             {/* Hotel row */}
             <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">
-                  Hotel
-                </p>
-                <p
-                  className={`mt-1 font-heading text-lg font-bold transition-colors ${
-                    hotel ? "text-ink" : "text-ink/25"
-                  }`}
-                >
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Hotel</p>
+                <p className={`mt-1 font-heading text-lg font-bold transition-colors ${hotel ? "text-ink" : "text-ink/25"}`}>
                   {hotel ? hotel.name : "—"}
                 </p>
               </div>
@@ -705,14 +566,8 @@ export default function ProposalPage() {
             {/* Dates row */}
             <div className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">
-                  Dates
-                </p>
-                <p
-                  className={`mt-1 font-heading text-lg font-bold transition-colors ${
-                    dateOpt ? "text-ink" : "text-ink/25"
-                  }`}
-                >
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Dates</p>
+                <p className={`mt-1 font-heading text-lg font-bold transition-colors ${dateOpt ? "text-ink" : "text-ink/25"}`}>
                   {dateOpt ? dateOpt.range : "—"}
                 </p>
               </div>
@@ -733,14 +588,10 @@ export default function ProposalPage() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-ink/60">Group size</p>
-                <p className="font-heading font-bold text-ink">
-                  {PROPOSAL.groupSize} people
-                </p>
+                <p className="font-heading font-bold text-ink">{PROPOSAL.groupSize} people</p>
               </div>
               <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
-                <p className="text-sm font-semibold text-ink">
-                  Total estimated cost
-                </p>
+                <p className="text-sm font-semibold text-ink">Total cost</p>
                 <p className="font-heading text-2xl font-bold text-brand">
                   {hotel ? fmt(totalCost) : "—"}
                 </p>
@@ -755,30 +606,21 @@ export default function ProposalPage() {
               <div className="mt-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">
-                    Deposit due now{" "}
-                    <span className="text-ink/40">(20%)</span>
+                    Deposit due now <span className="text-ink/40">(20%)</span>
                   </p>
-                  <p className="font-semibold text-ink">
-                    {hotel ? fmt(deposit) : "—"}
-                  </p>
+                  <p className="font-semibold text-ink">{hotel ? fmt(deposit) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">Installment 1</p>
-                  <p className="font-semibold text-ink">
-                    {hotel ? fmt(installment) : "—"}
-                  </p>
+                  <p className="font-semibold text-ink">{hotel ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">Installment 2</p>
-                  <p className="font-semibold text-ink">
-                    {hotel ? fmt(installment) : "—"}
-                  </p>
+                  <p className="font-semibold text-ink">{hotel ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between border-t border-ink/10 pt-3">
                   <p className="text-sm text-ink/65">Final payment</p>
-                  <p className="font-semibold text-ink">
-                    {hotel ? fmt(finalPayment) : "—"}
-                  </p>
+                  <p className="font-semibold text-ink">{hotel ? fmt(finalPayment) : "—"}</p>
                 </div>
               </div>
               {!hotel && (
@@ -791,11 +633,11 @@ export default function ProposalPage() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════ CONTRACT ═══════════════════ */}
+      {/* ════════════════════════ CONTRACT ═══════════════════════════════════ */}
       <section className="bg-white px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
           <div className="text-center">
-            <p className="eyebrow">Step 3 of 3</p>
+            <p className="eyebrow">Step 2 of 2</p>
             <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
               Review Your Contract
             </h2>
@@ -805,20 +647,18 @@ export default function ProposalPage() {
           </div>
 
           <div className="mx-auto mt-14 max-w-3xl">
-            {/* Scrollable contract box */}
             <div className="rounded-2xl border border-ink/10 bg-cream/40 p-6 sm:p-8">
+              {/* Scrollable contract */}
               <div
                 className="max-h-96 overflow-y-auto rounded-xl bg-white p-6 text-sm leading-relaxed text-ink/65 sm:p-8"
                 style={{ scrollbarWidth: "thin" }}
               >
-                <pre className="whitespace-pre-wrap font-sans">
-                  {CONTRACT_TEXT}
-                </pre>
+                <pre className="whitespace-pre-wrap font-sans">{CONTRACT_TEXT}</pre>
               </div>
 
-              {/* Checkbox */}
+              {/* Agree checkbox */}
               <label className="mt-6 flex cursor-pointer items-start gap-3">
-                <div className="relative mt-0.5 h-5 w-5 shrink-0">
+                <div className="mt-0.5 h-5 w-5 shrink-0">
                   <input
                     type="checkbox"
                     checked={agreed}
@@ -829,9 +669,7 @@ export default function ProposalPage() {
                     animate={agreed ? { scale: [1, 1.15, 1] } : {}}
                     transition={{ duration: 0.25 }}
                     className={`flex h-5 w-5 items-center justify-center rounded border-2 transition-all duration-200 ${
-                      agreed
-                        ? "border-brand bg-brand"
-                        : "border-ink/25 bg-white"
+                      agreed ? "border-brand bg-brand" : "border-ink/25 bg-white"
                     }`}
                   >
                     {agreed && <Check white />}
@@ -843,7 +681,7 @@ export default function ProposalPage() {
               </label>
             </div>
 
-            {/* Name / Date / Signature fields */}
+            {/* Name / Date fields */}
             <div className="mt-8 grid gap-5 sm:grid-cols-2">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-ink/45">
@@ -870,6 +708,7 @@ export default function ProposalPage() {
               </div>
             </div>
 
+            {/* Signature field */}
             <div className="mt-5">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-widest text-ink/45">
                 Signature — type your name to sign
@@ -890,9 +729,7 @@ export default function ProposalPage() {
                     className="overflow-hidden"
                   >
                     <div className="mt-3 rounded-xl border border-brand/20 bg-brand/5 px-5 py-4">
-                      <p className="mb-2 text-xs text-ink/35">
-                        Signature preview
-                      </p>
+                      <p className="mb-2 text-xs text-ink/35">Signature preview</p>
                       <p
                         className="text-4xl text-ink/75"
                         style={{ fontFamily: "var(--font-dancing)" }}
@@ -908,7 +745,7 @@ export default function ProposalPage() {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════ CONFIRM ════════════════════ */}
+      {/* ════════════════════════ CONFIRM ════════════════════════════════════ */}
       <section className="bg-night px-5 py-16 sm:px-8">
         <div className="mx-auto max-w-site">
           <AnimatePresence>
@@ -920,9 +757,9 @@ export default function ProposalPage() {
                 className="mb-5 text-center text-sm text-cream/35"
               >
                 {selectedHotel === null
-                  ? "Select a hotel to continue"
+                  ? "Select a hotel and dates to continue"
                   : selectedDate === null
-                    ? "Select your dates to continue"
+                    ? "Pick your dates inside the hotel card to continue"
                     : "Agree to the contract terms to continue"}
               </motion.p>
             )}
@@ -942,6 +779,7 @@ export default function ProposalPage() {
           </motion.button>
         </div>
       </section>
+
     </div>
   );
 }
