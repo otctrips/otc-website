@@ -70,21 +70,15 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`relative text-sm font-medium uppercase tracking-widest transition-colors hover:text-brand ${
+              className={`relative text-sm uppercase tracking-widest transition-colors hover:text-brand ${
                 isActive(link.href)
-                  ? "text-brand"
+                  ? "font-bold text-white underline underline-offset-4"
                   : onDark
-                    ? "text-white/90"
-                    : "text-ink/80"
+                    ? "font-medium text-white/90"
+                    : "font-medium text-ink/80"
               }`}
             >
               {link.label}
-              {isActive(link.href) && (
-                <motion.span
-                  layoutId="nav-underline"
-                  className="absolute -bottom-1.5 left-0 h-0.5 w-full bg-brand"
-                />
-              )}
             </Link>
           ))}
         </nav>
