@@ -441,13 +441,13 @@ export default function ProposalPage() {
                           {/* Card body */}
                           <div className="flex flex-1 flex-col p-6">
 
-                            {/* Hotel name — min-h-[64px] holds up to two lines */}
-                            <div className="flex min-h-[64px] items-start overflow-hidden">
+                            {/* Hotel name — min-h-[64px], bottom-aligned so stars row always follows immediately */}
+                            <div className="flex min-h-[64px] items-end overflow-hidden">
                               <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                             </div>
 
                             {/* Stars + distance + address — h-[52px], 4px gap between lines */}
-                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden">
+                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-1">
                               <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-1.5">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
