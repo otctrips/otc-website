@@ -1,6 +1,6 @@
 export const SITE = {
   name: "OTC TRIPS",
-  tagline: "Your Chapter's Trip. Built From Scratch. Handled Start to Finish.",
+  tagline: "Your Trip. Built From Scratch. Handled Start to Finish.",
   instagram: "https://instagram.com/otctrips",
   linkedin: "https://linkedin.com/company/otctrips",
   tripsPlanned: "195+",

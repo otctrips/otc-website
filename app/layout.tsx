@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://otctrips.com"),
   title: {
     default:
-      "OTC Trips | Your Chapter's Trip. Built From Scratch. Handled Start to Finish.",
+      "OTC Trips | Your Trip. Built From Scratch. Handled Start to Finish.",
     template: "%s | OTC Trips",
   },
   description:
