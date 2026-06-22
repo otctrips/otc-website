@@ -442,7 +442,7 @@ export default function ProposalPage() {
                           <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
 
                             {/* Hotel name — min-h-[64px], bottom-aligned so stars row always follows immediately */}
-                            <div className="flex min-h-[64px] items-start overflow-hidden">
+                            <div className="flex items-start overflow-hidden mb-1">
                               <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                             </div>
 
