@@ -7,65 +7,123 @@ import Image from "next/image";
 // ─── Dummy data ───────────────────────────────────────────────────────────────
 
 const PROPOSAL = {
-  groupName: "Alpha Chi Omega – Vanderbilt",
+  groupName: "Lambda Chi Alpha - FSU",
   destination: "Nashville, TN",
-  groupSize: 65,
+  groupSize: 112,
 };
 
-const DATE_OPTIONS = [
-  { short: "March 14–17", range: "March 14 – 17, 2025", nights: 3, note: "Limited spots" },
-  { short: "March 21–24", range: "March 21 – 24, 2025", nights: 3, note: "Best value" },
-  { short: "March 28–31", range: "March 28 – 31, 2025", nights: 3, note: "Most popular" },
-];
+type DateOption = {
+  short: string;
+  range: string;
+  nights: number;
+  note: string;
+  pricePerPerson: number;
+  totalCost: number;
+};
 
-const HOTELS = [
+type Hotel = {
+  name: string;
+  image: string;
+  stars: number;
+  description: string;
+  inclusions: string[];
+  dates: DateOption[];
+};
+
+const HOTELS: Hotel[] = [
   {
-    name: "The Grand Hyatt Nashville",
+    name: "Holiday Inn Express & Suites Nashville Metro W Downtown",
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
-    stars: 5,
+    stars: 3,
     description:
-      "Positioned in the heart of downtown Nashville, The Grand Hyatt towers above the Cumberland River with panoramic views and service that sets the whole weekend apart. Steps from Broadway and every live music venue worth visiting.",
+      "A clean, reliable option with quick access to downtown Nashville and the entertainment district. Includes a complimentary hot breakfast daily and free on-site parking — a practical and comfortable base for the whole group.",
     inclusions: [
-      "Exclusive room block reserved for your group",
-      "Complimentary organizer suite (2-night stay)",
-      "Dedicated group check-in lane",
-      "Rooftop terrace access for a private welcome event",
-      "Full breakfast included daily",
+      "Room block reserved at group rate",
+      "Complimentary hot breakfast daily",
+      "Dedicated group check-in coordination",
+      "Free on-site parking",
+      "Complimentary upgrade for trip organizer",
     ],
-    pricePerPerson: 389,
+    dates: [
+      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 107.73, totalCost: 12065.76 },
+    ],
   },
   {
-    name: "Marriott Downtown Nashville",
+    name: "Holiday Inn Nashville Vanderbilt",
     image:
       "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=800&auto=format&fit=crop",
-    stars: 4,
+    stars: 3,
     description:
-      "A sleek, modern property set right in the center of Nashville's entertainment district. Known for seamless group logistics, flexible event space, and a staff that genuinely knows how to handle large groups.",
+      "Situated near Vanderbilt University and Music Row, this full-service Holiday Inn offers modern amenities and an ideal location for exploring Nashville's most iconic neighborhoods and live music venues.",
     inclusions: [
-      "Reserved room block with group rate guarantee",
-      "Complimentary organizer suite",
-      "Private group meeting room (2-hour block)",
-      "Priority late checkout (1 pm) for your group",
-      "Welcome gift bags in each room",
+      "Dedicated room block at group rate",
+      "Complimentary room for trip organizer",
+      "Group dining arrangements on-site",
+      "On-site restaurant and bar",
+      "Complimentary parking",
     ],
-    pricePerPerson: 312,
+    dates: [
+      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 130.53, totalCost: 14619.36 },
+    ],
   },
   {
-    name: "Hilton Nashville Downtown",
+    name: "Holiday Inn & Suites Nashville Downtown Broadway",
     image:
       "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800&auto=format&fit=crop",
-    stars: 4,
+    stars: 3,
     description:
-      "Connected to the Nashville Convention Center and walking distance to every major attraction, this full-service Hilton delivers reliable comfort and all the amenities a group this size could need.",
+      "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the most versatile option on this proposal.",
     inclusions: [
-      "Group room block at locked rates",
-      "Complimentary suite upgrade for organizers",
-      "Dedicated group concierge for the weekend",
-      "Fitness center and rooftop pool access",
-      "Charter shuttle coordination from airport",
+      "Exclusive room block on Broadway",
+      "Complimentary suite for trip organizers",
+      "Dedicated group check-in lane",
+      "Event space available for group functions",
+      "Walking distance to all live music venues",
     ],
-    pricePerPerson: 275,
+    dates: [
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 159.03, totalCost: 17811.36 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 164.73, totalCost: 18449.76 },
+      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 147.63, totalCost: 16534.56 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 141.93, totalCost: 15896.16 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson: 67.83,  totalCost: 7596.96  },
+    ],
+  },
+  {
+    name: "W Nashville",
+    image:
+      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop",
+    stars: 5,
+    description:
+      "Nashville's most celebrated luxury hotel. The W brings its signature bold style to Music City with the WET Deck rooftop pool, a curated art collection, and a nightlife energy that matches the city's spirit. The premium choice for groups that want something unforgettable.",
+    inclusions: [
+      "Exclusive room block in the heart of downtown",
+      "Complimentary suite for trip organizers",
+      "Priority access to WET rooftop deck",
+      "Dedicated W Insider concierge for your group",
+      "Welcome amenity placed in each room",
+    ],
+    dates: [
+      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Limited availability", pricePerPerson: 230.28, totalCost: 25791.36 },
+    ],
+  },
+  {
+    name: "Holiday Inn Express & Suites Nashville West End Univ Area",
+    image:
+      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop",
+    stars: 3,
+    description:
+      "A well-located hotel near West End Avenue and Vanderbilt, offering comfortable rooms and easy access to both downtown Nashville and the vibrant restaurant and bar scene along West End. The most affordable option on this proposal.",
+    inclusions: [
+      "Dedicated room block at group rate",
+      "Complimentary breakfast included",
+      "Group coordinator on-site",
+      "Free on-site parking",
+      "Easy transit access to Broadway",
+    ],
+    dates: [
+      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 85.50, totalCost: 9576.00 },
+    ],
   },
 ];
 
@@ -220,7 +278,12 @@ function Check({ white = false, size = 14 }: { white?: boolean; size?: number })
 }
 
 const fmt = (n: number) =>
-  n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  n.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -252,12 +315,13 @@ export default function ProposalPage() {
   }
 
   const hotel = selectedHotel !== null ? HOTELS[selectedHotel] : null;
-  const dateOpt = selectedDate !== null ? DATE_OPTIONS[selectedDate] : null;
-  const totalCost = hotel ? hotel.pricePerPerson * PROPOSAL.groupSize : 0;
-  const deposit = Math.round(totalCost * 0.2);
-  const remaining = totalCost - deposit;
-  const installment = Math.round(remaining / 3);
-  const finalPayment = remaining - installment * 2;
+  const dateOpt = (hotel && selectedDate !== null) ? hotel.dates[selectedDate] : null;
+
+  const totalCost = dateOpt ? dateOpt.totalCost : 0;
+  const deposit    = dateOpt ? Math.round(totalCost * 0.2  * 100) / 100 : 0;
+  const remaining  = dateOpt ? Math.round((totalCost - deposit) * 100) / 100 : 0;
+  const installment = dateOpt ? Math.round((remaining / 3) * 100) / 100 : 0;
+  const finalPayment = dateOpt ? Math.round((remaining - installment * 2) * 100) / 100 : 0;
 
   const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
 
@@ -337,7 +401,7 @@ export default function ProposalPage() {
                 <span className="font-semibold text-cream">{PROPOSAL.groupName}</span>
               </motion.p>
 
-              {/* Details bar — destination + group size only */}
+              {/* Details bar */}
               <motion.div
                 initial={{ opacity: 0, y: 14 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -362,14 +426,17 @@ export default function ProposalPage() {
               Choose Your Hotel
             </h2>
             <p className="mt-4 text-lg text-ink/60">
-              Three options negotiated specifically for your group. Select the one that fits your vision and pick your dates.
+              Five options negotiated specifically for your group. Select the one that fits your vision and pick your dates.
             </p>
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {HOTELS.map((h, i) => {
               const hotelActive = selectedHotel === i;
-              const hotelTotal = h.pricePerPerson * PROPOSAL.groupSize;
+              // Price to display: selected date if this hotel is active, otherwise lowest available date
+              const activeDateData = hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
+              const lowestDate = h.dates.reduce((a, b) => a.pricePerPerson < b.pricePerPerson ? a : b);
+              const displayData = activeDateData ?? lowestDate;
 
               return (
                 <motion.div
@@ -377,7 +444,7 @@ export default function ProposalPage() {
                   initial={{ opacity: 0, y: 32 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
                   className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
                     hotelActive
                       ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
@@ -432,11 +499,11 @@ export default function ProposalPage() {
                     <div className="mt-6 border-t border-ink/10 pt-5">
                       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                         <span className="font-heading text-3xl font-bold text-ink">
-                          ${h.pricePerPerson}
+                          {fmt(displayData.pricePerPerson)}
                           <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
                         </span>
                         <span className="text-sm text-ink/45">
-                          (Total: {fmt(hotelTotal)})
+                          (Total: {fmt(displayData.totalCost)})
                         </span>
                       </div>
                     </div>
@@ -447,7 +514,7 @@ export default function ProposalPage() {
                         Available Dates
                       </p>
                       <div className="flex flex-wrap gap-2">
-                        {DATE_OPTIONS.map((d, di) => {
+                        {h.dates.map((d, di) => {
                           const dateActive = hotelActive && selectedDate === di;
                           return (
                             <motion.button
@@ -583,7 +650,7 @@ export default function ProposalPage() {
               <div className="flex items-center justify-between">
                 <p className="text-sm text-ink/60">Price per person</p>
                 <p className="font-heading font-bold text-ink">
-                  {hotel ? `$${hotel.pricePerPerson}` : "—"}
+                  {dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}
                 </p>
               </div>
               <div className="flex items-center justify-between">
@@ -593,7 +660,7 @@ export default function ProposalPage() {
               <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
                 <p className="text-sm font-semibold text-ink">Total cost</p>
                 <p className="font-heading text-2xl font-bold text-brand">
-                  {hotel ? fmt(totalCost) : "—"}
+                  {dateOpt ? fmt(totalCost) : "—"}
                 </p>
               </div>
             </div>
@@ -608,24 +675,24 @@ export default function ProposalPage() {
                   <p className="text-sm text-ink/65">
                     Deposit due now <span className="text-ink/40">(20%)</span>
                   </p>
-                  <p className="font-semibold text-ink">{hotel ? fmt(deposit) : "—"}</p>
+                  <p className="font-semibold text-ink">{dateOpt ? fmt(deposit) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">Installment 1</p>
-                  <p className="font-semibold text-ink">{hotel ? fmt(installment) : "—"}</p>
+                  <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">Installment 2</p>
-                  <p className="font-semibold text-ink">{hotel ? fmt(installment) : "—"}</p>
+                  <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between border-t border-ink/10 pt-3">
                   <p className="text-sm text-ink/65">Final payment</p>
-                  <p className="font-semibold text-ink">{hotel ? fmt(finalPayment) : "—"}</p>
+                  <p className="font-semibold text-ink">{dateOpt ? fmt(finalPayment) : "—"}</p>
                 </div>
               </div>
-              {!hotel && (
+              {!dateOpt && (
                 <p className="mt-4 text-center text-xs text-ink/35">
-                  Select a hotel above to see your payment breakdown
+                  Select a hotel and dates above to see your payment breakdown
                 </p>
               )}
             </div>
