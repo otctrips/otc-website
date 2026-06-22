@@ -26,6 +26,8 @@ type Hotel = {
   destination: string;
   image: string;
   stars: number;
+  address: string;
+  distance: string;
   description: string;
   inclusions: string[];
   dates: DateOption[];
@@ -38,6 +40,8 @@ const HOTELS: Hotel[] = [
     image:
       "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800&auto=format&fit=crop",
     stars: 3,
+    address: "920 Broadway, Nashville, TN 37203",
+    distance: "0.3 miles from Broadway",
     description:
       "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the top choice for large groups visiting Music City.",
     inclusions: [
@@ -61,6 +65,8 @@ const HOTELS: Hotel[] = [
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
     stars: 3,
+    address: "45 Westland Dr, Savannah, GA 31401",
+    distance: "0.4 miles from River Street",
     description:
       "Located in Savannah's iconic Historic District, this Fairfield Inn puts your group steps from River Street, the riverfront, and Forsyth Park. Clean, comfortable rooms with complimentary breakfast and a staff that handles large group bookings with ease.",
     inclusions: [
@@ -198,25 +204,6 @@ California Seller of Travel No. 2090937-50`;
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function StarRating({ count }: { count: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((n) => (
-        <svg
-          key={n}
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill={n <= count ? "#4D8397" : "none"}
-          stroke={n <= count ? "#4D8397" : "#9ca3af"}
-          strokeWidth="1.5"
-        >
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 function Check({ white = false, size = 14 }: { white?: boolean; size?: number }) {
   return (
@@ -419,7 +406,7 @@ export default function ProposalPage() {
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true, margin: "-60px" }}
                           transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-                          className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                          className={`relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
                             hotelActive
                               ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
                               : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
@@ -452,25 +439,26 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Card body */}
-                          <div className="flex flex-1 flex-col p-6">
-                            <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
-                            <div className="mt-1.5">
-                              <StarRating count={h.stars} />
-                            </div>
-                            <p className="mt-4 text-sm leading-relaxed text-ink/60">{h.description}</p>
+                          <div className="flex flex-1 flex-col justify-between p-6">
 
-                            {/* Inclusions */}
-                            <ul className="mt-5 space-y-2">
-                              {h.inclusions.map((item) => (
-                                <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
-                                  <span className="mt-0.5 shrink-0"><Check /></span>
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
+                            {/* Top: name · stars · distance · address */}
+                            <div>
+                              <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
+                              <div className="mt-3 flex flex-wrap items-center gap-3">
+                                <div className="flex items-center gap-1.5">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                  </svg>
+                                  <span className="text-sm font-semibold text-ink">4 Stars</span>
+                                </div>
+                                <span className="text-ink/25">·</span>
+                                <span className="text-sm text-ink/60">{h.distance}</span>
+                              </div>
+                              <p className="mt-2 text-sm text-ink/50">{h.address}</p>
+                            </div>
 
                             {/* Price */}
-                            <div className="mt-6 border-t border-ink/10 pt-5">
+                            <div className="border-t border-ink/10 pt-5">
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                 <span className="font-heading text-3xl font-bold text-ink">
                                   {fmt(displayData.pricePerPerson)}
@@ -483,7 +471,7 @@ export default function ProposalPage() {
                             </div>
 
                             {/* Date pills */}
-                            <div className="mt-5 border-t border-ink/10 pt-5">
+                            <div className="border-t border-ink/10 pt-5">
                               <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink/40">
                                 Available Dates
                               </p>
@@ -518,8 +506,8 @@ export default function ProposalPage() {
                               </div>
                             </div>
 
-                            {/* Select button */}
-                            <div className="mt-5 pt-1">
+                            {/* Select button — pinned to bottom via justify-between */}
+                            <div>
                               <motion.button
                                 whileTap={{ scale: 0.97 }}
                                 onClick={(e) => {
