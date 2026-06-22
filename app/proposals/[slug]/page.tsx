@@ -60,7 +60,7 @@ const HOTELS: Hotel[] = [
     ],
   },
   {
-    name: "Fairfield Inn & Suites Savannah Downtown/Historic District",
+    name: "Fairfield Inn & Suites Savannah Downtown",
     destination: "Savannah, GA",
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
