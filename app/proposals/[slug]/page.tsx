@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 // ─── Dummy data ───────────────────────────────────────────────────────────────
 
@@ -286,9 +287,9 @@ export default function ProposalPage() {
 
         <div className="relative px-5 pb-20 pt-10 sm:px-8">
           <div className="mx-auto max-w-site">
-            <div className="font-heading text-2xl font-bold tracking-wide text-white">
+            <Link href="/" className="font-heading text-2xl font-bold tracking-wide text-white">
               OTC <span className="text-brand-light">TRIPS</span>
-            </div>
+            </Link>
 
             <div className="mt-16 text-center sm:mt-24">
               <motion.p
