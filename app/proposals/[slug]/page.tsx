@@ -239,11 +239,15 @@ export default function ProposalPage() {
 
   const totalCost    = dateOpt ? dateOpt.totalCost : 0;
   const deposit      = dateOpt ? Math.round(totalCost * 0.2  * 100) / 100 : 0;
-  const remaining    = dateOpt ? Math.round((totalCost - deposit) * 100) / 100 : 0;
-  const installment  = dateOpt ? Math.round((remaining / 3) * 100) / 100 : 0;
-  const finalPayment = dateOpt ? Math.round((remaining - installment * 2) * 100) / 100 : 0;
 
-  let dueDates: { deposit: string; inst1: string; inst2: string; final: string } | null = null;
+  const BUS_DEPOSIT   = 1000;
+  const HOTEL_DEPOSIT = 1000;
+  const busTotal      = hotel && dateOpt ? Math.round(hotel.busPerPerson * PROPOSAL.groupSize * 100) / 100 : 0;
+  const hotelSubtotal = dateOpt ? Math.round(dateOpt.pricePerPerson * PROPOSAL.groupSize * 100) / 100 : 0;
+  const busBalance    = Math.round((busTotal - BUS_DEPOSIT) * 100) / 100;
+  const hotelBalance  = Math.round((hotelSubtotal - HOTEL_DEPOSIT) * 100) / 100;
+
+  let dueDates: { signing: string; balance: string; rooming: string } | null = null;
   if (dateOpt && todayStr) {
     const m = dateOpt.range.match(/^([A-Za-z]+ \d+)[^,]+,\s*(\d{4})/);
     if (m) {
@@ -254,7 +258,7 @@ export default function ProposalPage() {
           d.setDate(d.getDate() - days);
           return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
         };
-        dueDates = { deposit: todayStr, inst1: sub(90), inst2: sub(60), final: sub(30) };
+        dueDates = { signing: todayStr, balance: sub(40), rooming: sub(35) };
       }
     }
   }
@@ -688,35 +692,56 @@ export default function ProposalPage() {
               <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">
                 Payment Schedule
               </p>
-              <div className="mt-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">
-                    Deposit
-                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.deposit}</span>}
+              <div className="mt-4 space-y-5">
+
+                {/* Due on signing */}
+                <div>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                    Due on Signing
+                    {dueDates && <span className="ml-1 font-normal normal-case tracking-normal text-ink/30">· {dueDates.signing}</span>}
                   </p>
-                  <p className="font-semibold text-ink">{dateOpt ? fmt(deposit) : "—"}</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-ink/65">Charter bus deposit</p>
+                      <p className="font-semibold text-ink">{dateOpt && hotel ? fmt(BUS_DEPOSIT) : "—"}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-ink/65">Hotel deposit</p>
+                      <p className="font-semibold text-ink">{dateOpt ? fmt(HOTEL_DEPOSIT) : "—"}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">
-                    Installment 1
-                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.inst1}</span>}
+
+                {/* Due 40 days before */}
+                <div className="border-t border-ink/8 pt-4">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                    Due 40 Days Before Trip
+                    {dueDates && <span className="ml-1 font-normal normal-case tracking-normal text-ink/30">· {dueDates.balance}</span>}
                   </p>
-                  <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-ink/65">Remaining bus balance</p>
+                      <p className="font-semibold text-ink">{dateOpt && hotel ? fmt(busBalance) : "—"}</p>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm text-ink/65">Remaining hotel balance</p>
+                      <p className="font-semibold text-ink">{dateOpt ? fmt(hotelBalance) : "—"}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">
-                    Installment 2
-                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.inst2}</span>}
+
+                {/* Due 35 days before */}
+                <div className="border-t border-ink/8 pt-4">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                    Due 35 Days Before Trip
+                    {dueDates && <span className="ml-1 font-normal normal-case tracking-normal text-ink/30">· {dueDates.rooming}</span>}
                   </p>
-                  <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-ink/65">Rooming list due</p>
+                    <p className="text-sm italic text-ink/40">{dateOpt ? "No fee" : "—"}</p>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between border-t border-ink/10 pt-3">
-                  <p className="text-sm text-ink/65">
-                    Final payment
-                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.final}</span>}
-                  </p>
-                  <p className="font-semibold text-ink">{dateOpt ? fmt(finalPayment) : "—"}</p>
-                </div>
+
               </div>
               {!dateOpt && (
                 <p className="mt-4 text-center text-xs text-ink/35">
