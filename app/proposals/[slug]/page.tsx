@@ -444,7 +444,7 @@ export default function ProposalPage() {
                             {/* Top: name · stars · distance · address */}
                             <div>
                               {/* Name — min-h so two-line names don't shift content below */}
-                              <div className="flex min-h-[4rem] items-start">
+                              <div className="flex min-h-[3rem] items-start">
                                 <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                               </div>
                               {/* Stars + distance — fixed single-line height */}
