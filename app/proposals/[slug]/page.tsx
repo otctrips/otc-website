@@ -447,7 +447,7 @@ export default function ProposalPage() {
                             </div>
 
                             {/* Stars + distance + address — h-[52px], 4px gap between lines */}
-                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-1">
+                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-0">
                               <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-1.5">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
