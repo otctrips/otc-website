@@ -3,10 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
 import FadeIn from "@/components/FadeIn";
-import CTABanner from "@/components/CTABanner";
 import PartnerLogos from "@/components/PartnerLogos";
 import {
-  DIFFERENTIATOR_BAR,
   PAIN_POINTS,
   SITE,
   TESTIMONIALS,
@@ -19,58 +17,21 @@ export const metadata: Metadata = {
     "Fully custom group travel for fraternities, sororities, and college organizations. Flights included through our major carrier partnerships, one coordinator start to finish, no packages.",
 };
 
-const BAR_ICONS: Record<string, React.ReactNode> = {
-  plane: (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
-    </svg>
-  ),
-  blueprint: (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="18" height="18" rx="2" />
-      <path d="M3 9h18M9 21V9" />
-    </svg>
-  ),
-  person: (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4 3.6-6 8-6s8 2 8 6" />
-    </svg>
-  ),
-};
-
 export default function HomePage() {
   return (
     <>
       <HomeHero />
 
-      {/* Differentiator bar, flush against hero */}
-      <section className="bg-night text-cream">
-        <div className="container-site grid divide-y divide-cream/10 py-2 md:grid-cols-3 md:divide-x md:divide-y-0">
-          {DIFFERENTIATOR_BAR.map((item, i) => (
-            <FadeIn key={item.text} delay={i * 0.1}>
-              <div className="flex items-center gap-4 px-2 py-6 md:justify-center md:px-6">
-                <span className="text-brand-light">{BAR_ICONS[item.icon]}</span>
-                <p className="text-sm font-semibold uppercase tracking-wider text-cream/90">
-                  {item.text}
-                </p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
       {/* Social proof */}
       <section className="container-site py-24">
         <FadeIn className="text-center">
-          <p className="eyebrow">Social Proof</p>
-          <h2 className="heading-lg mt-3">
+          <h2 className="heading-lg">
             Trusted By Chapters Across the Country
           </h2>
         </FadeIn>
         <div className="mt-14 grid gap-8 lg:grid-cols-3">
           {TESTIMONIALS.map((t, i) => (
-            <FadeIn key={t.name} delay={i * 0.12}>
+            <FadeIn key={t.quote} delay={i * 0.12}>
               <figure className="flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm shadow-ink/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="text-brand/30">
                   <path d="M9.6 4C6 6 3.6 9.2 3.6 13.6c0 3.6 2 6.4 5.2 6.4 2.4 0 4.4-1.8 4.4-4.2 0-2.4-1.7-4-4-4-.4 0-.9.1-1 .1.3-2.3 2.2-4.6 4.4-5.7L9.6 4zm10.8 0c-3.6 2-6 5.2-6 9.6 0 3.6 2 6.4 5.2 6.4 2.4 0 4.4-1.8 4.4-4.2 0-2.4-1.7-4-4-4-.4 0-.9.1-1 .1.3-2.3 2.2-4.6 4.4-5.7L20.4 4z" />
@@ -79,9 +40,7 @@ export default function HomePage() {
                   &ldquo;{t.quote}&rdquo;
                 </blockquote>
                 <figcaption className="mt-6 border-t border-ink/10 pt-5">
-                  <p className="font-semibold">{t.name}</p>
-                  <p className="mt-0.5 text-sm text-ink/50">{t.school}</p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-widest text-brand">
+                  <p className="text-xs font-semibold uppercase tracking-widest text-brand">
                     {t.tripType}
                   </p>
                 </figcaption>
@@ -170,32 +129,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* The Flights section */}
-      <section className="bg-white py-28">
-        <div className="container-site text-center">
-          <FadeIn>
-            <p className="eyebrow">The Big One</p>
-            <h2 className="mt-4 font-heading text-5xl sm:text-6xl lg:text-7xl">
-              We Include Flights.
-            </h2>
-            <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-ink/65 sm:text-xl">
-              Most group travel companies leave flights up to you. Your group
-              booking separately, different airlines, different prices,
-              different arrival times. We coordinate group air through our
-              carrier relationships, locking in rates early so your whole
-              group travels together on the same flights.
-            </p>
-            <Link href="/what-we-do" className="btn-secondary mt-10">
-              See How It Works
-            </Link>
-          </FadeIn>
-        </div>
-      </section>
-
       {/* Partner strip */}
       <PartnerLogos />
-
-      <CTABanner />
     </>
   );
 }

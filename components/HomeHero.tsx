@@ -27,20 +27,10 @@ export default function HomeHero() {
         >
           {SITE.tagline}
         </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl"
-        >
-          Custom group travel for fraternities, sororities, and college
-          organizations. We handle flights, hotels, transportation, and
-          everything in between.
-        </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.75 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-10"
         >
           <Link href="/get-a-quote" className="btn-primary !px-12 !py-4 !text-base">

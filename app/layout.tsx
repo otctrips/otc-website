@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Montserrat, DM_Sans } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Montserrat, DM_Sans, Dancing_Script } from "next/font/google";
+import SiteChrome from "@/components/SiteChrome";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -15,6 +14,13 @@ const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700"],
   variable: "--font-dm-sans",
+  display: "swap",
+});
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-dancing",
   display: "swap",
 });
 
@@ -48,10 +54,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} ${dmSans.variable}`}>
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+      <body
+        className={`${montserrat.variable} ${dmSans.variable} ${dancingScript.variable}`}
+      >
+        <SiteChrome>{children}</SiteChrome>
       </body>
     </html>
   );
