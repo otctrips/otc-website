@@ -4,9 +4,15 @@ import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
 
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+export default function SiteChrome({
+  children,
+  isProposalSubdomain = false,
+}: {
+  children: React.ReactNode;
+  isProposalSubdomain?: boolean;
+}) {
   const pathname = usePathname();
-  const standalone = pathname.startsWith("/proposals");
+  const standalone = isProposalSubdomain || pathname.startsWith("/proposals");
 
   if (standalone) return <>{children}</>;
 

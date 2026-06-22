@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, DM_Sans, Dancing_Script } from "next/font/google";
+import { headers } from "next/headers";
 import SiteChrome from "@/components/SiteChrome";
 import "./globals.css";
 
@@ -47,17 +48,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const hostname = headersList.get("host") || "";
+  const isProposalSubdomain =
+    hostname === "proposal.otctrips.com" || hostname.startsWith("proposal.");
+
   return (
     <html lang="en">
       <body
         className={`${montserrat.variable} ${dmSans.variable} ${dancingScript.variable}`}
       >
-        <SiteChrome>{children}</SiteChrome>
+        <SiteChrome isProposalSubdomain={isProposalSubdomain}>{children}</SiteChrome>
       </body>
     </html>
   );
