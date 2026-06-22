@@ -41,7 +41,7 @@ const HOTELS: Hotel[] = [
     image:
       "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800&auto=format&fit=crop",
     stars: 3,
-    address: "920 Broadway, Nashville, TN 37203",
+    address: "415 4th Ave S, Nashville, TN 37201",
     distance: "0.3 miles from Broadway",
     description:
       "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the top choice for large groups visiting Music City.",
@@ -66,7 +66,7 @@ const HOTELS: Hotel[] = [
     image:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
     stars: 3,
-    address: "45 Westland Dr, Savannah, GA 31401",
+    address: "135 Martin Luther King Jr Blvd, Savannah, GA 31401",
     distance: "0.4 miles from River Street",
     description:
       "Located in Savannah's iconic Historic District, this Fairfield Inn puts your group steps from River Street, the riverfront, and Forsyth Park. Clean, comfortable rooms with complimentary breakfast and a staff that handles large group bookings with ease.",
