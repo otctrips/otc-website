@@ -8,7 +8,7 @@ import Link from "next/link";
 // ─── Dummy data ───────────────────────────────────────────────────────────────
 
 const PROPOSAL = {
-  groupName: "Lambda Chi Alpha - FSU",
+  groupName: "PIKE - University of Central Florida",
   destinations: "Nashville, TN & Savannah, GA",
   groupSize: 112,
 };
