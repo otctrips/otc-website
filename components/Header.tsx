@@ -7,17 +7,17 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 const NAV_LINKS = [
-  { href: "/what-we-do", label: "What We Do" },
-  { href: "/destinations", label: "Destinations" },
-  { href: "/our-trips", label: "Our Trips" },
+  { href: "https://otctrips.com/what-we-do", label: "What We Do" },
+  { href: "https://otctrips.com/destinations", label: "Destinations" },
+  { href: "https://otctrips.com/our-trips", label: "Our Trips" },
 ];
 
 const DRAWER_LINKS = [
   ...NAV_LINKS,
-  { href: "/about", label: "About" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/faqs", label: "FAQs" },
-  { href: "/travel-tips", label: "Travel Tips" },
+  { href: "https://otctrips.com/about", label: "About" },
+  { href: "https://otctrips.com/pricing", label: "Pricing" },
+  { href: "https://otctrips.com/faqs", label: "FAQs" },
+  { href: "https://otctrips.com/travel-tips", label: "Travel Tips" },
 ];
 
 export default function Header() {
@@ -43,8 +43,10 @@ export default function Header() {
     };
   }, [open]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  const isActive = (href: string) => {
+    const path = href.replace("https://otctrips.com", "") || "/";
+    return path === "/" ? pathname === "/" : pathname.startsWith(path);
+  };
 
   const onDark = !scrolled && !open;
 
@@ -57,7 +59,7 @@ export default function Header() {
       }`}
     >
       <div className="container-site flex h-20 items-center justify-between">
-        <Link href="/">
+        <Link href="https://otctrips.com">
           <Image
             src="/logo.png"
             alt="OTC Trips"
@@ -88,7 +90,7 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <Link
-            href="/get-a-quote"
+            href="https://otctrips.com/get-a-quote"
             className={`btn-primary hidden !px-6 !py-2.5 sm:inline-flex${scrolled ? " !border-2 !border-white" : ""}`}
           >
             Plan Your Trip
@@ -153,7 +155,7 @@ export default function Header() {
                 transition={{ delay: 0.6 }}
                 className="mt-8"
               >
-                <Link href="/get-a-quote" className="btn-primary">
+                <Link href="https://otctrips.com/get-a-quote" className="btn-primary">
                   Plan Your Trip
                 </Link>
               </motion.div>
