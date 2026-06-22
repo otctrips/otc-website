@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -56,13 +57,15 @@ export default function Header() {
       }`}
     >
       <div className="container-site flex h-20 items-center justify-between">
-        <Link
-          href="/"
-          className={`font-heading text-2xl font-bold tracking-wide transition-colors ${
-            onDark ? "text-white" : "text-ink"
-          }`}
-        >
-          OTC <span className="text-brand">TRIPS</span>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="OTC Trips"
+            height={40}
+            width={200}
+            style={{ width: "auto", height: "40px", filter: onDark ? "none" : "brightness(0)" }}
+            priority
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
