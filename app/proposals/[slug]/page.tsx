@@ -462,7 +462,10 @@ export default function ProposalPage() {
                             </div>
 
                             {/* Price — h-[64px] with border, vertically centered */}
-                            <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
+                            <div className="flex h-[64px] flex-col justify-center overflow-hidden border-t border-ink/10 mt-1">
+                              {!activeDateData && (
+                                <p className="mb-0.5 text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</p>
+                              )}
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                 <span className="font-heading text-3xl font-bold text-ink">
                                   {fmt(displayData.pricePerPerson)}
