@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const PROPOSAL = {
   groupName: "Lambda Chi Alpha - FSU",
-  destination: "Nashville, TN",
+  destinations: "Nashville, TN & Savannah, GA",
   groupSize: 112,
 };
 
@@ -23,6 +23,7 @@ type DateOption = {
 
 type Hotel = {
   name: string;
+  destination: string;
   image: string;
   stars: number;
   description: string;
@@ -32,48 +33,13 @@ type Hotel = {
 
 const HOTELS: Hotel[] = [
   {
-    name: "Holiday Inn Express & Suites Nashville Metro W Downtown",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
-    stars: 3,
-    description:
-      "A clean, reliable option with quick access to downtown Nashville and the entertainment district. Includes a complimentary hot breakfast daily and free on-site parking — a practical and comfortable base for the whole group.",
-    inclusions: [
-      "Room block reserved at group rate",
-      "Complimentary hot breakfast daily",
-      "Dedicated group check-in coordination",
-      "Free on-site parking",
-      "Complimentary upgrade for trip organizer",
-    ],
-    dates: [
-      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 107.73, totalCost: 12065.76 },
-    ],
-  },
-  {
-    name: "Holiday Inn Nashville Vanderbilt",
-    image:
-      "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=800&auto=format&fit=crop",
-    stars: 3,
-    description:
-      "Situated near Vanderbilt University and Music Row, this full-service Holiday Inn offers modern amenities and an ideal location for exploring Nashville's most iconic neighborhoods and live music venues.",
-    inclusions: [
-      "Dedicated room block at group rate",
-      "Complimentary room for trip organizer",
-      "Group dining arrangements on-site",
-      "On-site restaurant and bar",
-      "Complimentary parking",
-    ],
-    dates: [
-      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 130.53, totalCost: 14619.36 },
-    ],
-  },
-  {
     name: "Holiday Inn & Suites Nashville Downtown Broadway",
+    destination: "Nashville, TN",
     image:
       "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800&auto=format&fit=crop",
     stars: 3,
     description:
-      "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the most versatile option on this proposal.",
+      "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the top choice for large groups visiting Music City.",
     inclusions: [
       "Exclusive room block on Broadway",
       "Complimentary suite for trip organizers",
@@ -90,42 +56,34 @@ const HOTELS: Hotel[] = [
     ],
   },
   {
-    name: "W Nashville",
+    name: "Fairfield Inn & Suites Savannah Downtown/Historic District",
+    destination: "Savannah, GA",
     image:
-      "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=800&auto=format&fit=crop",
-    stars: 5,
-    description:
-      "Nashville's most celebrated luxury hotel. The W brings its signature bold style to Music City with the WET Deck rooftop pool, a curated art collection, and a nightlife energy that matches the city's spirit. The premium choice for groups that want something unforgettable.",
-    inclusions: [
-      "Exclusive room block in the heart of downtown",
-      "Complimentary suite for trip organizers",
-      "Priority access to WET rooftop deck",
-      "Dedicated W Insider concierge for your group",
-      "Welcome amenity placed in each room",
-    ],
-    dates: [
-      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Limited availability", pricePerPerson: 230.28, totalCost: 25791.36 },
-    ],
-  },
-  {
-    name: "Holiday Inn Express & Suites Nashville West End Univ Area",
-    image:
-      "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
     stars: 3,
     description:
-      "A well-located hotel near West End Avenue and Vanderbilt, offering comfortable rooms and easy access to both downtown Nashville and the vibrant restaurant and bar scene along West End. The most affordable option on this proposal.",
+      "Located in Savannah's iconic Historic District, this Fairfield Inn puts your group steps from River Street, the riverfront, and Forsyth Park. Clean, comfortable rooms with complimentary breakfast and a staff that handles large group bookings with ease.",
     inclusions: [
-      "Dedicated room block at group rate",
-      "Complimentary breakfast included",
-      "Group coordinator on-site",
-      "Free on-site parking",
-      "Easy transit access to Broadway",
+      "Room block reserved in the Historic District",
+      "Complimentary hot breakfast daily",
+      "Dedicated group check-in coordination",
+      "Walking distance to River Street and Forsyth Park",
+      "Complimentary upgrade for trip organizer",
     ],
     dates: [
-      { short: "Nov 6–8", range: "November 6 – 8, 2025", nights: 2, note: "Peak weekend", pricePerPerson: 85.50, totalCost: 9576.00 },
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 102.03, totalCost: 11427.36 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 107.73, totalCost: 12065.76 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 90.63,  totalCost: 10150.56 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson: 79.23,  totalCost: 8873.76  },
     ],
   },
 ];
+
+// Unique destinations in the order they appear in HOTELS
+const DESTINATIONS = HOTELS.reduce<string[]>((acc, h) => {
+  if (!acc.includes(h.destination)) acc.push(h.destination);
+  return acc;
+}, []);
 
 const INCLUSIONS = [
   {
@@ -317,10 +275,10 @@ export default function ProposalPage() {
   const hotel = selectedHotel !== null ? HOTELS[selectedHotel] : null;
   const dateOpt = (hotel && selectedDate !== null) ? hotel.dates[selectedDate] : null;
 
-  const totalCost = dateOpt ? dateOpt.totalCost : 0;
-  const deposit    = dateOpt ? Math.round(totalCost * 0.2  * 100) / 100 : 0;
-  const remaining  = dateOpt ? Math.round((totalCost - deposit) * 100) / 100 : 0;
-  const installment = dateOpt ? Math.round((remaining / 3) * 100) / 100 : 0;
+  const totalCost    = dateOpt ? dateOpt.totalCost : 0;
+  const deposit      = dateOpt ? Math.round(totalCost * 0.2  * 100) / 100 : 0;
+  const remaining    = dateOpt ? Math.round((totalCost - deposit) * 100) / 100 : 0;
+  const installment  = dateOpt ? Math.round((remaining / 3) * 100) / 100 : 0;
   const finalPayment = dateOpt ? Math.round((remaining - installment * 2) * 100) / 100 : 0;
 
   const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
@@ -408,7 +366,7 @@ export default function ProposalPage() {
                 transition={{ duration: 0.6, delay: 0.38 }}
                 className="mt-10 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-cream/15 bg-white/5 px-6 py-3 text-sm backdrop-blur-sm"
               >
-                <span className="font-medium text-cream/85">{PROPOSAL.destination}</span>
+                <span className="font-medium text-cream/85">{PROPOSAL.destinations}</span>
                 <span className="text-cream/30">·</span>
                 <span className="font-medium text-cream/85">{PROPOSAL.groupSize} People</span>
               </motion.div>
@@ -426,143 +384,164 @@ export default function ProposalPage() {
               Choose Your Hotel
             </h2>
             <p className="mt-4 text-lg text-ink/60">
-              Five options negotiated specifically for your group. Select the one that fits your vision and pick your dates.
+              Options across two destinations, negotiated specifically for your group. Select the hotel that fits and pick your dates.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-3">
-            {HOTELS.map((h, i) => {
-              const hotelActive = selectedHotel === i;
-              // Price to display: selected date if this hotel is active, otherwise lowest available date
-              const activeDateData = hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
-              const lowestDate = h.dates.reduce((a, b) => a.pricePerPerson < b.pricePerPerson ? a : b);
-              const displayData = activeDateData ?? lowestDate;
+          {/* Hotels grouped by destination */}
+          <div className="mt-14 space-y-16">
+            {DESTINATIONS.map((dest) => {
+              const destHotels = HOTELS
+                .map((h, i) => ({ h, i }))
+                .filter(({ h }) => h.destination === dest);
 
               return (
-                <motion.div
-                  key={h.name}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-                  className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
-                    hotelActive
-                      ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
-                      : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
-                  }`}
-                >
-                  {/* Selected check badge */}
-                  <AnimatePresence>
-                    {hotelActive && (
-                      <motion.div
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.5, opacity: 0 }}
-                        transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                        className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
-                      >
-                        <Check white />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  {/* Hotel image */}
-                  <div className="relative h-52 overflow-hidden">
-                    <Image
-                      src={h.image}
-                      alt={h.name}
-                      fill
-                      sizes="(max-width: 1024px) 100vw, 33vw"
-                      className="object-cover transition-transform duration-500 hover:scale-105"
-                    />
+                <div key={dest}>
+                  {/* Destination label */}
+                  <div className="mb-8 flex items-center gap-5">
+                    <div className="shrink-0">
+                      <p className="eyebrow">Destination</p>
+                      <h3 className="mt-1 font-heading text-2xl font-bold text-ink">{dest}</h3>
+                    </div>
+                    <div className="flex-1 border-t border-ink/15" />
                   </div>
 
-                  {/* Card body */}
-                  <div className="flex flex-1 flex-col p-6">
-                    <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
-                    <div className="mt-1.5">
-                      <StarRating count={h.stars} />
-                    </div>
-                    <p className="mt-4 text-sm leading-relaxed text-ink/60">{h.description}</p>
+                  <div className="grid gap-6 lg:grid-cols-3">
+                    {destHotels.map(({ h, i }) => {
+                      const hotelActive = selectedHotel === i;
+                      const activeDateData = hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
+                      const lowestDate = h.dates.reduce((a, b) => a.pricePerPerson < b.pricePerPerson ? a : b);
+                      const displayData = activeDateData ?? lowestDate;
 
-                    {/* Inclusions */}
-                    <ul className="mt-5 space-y-2">
-                      {h.inclusions.map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
-                          <span className="mt-0.5 shrink-0"><Check /></span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
+                      return (
+                        <motion.div
+                          key={h.name}
+                          initial={{ opacity: 0, y: 32 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-60px" }}
+                          transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                          className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                            hotelActive
+                              ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
+                              : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
+                          }`}
+                        >
+                          {/* Selected check badge */}
+                          <AnimatePresence>
+                            {hotelActive && (
+                              <motion.div
+                                initial={{ scale: 0.5, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.5, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
+                              >
+                                <Check white />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
 
-                    {/* Price */}
-                    <div className="mt-6 border-t border-ink/10 pt-5">
-                      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                        <span className="font-heading text-3xl font-bold text-ink">
-                          {fmt(displayData.pricePerPerson)}
-                          <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
-                        </span>
-                        <span className="text-sm text-ink/45">
-                          (Total: {fmt(displayData.totalCost)})
-                        </span>
-                      </div>
-                    </div>
+                          {/* Hotel image */}
+                          <div className="relative h-52 overflow-hidden">
+                            <Image
+                              src={h.image}
+                              alt={h.name}
+                              fill
+                              sizes="(max-width: 1024px) 100vw, 33vw"
+                              className="object-cover transition-transform duration-500 hover:scale-105"
+                            />
+                          </div>
 
-                    {/* ── Date pills ─────────────────────────────────────── */}
-                    <div className="mt-5 border-t border-ink/10 pt-5">
-                      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink/40">
-                        Available Dates
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {h.dates.map((d, di) => {
-                          const dateActive = hotelActive && selectedDate === di;
-                          return (
-                            <motion.button
-                              key={d.short}
-                              whileTap={{ scale: 0.95 }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                selectDate(i, di);
-                              }}
-                              className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                                dateActive
-                                  ? "bg-brand text-white shadow-sm shadow-brand/25"
-                                  : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
-                              }`}
-                            >
-                              <span>{d.short}</span>
-                              <span
-                                className={`ml-1.5 text-xs ${
-                                  dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
+                          {/* Card body */}
+                          <div className="flex flex-1 flex-col p-6">
+                            <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
+                            <div className="mt-1.5">
+                              <StarRating count={h.stars} />
+                            </div>
+                            <p className="mt-4 text-sm leading-relaxed text-ink/60">{h.description}</p>
+
+                            {/* Inclusions */}
+                            <ul className="mt-5 space-y-2">
+                              {h.inclusions.map((item) => (
+                                <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
+                                  <span className="mt-0.5 shrink-0"><Check /></span>
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+
+                            {/* Price */}
+                            <div className="mt-6 border-t border-ink/10 pt-5">
+                              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                                <span className="font-heading text-3xl font-bold text-ink">
+                                  {fmt(displayData.pricePerPerson)}
+                                  <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                                </span>
+                                <span className="text-sm text-ink/45">
+                                  (Total: {fmt(displayData.totalCost)})
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Date pills */}
+                            <div className="mt-5 border-t border-ink/10 pt-5">
+                              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                                Available Dates
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {h.dates.map((d, di) => {
+                                  const dateActive = hotelActive && selectedDate === di;
+                                  return (
+                                    <motion.button
+                                      key={d.short}
+                                      whileTap={{ scale: 0.95 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        selectDate(i, di);
+                                      }}
+                                      className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                        dateActive
+                                          ? "bg-brand text-white shadow-sm shadow-brand/25"
+                                          : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
+                                      }`}
+                                    >
+                                      <span>{d.short}</span>
+                                      <span
+                                        className={`ml-1.5 text-xs ${
+                                          dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
+                                        }`}
+                                      >
+                                        · {d.note}
+                                      </span>
+                                    </motion.button>
+                                  );
+                                })}
+                              </div>
+                            </div>
+
+                            {/* Select button */}
+                            <div className="mt-5 pt-1">
+                              <motion.button
+                                whileTap={{ scale: 0.97 }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  selectHotel(i);
+                                }}
+                                className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                                  hotelActive
+                                    ? "bg-brand text-white"
+                                    : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
                                 }`}
                               >
-                                · {d.note}
-                              </span>
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Select button */}
-                    <div className="mt-5 pt-1">
-                      <motion.button
-                        whileTap={{ scale: 0.97 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          selectHotel(i);
-                        }}
-                        className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
-                          hotelActive
-                            ? "bg-brand text-white"
-                            : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
-                        }`}
-                      >
-                        {hotelActive ? "Selected ✓" : "Select This Hotel"}
-                      </motion.button>
-                    </div>
+                                {hotelActive ? "Selected ✓" : "Select This Hotel"}
+                              </motion.button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
           </div>
