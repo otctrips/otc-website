@@ -680,10 +680,6 @@ export default function ProposalPage() {
                     {dateOpt ? fmt(totalCost) : "—"}
                   </p>
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">Deposit (20%)</p>
-                  <p className="font-heading font-bold text-ink">{dateOpt ? fmt(deposit) : "—"}</p>
-                </div>
               </div>
             </div>
 
