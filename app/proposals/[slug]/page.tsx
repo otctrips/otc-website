@@ -243,6 +243,22 @@ export default function ProposalPage() {
   const installment  = dateOpt ? Math.round((remaining / 3) * 100) / 100 : 0;
   const finalPayment = dateOpt ? Math.round((remaining - installment * 2) * 100) / 100 : 0;
 
+  let dueDates: { deposit: string; inst1: string; inst2: string; final: string } | null = null;
+  if (dateOpt && todayStr) {
+    const m = dateOpt.range.match(/^([A-Za-z]+ \d+)[^,]+,\s*(\d{4})/);
+    if (m) {
+      const start = new Date(`${m[1]}, ${m[2]}`);
+      if (!isNaN(start.getTime())) {
+        const sub = (days: number) => {
+          const d = new Date(start);
+          d.setDate(d.getDate() - days);
+          return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+        };
+        dueDates = { deposit: todayStr, inst1: sub(90), inst2: sub(60), final: sub(30) };
+      }
+    }
+  }
+
   const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
 
   // ── Success state ──────────────────────────────────────────────────────────
@@ -603,23 +619,67 @@ export default function ProposalPage() {
               )}
             </div>
 
-            {/* Cost breakdown */}
-            <div className="space-y-4 py-5">
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-ink/60">Price per person</p>
-                <p className="font-heading font-bold text-ink">
-                  {dateOpt && hotel ? fmt(dateOpt.pricePerPerson + hotel.busPerPerson) : "—"}
-                </p>
+            {/* Cost breakdown — itemized */}
+            <div className="py-5">
+              {/* Column headers */}
+              <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
+                <span>Item</span>
+                <div className="flex shrink-0 gap-4">
+                  <span className="w-[88px] text-right">Per Person</span>
+                  <span className="w-[100px] text-right">Total</span>
+                </div>
               </div>
-              <div className="flex items-center justify-between">
-                <p className="text-sm text-ink/60">Group size</p>
-                <p className="font-heading font-bold text-ink">{PROPOSAL.groupSize} people</p>
+
+              {/* Hotel line item */}
+              <div className="flex items-start justify-between gap-3 border-t border-ink/10 py-3">
+                <div>
+                  <p className="text-sm font-medium text-ink">Hotel</p>
+                  {hotel && <p className="mt-0.5 text-xs text-ink/45">{hotel.name}</p>}
+                </div>
+                <div className="flex shrink-0 gap-4">
+                  <p className="w-[88px] text-right font-semibold text-ink">
+                    {dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}
+                  </p>
+                  <p className="w-[100px] text-right font-semibold text-ink">
+                    {dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * PROPOSAL.groupSize * 100) / 100) : "—"}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
-                <p className="text-sm font-semibold text-ink">Total cost</p>
-                <p className="font-heading text-2xl font-bold text-brand">
-                  {dateOpt ? fmt(totalCost) : "—"}
-                </p>
+
+              {/* Charter Bus line item */}
+              <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
+                <p className="text-sm font-medium text-ink">Charter Bus</p>
+                <div className="flex shrink-0 gap-4">
+                  <p className="w-[88px] text-right font-semibold text-ink">
+                    {hotel ? fmt(hotel.busPerPerson) : "—"}
+                  </p>
+                  <p className="w-[100px] text-right font-semibold text-ink">
+                    {hotel ? fmt(Math.round(hotel.busPerPerson * PROPOSAL.groupSize * 100) / 100) : "—"}
+                  </p>
+                </div>
+              </div>
+
+              {/* Totals */}
+              <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-ink/65">Total Per Person</p>
+                  <p className="font-heading font-bold text-ink">
+                    {dateOpt && hotel ? fmt(dateOpt.pricePerPerson + hotel.busPerPerson) : "—"}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
+                  <p className="text-sm font-semibold text-ink">
+                    Total Trip Cost
+                    <span className="ml-1 font-normal text-ink/50">({PROPOSAL.groupSize} people)</span>
+                  </p>
+                  <p className="font-heading text-2xl font-bold text-brand">
+                    {dateOpt ? fmt(totalCost) : "—"}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-ink/65">Deposit (20%)</p>
+                  <p className="font-heading font-bold text-ink">{dateOpt ? fmt(deposit) : "—"}</p>
+                </div>
               </div>
             </div>
 
@@ -631,20 +691,30 @@ export default function ProposalPage() {
               <div className="mt-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">
-                    Deposit due now <span className="text-ink/40">(20%)</span>
+                    Deposit
+                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.deposit}</span>}
                   </p>
                   <p className="font-semibold text-ink">{dateOpt ? fmt(deposit) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">Installment 1</p>
+                  <p className="text-sm text-ink/65">
+                    Installment 1
+                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.inst1}</span>}
+                  </p>
                   <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between">
-                  <p className="text-sm text-ink/65">Installment 2</p>
+                  <p className="text-sm text-ink/65">
+                    Installment 2
+                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.inst2}</span>}
+                  </p>
                   <p className="font-semibold text-ink">{dateOpt ? fmt(installment) : "—"}</p>
                 </div>
                 <div className="flex items-center justify-between border-t border-ink/10 pt-3">
-                  <p className="text-sm text-ink/65">Final payment</p>
+                  <p className="text-sm text-ink/65">
+                    Final payment
+                    {dueDates && <span className="ml-1 text-xs text-ink/40">· due {dueDates.final}</span>}
+                  </p>
                   <p className="font-semibold text-ink">{dateOpt ? fmt(finalPayment) : "—"}</p>
                 </div>
               </div>
