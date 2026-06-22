@@ -439,7 +439,7 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Card body */}
-                          <div className="flex flex-1 flex-col p-6">
+                          <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
 
                             {/* Hotel name — min-h-[64px], bottom-aligned so stars row always follows immediately */}
                             <div className="flex min-h-[64px] items-end overflow-hidden">
