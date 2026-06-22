@@ -1,23 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// All static route prefixes that exist on the main site
-const MAIN_SITE_PREFIXES = [
-  "/what-we-do",
-  "/destinations",
-  "/our-trips",
-  "/get-a-quote",
-  "/about",
-  "/faqs",
-  "/pricing",
-  "/referral",
-  "/travel-tips",
-  "/privacy",
-  "/thank-you",
-  "/proposals",
-  "/api",
-];
-
 export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   const pathname = request.nextUrl.pathname;
@@ -25,15 +8,16 @@ export function middleware(request: NextRequest) {
   const isProposalSubdomain =
     hostname === "proposal.otctrips.com" || hostname.startsWith("proposal.");
 
-  // On non-proposal domains, block /{slug} so the (proposal) route group
-  // is not accessible from the main site
-  if (!isProposalSubdomain && pathname !== "/") {
-    const isMainSitePath = MAIN_SITE_PREFIXES.some(
-      (p) => pathname === p || pathname.startsWith(p + "/")
-    );
-    if (!isMainSitePath) {
-      return new NextResponse(null, { status: 404 });
-    }
+  // On the proposal subdomain, rewrite /{slug} → /proposals/{slug} internally.
+  // This lets the existing /proposals/[slug] page handle the request, which
+  // already suppresses the site header/footer via SiteChrome.
+  if (
+    isProposalSubdomain &&
+    pathname !== "/" &&
+    !pathname.startsWith("/proposals/") &&
+    !pathname.startsWith("/api")
+  ) {
+    return NextResponse.rewrite(new URL(`/proposals${pathname}`, request.url));
   }
 
   return NextResponse.next();
