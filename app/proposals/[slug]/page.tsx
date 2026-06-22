@@ -353,6 +353,38 @@ export default function ProposalPage() {
         </div>
       </section>
 
+      {/* ════════════════════════ WHAT'S INCLUDED ════════════════════════════ */}
+      <section className="bg-night px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-site">
+          <div className="text-center">
+            <p className="eyebrow-light">Everything handled</p>
+            <h2 className="mt-3 font-heading text-4xl font-bold text-white sm:text-5xl">
+              What&apos;s Included In Your Trip
+            </h2>
+            <p className="mt-4 text-lg text-cream/55">
+              From the moment you book to the moment you get home.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {INCLUSIONS.map((item, i) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="rounded-2xl border border-cream/10 bg-white/5 p-7"
+              >
+                <div className="text-brand-light">{item.icon}</div>
+                <h3 className="mt-4 font-heading text-lg font-bold text-white">{item.label}</h3>
+                <p className="mt-1.5 text-sm text-cream/50">{item.sublabel}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ════════════════════════ HOTELS ══════════════════════════════════════ */}
       <section className="bg-cream px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
@@ -539,38 +571,6 @@ export default function ProposalPage() {
                 </div>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      {/* ════════════════════════ WHAT'S INCLUDED ════════════════════════════ */}
-      <section className="bg-night px-5 py-24 sm:px-8">
-        <div className="mx-auto max-w-site">
-          <div className="text-center">
-            <p className="eyebrow-light">Everything handled</p>
-            <h2 className="mt-3 font-heading text-4xl font-bold text-white sm:text-5xl">
-              What&apos;s Included In Your Trip
-            </h2>
-            <p className="mt-4 text-lg text-cream/55">
-              From the moment you book to the moment you get home.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {INCLUSIONS.map((item, i) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="rounded-2xl border border-cream/10 bg-white/5 p-7"
-              >
-                <div className="text-brand-light">{item.icon}</div>
-                <h3 className="mt-4 font-heading text-lg font-bold text-white">{item.label}</h3>
-                <p className="mt-1.5 text-sm text-cream/50">{item.sublabel}</p>
-              </motion.div>
-            ))}
           </div>
         </div>
       </section>
