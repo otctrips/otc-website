@@ -53,11 +53,11 @@ const HOTELS: Hotel[] = [
       "Walking distance to all live music venues",
     ],
     dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 159.03, totalCost: 17811.36 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 164.73, totalCost: 18449.76 },
-      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 147.63, totalCost: 16534.56 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 141.93, totalCost: 15896.16 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson: 67.83,  totalCost: 7596.96  },
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 314.58, totalCost: 35232.96 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 320.28, totalCost: 35871.36 },
+      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 303.18, totalCost: 33956.16 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 297.48, totalCost: 33317.76 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson: 223.38, totalCost: 25018.56 },
     ],
   },
   {
@@ -78,10 +78,10 @@ const HOTELS: Hotel[] = [
       "Complimentary upgrade for trip organizer",
     ],
     dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 102.03, totalCost: 11427.36 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 107.73, totalCost: 12065.76 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 90.63,  totalCost: 10150.56 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson: 79.23,  totalCost: 8873.76  },
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 190.62, totalCost: 21349.44 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 196.32, totalCost: 21987.84 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 179.22, totalCost: 20072.64 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson: 167.82, totalCost: 18795.84 },
     ],
   },
 ];
