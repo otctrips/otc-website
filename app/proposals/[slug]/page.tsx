@@ -93,15 +93,6 @@ const DESTINATIONS = HOTELS.reduce<string[]>((acc, h) => {
 
 const INCLUSIONS = [
   {
-    label: "Group Air Coordination",
-    sublabel: "Flights for the full group, everyone together",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-        <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" />
-      </svg>
-    ),
-  },
-  {
     label: "Hotel Room Block",
     sublabel: "Reserved exclusively for your group",
     icon: (
@@ -122,26 +113,6 @@ const INCLUSIONS = [
         <circle cx="7" cy="18" r="2" />
         <path d="M9 18h5" />
         <circle cx="16" cy="18" r="2" />
-      </svg>
-    ),
-  },
-  {
-    label: "On-Site Coordinator",
-    sublabel: "Your point of contact the entire trip",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-    ),
-  },
-  {
-    label: "Individual Payment Collection",
-    sublabel: "No organizer fronts any money",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
-        <line x1="1" y1="10" x2="23" y2="10" />
       </svg>
     ),
   },
@@ -462,11 +433,11 @@ export default function ProposalPage() {
                             </div>
 
                             {/* Price — h-[64px] with border, vertically centered */}
-                            <div className="flex h-[64px] flex-col justify-center overflow-hidden border-t border-ink/10 mt-1">
-                              {!activeDateData && (
-                                <p className="mb-0.5 text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</p>
-                              )}
+                            <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                                {!activeDateData && (
+                                  <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
+                                )}
                                 <span className="font-heading text-3xl font-bold text-ink">
                                   {fmt(displayData.pricePerPerson)}
                                   <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
