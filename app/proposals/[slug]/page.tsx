@@ -31,6 +31,7 @@ type Hotel = {
   distance: string;
   description: string;
   inclusions: string[];
+  busPerPerson: number;
   dates: DateOption[];
 };
 
@@ -52,12 +53,13 @@ const HOTELS: Hotel[] = [
       "Event space available for group functions",
       "Walking distance to all live music venues",
     ],
+    busPerPerson: 155.55,
     dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 334.58, totalCost: 37472.96 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 340.28, totalCost: 38111.36 },
-      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 323.18, totalCost: 36196.16 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 317.48, totalCost: 35557.76 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson: 243.38, totalCost: 27258.56 },
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 179.03, totalCost: 37472.96 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 184.73, totalCost: 38111.36 },
+      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 167.63, totalCost: 36196.16 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 161.93, totalCost: 35557.76 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson:  87.83, totalCost: 27258.56 },
     ],
   },
   {
@@ -77,11 +79,12 @@ const HOTELS: Hotel[] = [
       "Walking distance to River Street and Forsyth Park",
       "Complimentary upgrade for trip organizer",
     ],
+    busPerPerson: 88.59,
     dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 210.62, totalCost: 23589.44 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 216.32, totalCost: 24227.84 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 199.22, totalCost: 22312.64 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson: 187.82, totalCost: 21035.84 },
+      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 122.03, totalCost: 23589.44 },
+      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 127.73, totalCost: 24227.84 },
+      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 110.63, totalCost: 22312.64 },
+      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson:  99.23, totalCost: 21035.84 },
     ],
   },
 ];
@@ -449,7 +452,7 @@ export default function ProposalPage() {
                               </div>
                             </div>
 
-                            {/* Bus inclusion note */}
+                            {/* Bus cost line */}
                             <div className="flex items-center gap-1.5 pb-3">
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                                 <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -457,7 +460,7 @@ export default function ProposalPage() {
                                 <path d="M9 18h5" />
                                 <circle cx="16" cy="18" r="2" />
                               </svg>
-                              <span className="text-sm text-ink/70">Includes roundtrip charter bus</span>
+                              <span className="text-sm text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
                             </div>
 
                             {/* Dates — min-h-[120px] with border */}
@@ -605,7 +608,7 @@ export default function ProposalPage() {
               <div className="flex items-center justify-between">
                 <p className="text-sm text-ink/60">Price per person</p>
                 <p className="font-heading font-bold text-ink">
-                  {dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}
+                  {dateOpt && hotel ? fmt(dateOpt.pricePerPerson + hotel.busPerPerson) : "—"}
                 </p>
               </div>
               <div className="flex items-center justify-between">
