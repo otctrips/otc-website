@@ -72,10 +72,12 @@ export default function Header() {
               href={link.href}
               className={`relative text-sm uppercase tracking-widest hover:underline hover:underline-offset-4 ${
                 isActive(link.href)
-                  ? "font-bold text-white underline underline-offset-4"
+                  ? onDark
+                    ? "font-bold text-white underline underline-offset-4"
+                    : "font-bold text-ink underline underline-offset-4"
                   : onDark
                     ? "font-medium text-white/90"
-                    : "font-medium text-ink/80"
+                    : "font-medium text-ink"
               }`}
             >
               {link.label}
