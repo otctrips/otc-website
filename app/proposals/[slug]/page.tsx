@@ -457,7 +457,7 @@ export default function ProposalPage() {
                                 <path d="M9 18h5" />
                                 <circle cx="16" cy="18" r="2" />
                               </svg>
-                              <span className="text-xs text-ink/40">Includes roundtrip charter bus</span>
+                              <span className="text-sm text-ink/70">Includes roundtrip charter bus</span>
                             </div>
 
                             {/* Dates — min-h-[120px] with border */}
