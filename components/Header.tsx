@@ -70,7 +70,7 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className={`relative text-sm uppercase tracking-widest transition-colors hover:text-brand ${
+              className={`relative text-sm uppercase tracking-widest hover:underline hover:underline-offset-4 ${
                 isActive(link.href)
                   ? "font-bold text-white underline underline-offset-4"
                   : onDark
