@@ -439,16 +439,16 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Card body */}
-                          <div className="flex flex-1 flex-col justify-between p-6">
+                          <div className="flex flex-1 flex-col p-6">
 
-                            {/* Top: name · stars · distance · address */}
-                            <div>
-                              {/* Name — min-h so two-line names don't shift content below */}
-                              <div className="flex min-h-[3rem] items-start">
-                                <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
-                              </div>
-                              {/* Stars + distance — fixed single-line height */}
-                              <div className="flex h-6 flex-wrap items-center gap-3">
+                            {/* Hotel name — min-h-[64px] holds up to two lines */}
+                            <div className="flex min-h-[64px] items-start overflow-hidden">
+                              <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
+                            </div>
+
+                            {/* Stars + distance + address — h-[52px], 4px gap between lines */}
+                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden">
+                              <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-1.5">
                                   <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
                                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
@@ -458,14 +458,11 @@ export default function ProposalPage() {
                                 <span className="text-ink/25">·</span>
                                 <span className="text-sm text-ink/60">{h.distance}</span>
                               </div>
-                              {/* Address — fixed single-line height */}
-                              <div className="mt-2 flex h-5 items-center">
-                                <p className="text-sm text-ink/50">{h.address}</p>
-                              </div>
+                              <p className="text-sm text-ink/50">{h.address}</p>
                             </div>
 
-                            {/* Price — fixed height so total line never shifts dates */}
-                            <div className="min-h-[4.5rem] border-t border-ink/10 pt-5">
+                            {/* Price — h-[64px] with border, vertically centered */}
+                            <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10">
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                 <span className="font-heading text-3xl font-bold text-ink">
                                   {fmt(displayData.pricePerPerson)}
@@ -477,14 +474,12 @@ export default function ProposalPage() {
                               </div>
                             </div>
 
-                            {/* Date pills */}
-                            <div className="border-t border-ink/10 pt-5">
-                              {/* Label — fixed height */}
-                              <p className="mb-3 flex h-5 items-center text-xs font-semibold uppercase tracking-widest text-ink/40">
+                            {/* Dates — min-h-[120px] with border */}
+                            <div className="min-h-[120px] border-t border-ink/10 pt-4">
+                              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
                                 Available Dates
                               </p>
-                              {/* Pills — min-h so cards with more pills don't push button down */}
-                              <div className="flex min-h-[6rem] flex-wrap content-start gap-2">
+                              <div className="flex flex-wrap gap-2">
                                 {h.dates.map((d, di) => {
                                   const dateActive = hotelActive && selectedDate === di;
                                   return (
@@ -515,8 +510,8 @@ export default function ProposalPage() {
                               </div>
                             </div>
 
-                            {/* Select button — pinned to bottom via justify-between */}
-                            <div>
+                            {/* Select button — mt-auto pins to bottom */}
+                            <div className="mt-auto pt-4">
                               <motion.button
                                 whileTap={{ scale: 0.97 }}
                                 onClick={(e) => {
