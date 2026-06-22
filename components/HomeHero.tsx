@@ -16,7 +16,7 @@ export default function HomeHero() {
         sizes="100vw"
         className="object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/60 to-black/85" />
+      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.65) 100%)" }} />
 
       <div className="container-site relative py-32 text-center text-white">
         <motion.h1
