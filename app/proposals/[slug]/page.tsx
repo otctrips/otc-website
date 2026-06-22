@@ -238,7 +238,6 @@ export default function ProposalPage() {
   const dateOpt = (hotel && selectedDate !== null) ? hotel.dates[selectedDate] : null;
 
   const totalCost    = dateOpt ? dateOpt.totalCost : 0;
-  const deposit      = dateOpt ? Math.round(totalCost * 0.2  * 100) / 100 : 0;
 
   const BUS_DEPOSIT   = 1000;
   const HOTEL_DEPOSIT = 1000;
