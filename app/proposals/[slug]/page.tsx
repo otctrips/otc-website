@@ -46,11 +46,15 @@ type ProposalDB = {
 const BUS_PER_CITY: Record<string, number> = {
   Nashville: 155.55,
   Savannah: 88.59,
+  Miami: 75.00,
+  Austin: 65.00,
 };
 
 const CITY_TO_DESTINATION: Record<string, string> = {
   Nashville: "Nashville, TN",
   Savannah: "Savannah, GA",
+  Miami: "Miami, FL",
+  Austin: "Austin, TX",
 };
 
 function shortDateLabel(range: string): string {
