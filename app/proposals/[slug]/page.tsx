@@ -729,6 +729,7 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Bus cost line */}
+                          {h.busPerPerson > 0 && (
                           <div className="flex items-center gap-1.5 pb-3">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                               <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -738,6 +739,7 @@ export default function ProposalPage() {
                             </svg>
                             <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
                           </div>
+                          )}
 
                           {/* Dates */}
                           <div className="min-h-[120px] border-t border-ink/10 pt-4">
@@ -907,17 +909,19 @@ export default function ProposalPage() {
               </div>
 
               {/* Charter Bus line item */}
+              {hotel && hotel.busPerPerson > 0 && (
               <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
                 <p className="text-sm font-medium text-ink">Charter Bus</p>
                 <div className="flex shrink-0 gap-4">
                   <p className="w-[88px] text-right font-semibold text-ink">
-                    {hotel ? fmt(hotel.busPerPerson) : "—"}
+                    {fmt(hotel.busPerPerson)}
                   </p>
                   <p className="w-[100px] text-right font-semibold text-ink">
-                    {hotel ? fmt(Math.round(hotel.busPerPerson * groupSize * 100) / 100) : "—"}
+                    {fmt(Math.round(hotel.busPerPerson * groupSize * 100) / 100)}
                   </p>
                 </div>
               </div>
+              )}
 
               {/* Totals */}
               <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
@@ -952,10 +956,12 @@ export default function ProposalPage() {
                     Due on Signing
                   </p>
                   <div className="space-y-2">
+                    {hotel && hotel.busPerPerson > 0 && (
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-ink/65">Charter bus deposit</p>
-                      <p className="font-semibold text-ink">{dateOpt && hotel ? fmt(BUS_DEPOSIT) : "—"}</p>
+                      <p className="font-semibold text-ink">{dateOpt ? fmt(BUS_DEPOSIT) : "—"}</p>
                     </div>
+                    )}
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-ink/65">Hotel deposit</p>
                       <p className="font-semibold text-ink">{dateOpt ? fmt(HOTEL_DEPOSIT) : "—"}</p>
@@ -970,10 +976,12 @@ export default function ProposalPage() {
                     {dueDates && <span className="ml-1 font-normal normal-case tracking-normal text-ink/30">· {dueDates.balance}</span>}
                   </p>
                   <div className="space-y-2">
+                    {hotel && hotel.busPerPerson > 0 && (
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-ink/65">Remaining bus balance</p>
-                      <p className="font-semibold text-ink">{dateOpt && hotel ? fmt(busBalance) : "—"}</p>
+                      <p className="font-semibold text-ink">{dateOpt ? fmt(busBalance) : "—"}</p>
                     </div>
+                    )}
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-ink/65">Remaining hotel balance</p>
                       <p className="font-semibold text-ink">{dateOpt ? fmt(hotelBalance) : "—"}</p>
