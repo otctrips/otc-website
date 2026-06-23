@@ -287,33 +287,41 @@ export default function ProposalPage() {
           .from("hotel_dates")
           .select("*")
           .eq("hotel_id", h.id)
-          .order("nightly_rate", { ascending: true });
+          .order("created_at", { ascending: true });
+
+        const parseDateRange = (range: string) => {
+          const m = range.match(/^([A-Za-z]+ \d+)[^,]+,\s*(\d{4})/);
+          if (!m) return 0;
+          return new Date(`${m[1]}, ${m[2]}`).getTime();
+        };
 
         const busPerPerson = BUS_PER_CITY[h.city] ?? 0;
-        const dates: DateOption[] = (dateRows ?? []).map((d) => {
-          const hotelTotal =
-            Math.round(
-              d.nightly_rate *
-                (1 + proposalData.tax_rate) *
-                proposalData.nights *
-                proposalData.rooms *
-                100
-            ) / 100;
-          const pricePerPerson =
-            Math.round((hotelTotal / proposalData.group_size) * 100) / 100;
-          const totalCost =
-            Math.round(
-              (pricePerPerson + busPerPerson) * proposalData.group_size * 100
-            ) / 100;
-          return {
-            short: shortDateLabel(d.date_range),
-            range: d.date_range,
-            nights: proposalData.nights,
-            note: d.note ?? "",
-            pricePerPerson,
-            totalCost,
-          };
-        });
+        const dates: DateOption[] = (dateRows ?? [])
+          .map((d) => {
+            const hotelTotal =
+              Math.round(
+                d.nightly_rate *
+                  (1 + proposalData.tax_rate) *
+                  proposalData.nights *
+                  proposalData.rooms *
+                  100
+              ) / 100;
+            const pricePerPerson =
+              Math.round((hotelTotal / proposalData.group_size) * 100) / 100;
+            const totalCost =
+              Math.round(
+                (pricePerPerson + busPerPerson) * proposalData.group_size * 100
+              ) / 100;
+            return {
+              short: shortDateLabel(d.date_range),
+              range: d.date_range,
+              nights: proposalData.nights,
+              note: d.note ?? "",
+              pricePerPerson,
+              totalCost,
+            };
+          })
+          .sort((a, b) => parseDateRange(a.range) - parseDateRange(b.range));
 
         built.push({
           name: h.name,
@@ -575,7 +583,7 @@ export default function ProposalPage() {
                             alt={h.name}
                             fill
                             sizes="(max-width: 1024px) 100vw, 33vw"
-                            className={`object-cover transition-transform duration-500 hover:scale-105 ${h.destination === "Savannah, GA" ? "object-top" : "object-center"}`}
+                            className="object-cover object-bottom transition-transform duration-500 hover:scale-105"
                           />
                         </div>
 
