@@ -760,7 +760,7 @@ export default function ProposalPage() {
           <div className="mx-auto mt-10 h-[2px] w-12 bg-white/30" />
 
           {/* Contact columns */}
-          <div className="mt-10 grid gap-12 sm:grid-cols-2">
+          <div className="mt-10 grid gap-12 sm:grid-cols-2 max-w-2xl mx-auto w-full">
 
             {/* Tyler */}
             <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
