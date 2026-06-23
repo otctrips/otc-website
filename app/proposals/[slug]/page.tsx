@@ -353,6 +353,43 @@ export default function ProposalPage() {
     setSelectedDate(dateIdx);
   }
 
+  async function handleConfirm() {
+    if (!canConfirm || !proposal || !hotel || !dateOpt) return;
+
+    const signedAt = new Date().toISOString();
+    const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
+
+    await supabase.from("signatures").insert({
+      proposal_id: proposal.id,
+      group_name: proposal.group_name,
+      selected_hotel: hotel.name,
+      selected_dates: dateOpt.range,
+      hotel_per_person: dateOpt.pricePerPerson,
+      bus_per_person: hotel.busPerPerson,
+      total_per_person: totalPerPerson,
+      total_cost: dateOpt.totalCost,
+      full_name: fullName,
+      signature: signature,
+      signed_at: signedAt,
+    });
+
+    await fetch("/api/notify-signature", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        groupName: proposal.group_name,
+        selectedHotel: hotel.name,
+        selectedDates: dateOpt.range,
+        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
+        fullName,
+        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+      }),
+    });
+
+    setConfirmed(true);
+  }
+
   const DESTINATIONS = hotels.reduce<string[]>((acc, h) => {
     if (!acc.includes(h.destination)) acc.push(h.destination);
     return acc;
@@ -1105,7 +1142,7 @@ export default function ProposalPage() {
 
           <motion.button
             whileTap={canConfirm ? { scale: 0.985 } : {}}
-            onClick={() => canConfirm && setConfirmed(true)}
+            onClick={handleConfirm}
             disabled={!canConfirm}
             className={`w-full rounded-full py-5 font-heading text-lg font-bold uppercase tracking-widest transition-all duration-300 ${
               canConfirm
