@@ -5,6 +5,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   const body = await request.json();
+  console.log("[notify-signature] request body:", JSON.stringify(body));
+
   const {
     groupName,
     selectedHotel,
@@ -15,7 +17,7 @@ export async function POST(request: Request) {
     signedAt,
   } = body;
 
-  const { error } = await resend.emails.send({
+  const { data, error } = await resend.emails.send({
     from: "onboarding@resend.dev",
     to: "tylerdaley@otctrips.com",
     subject: `New Trip Confirmation - ${groupName}`,
@@ -33,9 +35,12 @@ export async function POST(request: Request) {
     `,
   });
 
+  console.log("[notify-signature] resend response data:", JSON.stringify(data));
+  console.log("[notify-signature] resend response error:", JSON.stringify(error));
+
   if (error) {
     return NextResponse.json({ error }, { status: 500 });
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, data });
 }

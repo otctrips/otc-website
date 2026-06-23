@@ -373,19 +373,26 @@ export default function ProposalPage() {
       signed_at: signedAt,
     });
 
-    await fetch("/api/notify-signature", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        groupName: proposal.group_name,
-        selectedHotel: hotel.name,
-        selectedDates: dateOpt.range,
-        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
-        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
-        fullName,
-        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
-      }),
-    });
+    console.log("[handleConfirm] calling /api/notify-signature");
+    try {
+      const res = await fetch("/api/notify-signature", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          groupName: proposal.group_name,
+          selectedHotel: hotel.name,
+          selectedDates: dateOpt.range,
+          totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+          totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
+          fullName,
+          signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+        }),
+      });
+      const data = await res.json();
+      console.log("[handleConfirm] notify-signature response:", res.status, data);
+    } catch (err) {
+      console.error("[handleConfirm] notify-signature fetch error:", err);
+    }
 
     setConfirmed(true);
   }
