@@ -6,6 +6,18 @@ const nextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        protocol: "https",
+        hostname: "fybjvcnworlikfxfkeer.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "digital.ihg.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cache.marriott.com",
+      },
     ],
   },
 };
