@@ -242,6 +242,7 @@ export default function ProposalPage() {
   const [notFound, setNotFound] = useState(false);
   const [proposal, setProposal] = useState<ProposalDB | null>(null);
   const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [existingSignature, setExistingSignature] = useState<{ full_name: string; signed_at: string } | null>(null);
 
   const [selectedHotel, setSelectedHotel] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
@@ -274,6 +275,20 @@ export default function ProposalPage() {
         return;
       }
       setProposal(proposalData);
+
+      const { data: sigRow } = await supabase
+        .from("signatures")
+        .select("full_name, signed_at")
+        .eq("proposal_id", proposalData.id)
+        .order("signed_at", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      if (sigRow) {
+        setExistingSignature(sigRow);
+        setLoading(false);
+        return;
+      }
 
       const { data: hotelRows } = await supabase
         .from("hotels")
@@ -456,6 +471,42 @@ export default function ProposalPage() {
         <Link href="https://otctrips.com" className="mt-8 text-brand-light underline underline-offset-4">
           Return to OTC Trips
         </Link>
+      </div>
+    );
+  }
+
+  // ── Already signed ────────────────────────────────────────────────────────
+  if (existingSignature) {
+    const signedDate = new Date(existingSignature.signed_at).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-night px-5 text-center">
+        <div className="max-w-lg">
+          <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-white/10">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+          <h1 className="font-heading text-4xl font-bold text-white sm:text-5xl">
+            This proposal has already been signed.
+          </h1>
+          <p className="mt-5 text-lg text-cream/60">
+            Signed by <span className="font-semibold text-cream">{existingSignature.full_name}</span> on {signedDate}.
+          </p>
+          <p className="mt-4 text-sm text-cream/40">
+            Questions? Reach out to us directly.
+          </p>
+          <a
+            href="https://otctrips.com"
+            className="mt-8 inline-block text-brand-light underline underline-offset-4"
+          >
+            Return to OTC Trips
+          </a>
+        </div>
       </div>
     );
   }
