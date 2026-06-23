@@ -39,6 +39,7 @@ type ProposalDB = {
   nights: number;
   tax_rate: number;
   message: string | null;
+  currency: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -315,11 +316,13 @@ export default function ProposalPage() {
         };
 
         const busPerPerson = BUS_PER_CITY[h.city] ?? 0;
+        const cadConversion = proposalData.currency === "CAD" ? 0.73 : 1;
         const dates: DateOption[] = (dateRows ?? [])
           .map((d) => {
             const hotelTotal =
               Math.round(
                 d.nightly_rate *
+                  cadConversion *
                   (1 + proposalData.tax_rate) *
                   proposalData.nights *
                   proposalData.rooms *
