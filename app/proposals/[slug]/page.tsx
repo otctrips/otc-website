@@ -575,7 +575,7 @@ export default function ProposalPage() {
                             alt={h.name}
                             fill
                             sizes="(max-width: 1024px) 100vw, 33vw"
-                            className="object-cover transition-transform duration-500 hover:scale-105"
+                            className={`object-cover transition-transform duration-500 hover:scale-105 ${h.destination === "Savannah, GA" ? "object-top" : "object-center"}`}
                           />
                         </div>
 
