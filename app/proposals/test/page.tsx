@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 // ─── Hardcoded test data ──────────────────────────────────────────────────────
 
@@ -273,6 +274,50 @@ export default function TestProposalPage() {
   function selectDate(hotelIdx: number, dateIdx: number) {
     if (selectedHotel !== hotelIdx) setSelectedHotel(hotelIdx);
     setSelectedDate(dateIdx);
+  }
+
+  async function handleConfirm() {
+    if (!canConfirm || !hotel || !dateOpt) return;
+
+    const signedAt = new Date().toISOString();
+    const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
+
+    await supabase.from("signatures").insert({
+      proposal_id: null,
+      group_name: PROPOSAL.groupName,
+      selected_hotel: hotel.name,
+      selected_dates: dateOpt.range,
+      hotel_per_person: dateOpt.pricePerPerson,
+      bus_per_person: hotel.busPerPerson,
+      total_per_person: totalPerPerson,
+      total_cost: dateOpt.totalCost,
+      full_name: fullName,
+      signature: signature,
+      signed_at: signedAt,
+    });
+
+    console.log("[handleConfirm] calling /api/notify-signature");
+    try {
+      const res = await fetch("/api/notify-signature", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          groupName: PROPOSAL.groupName,
+          selectedHotel: hotel.name,
+          selectedDates: dateOpt.range,
+          totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+          totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
+          fullName,
+          signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+        }),
+      });
+      const data = await res.json();
+      console.log("[handleConfirm] notify-signature response:", res.status, data);
+    } catch (err) {
+      console.error("[handleConfirm] notify-signature fetch error:", err);
+    }
+
+    setConfirmed(true);
   }
 
   const groupSize = PROPOSAL.groupSize;
@@ -924,7 +969,7 @@ export default function TestProposalPage() {
 
           <motion.button
             whileTap={canConfirm ? { scale: 0.985 } : {}}
-            onClick={() => canConfirm && setConfirmed(true)}
+            onClick={handleConfirm}
             disabled={!canConfirm}
             className={`w-full rounded-full py-5 font-heading text-lg font-bold uppercase tracking-widest transition-all duration-300 ${
               canConfirm
