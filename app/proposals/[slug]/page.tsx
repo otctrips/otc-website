@@ -747,6 +747,73 @@ export default function ProposalPage() {
         </div>
       </section>
 
+      {/* ════════════════════════ CONTACT ════════════════════════════════════ */}
+      <section className="bg-[#4D8397] px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-site">
+
+          {/* Quote */}
+          <p className="mx-auto max-w-2xl text-center text-xl italic leading-relaxed text-white sm:text-2xl">
+            &ldquo;Hey PIKE UCF, really excited to put this trip together for you. We have handled hundreds of trips like this and take a lot of pride in making sure everything goes perfectly. If you have any questions before signing, reach out directly.&rdquo;
+          </p>
+
+          {/* Divider */}
+          <div className="mx-auto mt-10 h-[2px] w-12 bg-white/30" />
+
+          {/* Contact columns */}
+          <div className="mt-10 grid gap-12 sm:grid-cols-2">
+
+            {/* Tyler */}
+            <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+              <div>
+                <p className="font-heading text-xl font-bold text-white">Tyler Daley</p>
+                <p className="mt-0.5 text-xs font-semibold uppercase tracking-widest text-white/50">Co-Founder, Trip Operations</p>
+              </div>
+              <a href="tel:8139093784" className="flex items-center gap-2 text-white/80 transition-colors hover:text-white">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.07 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                <span className="text-sm">(813) 909-3784</span>
+              </a>
+              <a href="mailto:tylerdaley@otctrips.com" className="flex items-center gap-2 text-white/80 transition-colors hover:text-white">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                <span className="text-sm">tylerdaley@otctrips.com</span>
+              </a>
+            </div>
+
+            {/* Michael */}
+            <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+              <div>
+                <p className="font-heading text-xl font-bold text-white">Michael Vita</p>
+                <p className="mt-0.5 text-xs font-semibold uppercase tracking-widest text-white/50">Co-Founder, Client Relations</p>
+              </div>
+              <a href="tel:7044954614" className="flex items-center gap-2 text-white/80 transition-colors hover:text-white">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.07 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                <span className="text-sm">(704) 495-4614</span>
+              </a>
+              <a href="mailto:michaelvita@otctrips.com" className="flex items-center gap-2 text-white/80 transition-colors hover:text-white">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                <span className="text-sm">michaelvita@otctrips.com</span>
+              </a>
+            </div>
+
+          </div>
+
+          {/* Footer note */}
+          <p className="mt-14 text-center text-sm text-white/45">
+            We are always available. Reach out directly and we will get back to you fast.
+          </p>
+
+        </div>
+      </section>
+
       {/* ════════════════════════ CONTRACT ═══════════════════════════════════ */}
       <section className="bg-white px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
