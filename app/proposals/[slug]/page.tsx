@@ -760,7 +760,8 @@ export default function ProposalPage() {
           <div className="mx-auto mt-10 h-[2px] w-12 bg-white/30" />
 
           {/* Contact columns */}
-          <div className="mt-10 grid gap-12 sm:grid-cols-2 max-w-2xl mx-auto w-full">
+          <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
+          <div className="grid grid-cols-2 gap-48 mx-auto">
 
             {/* Tyler */}
             <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
@@ -804,6 +805,7 @@ export default function ProposalPage() {
               </a>
             </div>
 
+          </div>
           </div>
 
           {/* Footer note */}
