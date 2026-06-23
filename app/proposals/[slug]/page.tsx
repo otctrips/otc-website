@@ -309,7 +309,7 @@ export default function ProposalPage() {
 
         <div className="relative px-5 pb-20 pt-10 sm:px-8">
           <div className="mx-auto max-w-site">
-            <Link href="/" className="font-heading text-2xl font-bold tracking-wide text-white">
+            <Link href="https://otctrips.com" className="font-heading text-2xl font-bold tracking-wide text-white">
               OTC <span className="text-brand-light">TRIPS</span>
             </Link>
 
