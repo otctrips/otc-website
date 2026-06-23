@@ -911,7 +911,7 @@ export default function ProposalPage() {
           <div className="grid grid-cols-2 gap-48 mx-auto">
 
             {/* Tyler */}
-            <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+            <div className="flex flex-col items-start gap-3 text-left">
               <div>
                 <p className="font-heading text-xl font-bold text-white">Tyler Daley</p>
                 <p className="mt-0.5 text-xs font-semibold uppercase tracking-widest text-white/50">Co-Founder, Trip Operations</p>
