@@ -97,49 +97,113 @@ const INCLUSIONS = [
 
 const CONTRACT_TEXT = `TRIP SERVICES AGREEMENT
 
-This Trip Services Agreement ("Agreement") is entered into between OTC Trips, LLC ("OTC Trips" or "Company"), an independent affiliate of A.S.A.P. Cruises Inc., Florida Seller of Travel No. FST ST15578, and the undersigned client organization ("Client") as of the date signed below.
+This Trip Services Agreement ("Agreement") is entered into between OTC Trips, LLC ("OTC Trips" or "Company") and the undersigned client organization ("Client") as of the date signed below.
 
 1. SERVICES
 
-OTC Trips agrees to coordinate the group travel services described in this proposal, including hotel room block management, ground transportation coordination, group air logistics (where included), individual payment collection, on-site coordination, and trip support. All services are subject to availability at time of final booking confirmation.
+OTC Trips agrees to coordinate and arrange the group travel services described in the accompanying proposal, which may include hotel accommodations, transportation, flights, event venues, payment collection, itinerary management, on-site support, and other related travel services. All services are subject to availability and final confirmation by the applicable third-party vendors at the time of booking.
+
+OTC Trips acts solely as a travel coordinator and intermediary between the Client and third-party service providers. OTC Trips does not own, operate, or control hotels, airlines, transportation companies, venues, or other travel suppliers and is not responsible for their acts, omissions, service interruptions, schedule changes, or operational decisions.
+
+Any services, pricing, accommodations, transportation, or amenities referenced in the proposal are subject to modification based on vendor availability, operational requirements, or circumstances beyond OTC Trips' reasonable control.
 
 2. PAYMENT SCHEDULE
 
-A non-refundable deposit of 20% of the total trip cost is due within seven (7) days of executing this Agreement. This deposit confirms the room block, transportation holds, and other reservations on behalf of the Client. The remaining balance is due in three (3) equal installments on the dates specified in the payment schedule provided with this Agreement. Individual travelers will receive separate payment links with their own installment schedules. No single individual is responsible for the total group cost.
+The Client agrees to make all payments in accordance with the payment schedule outlined in the proposal, invoice, or other written payment schedule provided by OTC Trips. Any payment designated as due upon signing shall be payable upon execution of this Agreement.
+
+The Client acknowledges and agrees that OTC Trips may enter into contractual commitments with hotels, transportation providers, venues, airlines, and other vendors based upon the Client's authorization to proceed. As a result, all payments made pursuant to this Agreement shall be subject to the cancellation and refund provisions set forth herein.
+
+The Client acknowledges and agrees that it is solely responsible for all amounts due under this Agreement, regardless of whether the Client collects funds from individual travelers or third parties. Any unpaid balances shall remain the responsibility of the Client organization.
+
+Failure to make payments by the specified due dates may result in cancellation of reservations, forfeiture of deposits, additional fees imposed by third-party vendors, suspension of services, or cancellation of the trip without refund.
 
 3. CANCELLATION POLICY
 
-Cancellations received more than 90 days prior to the trip departure date will forfeit the initial deposit only. Cancellations received 60–89 days prior to departure will forfeit 40% of the total trip cost. Cancellations received 30–59 days prior to departure will forfeit 65% of the total trip cost. Cancellations received fewer than 30 days prior to departure will forfeit 100% of the total trip cost. Individual traveler name substitutions may be permitted subject to airline and hotel policies and will be accommodated at no additional charge up to 21 days before departure. OTC Trips reserves the right to pass through any cancellation fees imposed by third-party vendors (airlines, hotels, venues) that exceed the above schedule.
+All cancellations are subject to the terms, conditions, penalties, and refund policies imposed by the applicable third-party vendors, including but not limited to hotels, transportation providers, airlines, venues, and other travel suppliers.
+
+The Client acknowledges that OTC Trips may enter into non-refundable or partially refundable contractual commitments with third-party vendors on the Client's behalf. As a result, payments made under this Agreement may become non-refundable in whole or in part upon execution of vendor agreements, payment of deposits, or other financial commitments made by OTC Trips.
+
+Any refunds issued by OTC Trips shall be limited to amounts recovered from third-party vendors, less any non-refundable deposits, administrative costs, processing fees, or expenses incurred by OTC Trips in connection with the trip.
+
+Cancellation requests must be submitted in writing by an authorized representative of the Client organization. OTC Trips will make reasonable efforts to recover refundable amounts from third-party vendors but does not guarantee any refund unless and until such funds are received from the applicable vendor.
 
 4. HEADCOUNT POLICY
 
-The Client agrees to provide a confirmed headcount no later than 60 days prior to departure. Changes to headcount after this date are subject to availability and may result in rate adjustments. An increase in group size of more than 15% from the initial confirmed headcount may require renegotiation of room block terms. OTC Trips is not liable for any additional costs resulting from a decrease in headcount after the confirmation date.
+The Client acknowledges that pricing, room blocks, transportation, venue arrangements, and other travel services are based upon the estimated group size provided to OTC Trips during the planning process.
 
-5. FLIGHT LOGISTICS
+The Client shall provide a final confirmed headcount by the deadline specified in the proposal, itinerary, or other written communication from OTC Trips. Changes to the group size after the final headcount deadline may be subject to vendor availability, pricing adjustments, additional fees, or cancellation penalties imposed by third-party vendors.
 
-Where group air coordination is included, OTC Trips will block seats on designated group-fare itineraries. Final passenger names and TSA-compliant identification information must be submitted by the name-submission deadline specified in the trip itinerary document. Late submission of passenger names may result in additional fees or loss of group airfare pricing. OTC Trips coordinates group air through its carrier partnerships and is not responsible for schedule changes, delays, or cancellations imposed by the airline, but will provide reasonable assistance in securing alternate arrangements.
+The Client acknowledges that reductions in group size may not reduce the total amount due under this Agreement if OTC Trips has already entered into contractual commitments on the Client's behalf. Any costs, penalties, or fees resulting from changes to the confirmed headcount shall be the responsibility of the Client.
+
+OTC Trips does not guarantee the availability of additional rooms, transportation capacity, venue space, or other services requested after the final headcount deadline.
+
+5. TRANSPORTATION LOGISTICS
+
+Where transportation services, including commercial flights, charter transportation, shuttle services, ferries, rail travel, or other transportation arrangements are included in the trip, the Client shall provide all required traveler information by the deadlines established by OTC Trips and the applicable transportation providers.
+
+The Client is responsible for ensuring that all traveler names, identification information, travel documents, and other required information are accurate and submitted on time. OTC Trips shall not be responsible for additional costs, penalties, denied boarding, or loss of reservations resulting from inaccurate, incomplete, or late-submitted traveler information.
+
+Transportation schedules, routes, seating assignments, baggage allowances, and other transportation-related services are subject to the policies and operational decisions of the applicable transportation provider. OTC Trips is not responsible for delays, schedule changes, cancellations, mechanical issues, weather-related disruptions, labor disputes, or other events beyond its reasonable control.
+
+Any fees, penalties, or additional costs imposed by transportation providers as a result of changes requested by the Client or its travelers shall be the responsibility of the Client.
 
 6. CONDUCT POLICY
 
-The Client and all individual travelers are expected to conduct themselves in a manner consistent with the policies of all hotels, venues, and transportation providers used during the trip. OTC Trips reserves the right to remove any individual from trip services for conduct that violates hotel policies, applicable laws, or the safety or comfort of others. No refund will be issued for removal due to misconduct. The Client organization (as the contracting party) acknowledges responsibility for communicating conduct expectations to all individual travelers participating in the trip.
+The Client shall be responsible for communicating all trip rules, policies, deadlines, and expectations to its travelers. All travelers are expected to comply with applicable laws and the policies of all hotels, transportation providers, venues, and other third-party vendors utilized during the trip.
+
+OTC Trips reserves the right to remove, restrict, or deny participation in any portion of the trip to any traveler whose conduct is deemed unsafe, disruptive, illegal, abusive, or otherwise detrimental to the operation of the trip or the safety and enjoyment of others. No refund shall be provided for any services missed as a result of such removal or restriction.
+
+The Client shall be responsible for any damages, fines, penalties, cleaning fees, or other charges imposed by third-party vendors as a result of the conduct of its travelers. OTC Trips reserves the right to pass through any such costs to the Client.
+
+OTC Trips shall not be liable for any consequences arising from a traveler's failure to comply with applicable laws, venue policies, transportation requirements, identification requirements, age restrictions, or other vendor-imposed rules and regulations.
 
 7. LIABILITY AND LIMITATIONS
 
-OTC Trips acts as an intermediary between the Client and third-party service providers (hotels, airlines, charter services, venues). OTC Trips is not liable for the acts, errors, omissions, or defaults of any third-party provider, nor for any injury, damage, loss, accident, delay, or irregularity that may occur due to defect of any vehicle or the negligence or default of any company or person engaged in carrying out the services. OTC Trips strongly recommends individual travel protection insurance for all travelers. Information regarding optional travel protection plans will be provided upon request.
+OTC Trips acts solely as a coordinator and intermediary between the Client and third-party service providers, including but not limited to hotels, transportation providers, airlines, venues, tour operators, and other travel suppliers. OTC Trips does not own, operate, manage, or control any third-party service provider and shall not be liable for the acts, omissions, negligence, errors, service interruptions, schedule changes, cancellations, delays, or other actions of such providers.
+
+The Client acknowledges that travel involves inherent risks, including but not limited to accidents, illness, injury, death, property damage, theft, transportation delays, weather-related disruptions, recreational activities, nightlife activities, excursions, and other unforeseen events. Participation in travel and trip-related activities is voluntary and undertaken at each traveler's own risk.
+
+OTC Trips shall not be liable for any injury, illness, death, loss, damage, expense, or claim arising from the actions, conduct, negligence, recklessness, intoxication, or failure to exercise reasonable care by the Client or any traveler participating in the trip.
+
+OTC Trips shall not be liable for any indirect, incidental, consequential, special, punitive, or exemplary damages arising out of or relating to this Agreement or the trip.
+
+In no event shall OTC Trips' total liability arising out of or relating to this Agreement exceed the total amount actually paid by the Client directly to OTC Trips for the specific trip giving rise to the claim.
+
+The Client agrees to indemnify, defend, and hold harmless OTC Trips, its owners, officers, employees, contractors, and representatives from and against any claims, damages, liabilities, losses, costs, or expenses, including reasonable attorneys' fees, arising out of or related to the actions, conduct, negligence, or misconduct of the Client or its travelers.
 
 8. FORCE MAJEURE
 
-OTC Trips shall not be liable for failure to perform its obligations hereunder when such failure is caused by events beyond its reasonable control, including but not limited to acts of God, natural disasters, government actions, pandemics, terrorism, or other unforeseen events that make travel impractical or impossible. In such cases, OTC Trips will work in good faith to reschedule or recover deposits from third-party providers, but cannot guarantee full refunds where such costs have already been committed to vendors.
+OTC Trips shall not be liable for any delay, disruption, cancellation, modification, or failure to perform its obligations under this Agreement resulting from events beyond its reasonable control, including but not limited to acts of God, natural disasters, severe weather, hurricanes, floods, fires, pandemics, epidemics, government actions, travel restrictions, labor disputes, transportation disruptions, acts of terrorism, civil unrest, or other unforeseen circumstances.
+
+In the event of a force majeure occurrence, OTC Trips shall make reasonable efforts to assist the Client in rescheduling services, obtaining credits, or recovering refundable amounts from third-party vendors. However, OTC Trips does not guarantee refunds, credits, or alternative arrangements, as such matters are subject to the policies and decisions of the applicable third-party vendors.
+
+Any refunds, credits, or reimbursements resulting from a force majeure event shall be limited to amounts actually recovered from third-party vendors, less any non-refundable costs, fees, or expenses incurred by OTC Trips.
 
 9. ENTIRE AGREEMENT
 
-This Agreement, together with the proposal document provided to the Client, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, representations, warranties, and understandings of the parties. This Agreement may not be modified except by a written instrument signed by both parties. By signing below, the Client acknowledges that they have read, understood, and agree to be bound by all terms and conditions of this Agreement.
+This Agreement, together with any proposal, invoice, itinerary, addendum, or other written document provided by OTC Trips and accepted by the Client, constitutes the entire agreement between the parties with respect to the subject matter hereof and supersedes all prior negotiations, discussions, representations, and understandings, whether written or oral.
 
-─────────────────────────────────────────────────
-OTC Trips, LLC
-An Independent Affiliate of A.S.A.P. Cruises Inc.
-Florida Seller of Travel No. FST ST15578
-California Seller of Travel No. 2090937-50`;
+No modification, amendment, or waiver of any provision of this Agreement shall be effective unless made in writing and signed by both parties.
+
+If any provision of this Agreement is determined to be invalid or unenforceable, the remaining provisions shall remain in full force and effect.
+
+The failure of either party to enforce any provision of this Agreement shall not be construed as a waiver of that provision or any other provision of this Agreement.
+
+10. ELECTRONIC SIGNATURES
+
+The parties agree that electronic signatures, digital signatures, and electronically transmitted copies of this Agreement shall be deemed original signatures and shall be fully binding and enforceable to the fullest extent permitted by law.
+
+11. GOVERNING LAW AND VENUE
+
+This Agreement shall be governed by and construed in accordance with the laws of the State of Florida, without regard to its conflict of law principles. Any legal action or proceeding arising out of or relating to this Agreement shall be brought exclusively in the state or federal courts located in Florida, and the parties hereby consent to the jurisdiction of such courts.
+
+12. AUTHORIZED REPRESENTATIVE
+
+The individual executing this Agreement on behalf of the Client represents and warrants that they are authorized to bind the Client organization to the terms of this Agreement. The Client shall remain fully responsible for all obligations arising under this Agreement regardless of any internal organizational approvals, membership changes, leadership transitions, or disputes regarding authority.
+
+13. TRAVELER INFORMATION AND DOCUMENTATION
+
+The Client and its travelers are solely responsible for obtaining and maintaining all required identification, passports, visas, travel authorizations, health documentation, and other documents required for participation in the trip. OTC Trips shall not be responsible for denied boarding, denied entry, missed departures, additional expenses, or other losses resulting from a traveler's failure to possess the required documentation or comply with applicable travel requirements.`;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
