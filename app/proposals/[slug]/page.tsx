@@ -430,34 +430,6 @@ export default function ProposalPage() {
 
   const totalCost = dateOpt ? dateOpt.totalCost : 0;
 
-  const BUS_DEPOSIT = 1000;
-  const HOTEL_DEPOSIT = 1000;
-  const busTotal =
-    hotel && dateOpt
-      ? Math.round(hotel.busPerPerson * groupSize * 100) / 100
-      : 0;
-  const hotelSubtotal = dateOpt
-    ? Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100
-    : 0;
-  const busBalance = Math.round((busTotal - BUS_DEPOSIT) * 100) / 100;
-  const hotelBalance = Math.round((hotelSubtotal - HOTEL_DEPOSIT) * 100) / 100;
-
-  let dueDates: { signing: string; balance: string; rooming: string } | null = null;
-  if (dateOpt && todayStr) {
-    const m = dateOpt.range.match(/^([A-Za-z]+ \d+)[^,]+,\s*(\d{4})/);
-    if (m) {
-      const start = new Date(`${m[1]}, ${m[2]}`);
-      if (!isNaN(start.getTime())) {
-        const sub = (days: number) => {
-          const d = new Date(start);
-          d.setDate(d.getDate() - days);
-          return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-        };
-        dueDates = { signing: todayStr, balance: sub(40), rooming: sub(35) };
-      }
-    }
-  }
-
   const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
 
   // ── Loading ────────────────────────────────────────────────────────────────
