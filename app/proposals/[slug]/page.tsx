@@ -329,7 +329,7 @@ export default function ProposalPage() {
                   100
               ) / 100;
             const pricePerPerson =
-              Math.round((hotelTotal / proposalData.group_size) * 100) / 100;
+              Math.round((hotelTotal / proposalData.group_size + 20) * 100) / 100;
             const totalCost =
               Math.round(
                 (pricePerPerson + busPerPerson) * proposalData.group_size * 100
