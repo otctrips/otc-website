@@ -785,7 +785,7 @@ export default function ProposalPage() {
             </div>
 
             {/* Michael */}
-            <div className="flex flex-col items-center gap-3 text-center sm:items-start sm:text-left">
+            <div className="flex flex-col items-end gap-3 text-right">
               <div>
                 <p className="font-heading text-xl font-bold text-white">Michael Vita</p>
                 <p className="mt-0.5 text-xs font-semibold uppercase tracking-widest text-white/50">Co-Founder, Client Relations</p>
