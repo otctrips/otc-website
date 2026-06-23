@@ -1,17 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
-// ─── Dummy data ───────────────────────────────────────────────────────────────
-
-const PROPOSAL = {
-  groupName: "PIKE - University of Central Florida",
-  destinations: "Nashville, TN & Savannah, GA",
-  groupSize: 112,
-};
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type DateOption = {
   short: string;
@@ -29,71 +25,39 @@ type Hotel = {
   stars: number;
   address: string;
   distance: string;
-  description: string;
-  inclusions: string[];
   busPerPerson: number;
   dates: DateOption[];
 };
 
-const HOTELS: Hotel[] = [
-  {
-    name: "Holiday Inn & Suites Nashville Downtown Broadway",
-    destination: "Nashville, TN",
-    image:
-      "https://images.unsplash.com/photo-1564501049412-61c2a3083791?q=80&w=800&auto=format&fit=crop",
-    stars: 3,
-    address: "415 4th Ave S, Nashville, TN 37201",
-    distance: "0.3 miles from Broadway",
-    description:
-      "Steps from Broadway and the heart of Nashville's live music scene, this hotel puts your group at the center of everything. Flexible spaces and attentive group service make it the top choice for large groups visiting Music City.",
-    inclusions: [
-      "Exclusive room block on Broadway",
-      "Complimentary suite for trip organizers",
-      "Dedicated group check-in lane",
-      "Event space available for group functions",
-      "Walking distance to all live music venues",
-    ],
-    busPerPerson: 155.55,
-    dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",    nights: 2, note: "Peak weekend",    pricePerPerson: 179.03, totalCost: 37472.96 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025",  nights: 2, note: "Popular weekend",  pricePerPerson: 184.73, totalCost: 38111.36 },
-      { short: "Nov 20–22", range: "November 20 – 22, 2025",  nights: 2, note: "Great value",      pricePerPerson: 167.63, totalCost: 36196.16 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025",  nights: 2, note: "Low season rates", pricePerPerson: 161.93, totalCost: 35557.76 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025",  nights: 2, note: "Best price",       pricePerPerson:  87.83, totalCost: 27258.56 },
-    ],
-  },
-  {
-    name: "Fairfield Inn & Suites Savannah Downtown",
-    destination: "Savannah, GA",
-    image:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800&auto=format&fit=crop",
-    stars: 3,
-    address: "135 Martin Luther King Jr Blvd, Savannah, GA 31401",
-    distance: "0.4 miles from River Street",
-    description:
-      "Located in Savannah's iconic Historic District, this Fairfield Inn puts your group steps from River Street, the riverfront, and Forsyth Park. Clean, comfortable rooms with complimentary breakfast and a staff that handles large group bookings with ease.",
-    inclusions: [
-      "Room block reserved in the Historic District",
-      "Complimentary hot breakfast daily",
-      "Dedicated group check-in coordination",
-      "Walking distance to River Street and Forsyth Park",
-      "Complimentary upgrade for trip organizer",
-    ],
-    busPerPerson: 88.59,
-    dates: [
-      { short: "Nov 6–8",   range: "November 6 – 8, 2025",   nights: 2, note: "Peak weekend",    pricePerPerson: 122.03, totalCost: 23589.44 },
-      { short: "Nov 13–15", range: "November 13 – 15, 2025", nights: 2, note: "Popular weekend",  pricePerPerson: 127.73, totalCost: 24227.84 },
-      { short: "Dec 11–13", range: "December 11 – 13, 2025", nights: 2, note: "Low season rates", pricePerPerson: 110.63, totalCost: 22312.64 },
-      { short: "Dec 14–16", range: "December 14 – 16, 2025", nights: 2, note: "Best price",       pricePerPerson:  99.23, totalCost: 21035.84 },
-    ],
-  },
-];
+type ProposalDB = {
+  id: string;
+  slug: string;
+  group_name: string;
+  destination: string;
+  group_size: number;
+  rooms: number;
+  nights: number;
+  tax_rate: number;
+  message: string | null;
+};
 
-// Unique destinations in the order they appear in HOTELS
-const DESTINATIONS = HOTELS.reduce<string[]>((acc, h) => {
-  if (!acc.includes(h.destination)) acc.push(h.destination);
-  return acc;
-}, []);
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+const BUS_PER_CITY: Record<string, number> = {
+  Nashville: 155.55,
+  Savannah: 88.59,
+};
+
+const CITY_TO_DESTINATION: Record<string, string> = {
+  Nashville: "Nashville, TN",
+  Savannah: "Savannah, GA",
+};
+
+function shortDateLabel(range: string): string {
+  const m = range.match(/^([A-Za-z]+) (\d+)\s*[–-]\s*(\d+)/);
+  if (!m) return range;
+  return `${m[1].slice(0, 3)} ${m[2]}–${m[3]}`;
+}
 
 const INCLUSIONS = [
   {
@@ -177,8 +141,7 @@ An Independent Affiliate of A.S.A.P. Cruises Inc.
 Florida Seller of Travel No. FST ST15578
 California Seller of Travel No. 2090937-50`;
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function Check({ white = false, size = 14 }: { white?: boolean; size?: number }) {
   return (
@@ -208,6 +171,14 @@ const fmt = (n: number) =>
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ProposalPage() {
+  const params = useParams();
+  const slug = params.slug as string;
+
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+  const [proposal, setProposal] = useState<ProposalDB | null>(null);
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+
   const [selectedHotel, setSelectedHotel] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [agreed, setAgreed] = useState(false);
@@ -222,6 +193,82 @@ export default function ProposalPage() {
     );
   }, []);
 
+  useEffect(() => {
+    if (!slug) return;
+    async function fetchData() {
+      setLoading(true);
+
+      const { data: proposalData, error: proposalError } = await supabase
+        .from("proposals")
+        .select("*")
+        .eq("slug", slug)
+        .single();
+
+      if (proposalError || !proposalData) {
+        setNotFound(true);
+        setLoading(false);
+        return;
+      }
+      setProposal(proposalData);
+
+      const { data: hotelRows } = await supabase
+        .from("hotels")
+        .select("*")
+        .eq("proposal_id", proposalData.id)
+        .order("created_at", { ascending: true });
+
+      const built: Hotel[] = [];
+      for (const h of hotelRows ?? []) {
+        const { data: dateRows } = await supabase
+          .from("hotel_dates")
+          .select("*")
+          .eq("hotel_id", h.id)
+          .order("nightly_rate", { ascending: true });
+
+        const busPerPerson = BUS_PER_CITY[h.city] ?? 0;
+        const dates: DateOption[] = (dateRows ?? []).map((d) => {
+          const hotelTotal =
+            Math.round(
+              d.nightly_rate *
+                (1 + proposalData.tax_rate) *
+                proposalData.nights *
+                proposalData.rooms *
+                100
+            ) / 100;
+          const pricePerPerson =
+            Math.round((hotelTotal / proposalData.group_size) * 100) / 100;
+          const totalCost =
+            Math.round(
+              (pricePerPerson + busPerPerson) * proposalData.group_size * 100
+            ) / 100;
+          return {
+            short: shortDateLabel(d.date_range),
+            range: d.date_range,
+            nights: proposalData.nights,
+            note: d.note ?? "",
+            pricePerPerson,
+            totalCost,
+          };
+        });
+
+        built.push({
+          name: h.name,
+          destination: CITY_TO_DESTINATION[h.city] ?? h.city,
+          image: h.image_url,
+          stars: h.stars,
+          address: h.address,
+          distance: h.distance,
+          busPerPerson,
+          dates,
+        });
+      }
+
+      setHotels(built);
+      setLoading(false);
+    }
+    fetchData();
+  }, [slug]);
+
   function selectHotel(idx: number) {
     if (selectedHotel !== idx) {
       setSelectedHotel(idx);
@@ -234,17 +281,28 @@ export default function ProposalPage() {
     setSelectedDate(dateIdx);
   }
 
-  const hotel = selectedHotel !== null ? HOTELS[selectedHotel] : null;
-  const dateOpt = (hotel && selectedDate !== null) ? hotel.dates[selectedDate] : null;
+  const DESTINATIONS = hotels.reduce<string[]>((acc, h) => {
+    if (!acc.includes(h.destination)) acc.push(h.destination);
+    return acc;
+  }, []);
 
-  const totalCost    = dateOpt ? dateOpt.totalCost : 0;
+  const groupSize = proposal?.group_size ?? 0;
+  const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
+  const dateOpt = hotel && selectedDate !== null ? hotel.dates[selectedDate] : null;
 
-  const BUS_DEPOSIT   = 1000;
+  const totalCost = dateOpt ? dateOpt.totalCost : 0;
+
+  const BUS_DEPOSIT = 1000;
   const HOTEL_DEPOSIT = 1000;
-  const busTotal      = hotel && dateOpt ? Math.round(hotel.busPerPerson * PROPOSAL.groupSize * 100) / 100 : 0;
-  const hotelSubtotal = dateOpt ? Math.round(dateOpt.pricePerPerson * PROPOSAL.groupSize * 100) / 100 : 0;
-  const busBalance    = Math.round((busTotal - BUS_DEPOSIT) * 100) / 100;
-  const hotelBalance  = Math.round((hotelSubtotal - HOTEL_DEPOSIT) * 100) / 100;
+  const busTotal =
+    hotel && dateOpt
+      ? Math.round(hotel.busPerPerson * groupSize * 100) / 100
+      : 0;
+  const hotelSubtotal = dateOpt
+    ? Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100
+    : 0;
+  const busBalance = Math.round((busTotal - BUS_DEPOSIT) * 100) / 100;
+  const hotelBalance = Math.round((hotelSubtotal - HOTEL_DEPOSIT) * 100) / 100;
 
   let dueDates: { signing: string; balance: string; rooming: string } | null = null;
   if (dateOpt && todayStr) {
@@ -263,6 +321,28 @@ export default function ProposalPage() {
   }
 
   const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
+
+  // ── Loading ────────────────────────────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-night">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+      </div>
+    );
+  }
+
+  // ── Not found ──────────────────────────────────────────────────────────────
+  if (notFound || !proposal) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-night px-5 text-center">
+        <h1 className="font-heading text-4xl font-bold text-white">Proposal not found</h1>
+        <p className="mt-4 text-cream/60">This proposal link may have expired or doesn&apos;t exist.</p>
+        <Link href="https://otctrips.com" className="mt-8 text-brand-light underline underline-offset-4">
+          Return to OTC Trips
+        </Link>
+      </div>
+    );
+  }
 
   // ── Success state ──────────────────────────────────────────────────────────
   if (confirmed) {
@@ -337,7 +417,7 @@ export default function ProposalPage() {
                 className="mt-5 text-xl text-cream/65"
               >
                 Built exclusively for{" "}
-                <span className="font-semibold text-cream">{PROPOSAL.groupName}</span>
+                <span className="font-semibold text-cream">{proposal.group_name}</span>
               </motion.p>
 
               {/* Details bar */}
@@ -347,9 +427,9 @@ export default function ProposalPage() {
                 transition={{ duration: 0.6, delay: 0.38 }}
                 className="mt-10 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-cream/15 bg-white/5 px-6 py-3 text-sm backdrop-blur-sm"
               >
-                <span className="font-medium text-cream/85">{PROPOSAL.destinations}</span>
+                <span className="font-medium text-cream/85">{proposal.destination}</span>
                 <span className="text-cream/30">·</span>
-                <span className="font-medium text-cream/85">{PROPOSAL.groupSize} People</span>
+                <span className="font-medium text-cream/85">{proposal.group_size} People</span>
               </motion.div>
             </div>
           </div>
@@ -372,7 +452,7 @@ export default function ProposalPage() {
           {/* Hotels grouped by destination */}
           <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2">
             {DESTINATIONS.map((dest) => {
-              const destHotels = HOTELS
+              const destHotels = hotels
                 .map((h, i) => ({ h, i }))
                 .filter(({ h }) => h.destination === dest);
 
@@ -388,156 +468,159 @@ export default function ProposalPage() {
                   </div>
 
                   {destHotels.map(({ h, i }) => {
-                      const hotelActive = selectedHotel === i;
-                      const activeDateData = hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
-                      const lowestDate = h.dates.reduce((a, b) => a.pricePerPerson < b.pricePerPerson ? a : b);
-                      const displayData = activeDateData ?? lowestDate;
+                    const hotelActive = selectedHotel === i;
+                    const activeDateData =
+                      hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
+                    const lowestDate = h.dates.reduce((a, b) =>
+                      a.pricePerPerson < b.pricePerPerson ? a : b
+                    );
+                    const displayData = activeDateData ?? lowestDate;
 
-                      return (
-                        <motion.div
-                          key={h.name}
-                          initial={{ opacity: 0, y: 32 }}
-                          whileInView={{ opacity: 1, y: 0 }}
-                          viewport={{ once: true, margin: "-60px" }}
-                          transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
-                          className={`relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
-                            hotelActive
-                              ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
-                              : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
-                          }`}
-                        >
-                          {/* Selected check badge */}
-                          <AnimatePresence>
-                            {hotelActive && (
-                              <motion.div
-                                initial={{ scale: 0.5, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.5, opacity: 0 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
-                              >
-                                <Check white />
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                    return (
+                      <motion.div
+                        key={h.name}
+                        initial={{ opacity: 0, y: 32 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-60px" }}
+                        transition={{ duration: 0.5, delay: (i % 3) * 0.1 }}
+                        className={`relative flex flex-1 flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                          hotelActive
+                            ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
+                            : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
+                        }`}
+                      >
+                        {/* Selected check badge */}
+                        <AnimatePresence>
+                          {hotelActive && (
+                            <motion.div
+                              initial={{ scale: 0.5, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0.5, opacity: 0 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                              className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
+                            >
+                              <Check white />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
 
-                          {/* Hotel image */}
-                          <div className="relative h-52 overflow-hidden">
-                            <Image
-                              src={h.image}
-                              alt={h.name}
-                              fill
-                              sizes="(max-width: 1024px) 100vw, 33vw"
-                              className="object-cover transition-transform duration-500 hover:scale-105"
-                            />
+                        {/* Hotel image */}
+                        <div className="relative h-52 overflow-hidden">
+                          <Image
+                            src={h.image}
+                            alt={h.name}
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className="object-cover transition-transform duration-500 hover:scale-105"
+                          />
+                        </div>
+
+                        {/* Card body */}
+                        <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
+
+                          {/* Hotel name */}
+                          <div className="flex items-start overflow-hidden mb-1">
+                            <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                           </div>
 
-                          {/* Card body */}
-                          <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
-
-                            {/* Hotel name — min-h-[64px], bottom-aligned so stars row always follows immediately */}
-                            <div className="flex items-start overflow-hidden mb-1">
-                              <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
-                            </div>
-
-                            {/* Stars + distance + address — h-[52px], 4px gap between lines */}
-                            <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-0">
-                              <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-1.5">
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
-                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                  </svg>
-                                  <span className="text-sm font-semibold text-ink">4 Stars</span>
-                                </div>
-                                <span className="text-ink/25">·</span>
-                                <span className="text-sm text-ink/60">{h.distance}</span>
+                          {/* Stars + distance + address */}
+                          <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-0">
+                            <div className="flex items-center gap-3">
+                              <div className="flex items-center gap-1.5">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                                <span className="text-sm font-semibold text-ink">4 Stars</span>
                               </div>
-                              <p className="text-sm text-ink/50">{h.address}</p>
+                              <span className="text-ink/25">·</span>
+                              <span className="text-sm text-ink/60">{h.distance}</span>
                             </div>
+                            <p className="text-sm text-ink/50">{h.address}</p>
+                          </div>
 
-                            {/* Price — h-[64px] with border, vertically centered */}
-                            <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
-                              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                                {!activeDateData && (
-                                  <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
-                                )}
-                                <span className="font-heading text-3xl font-bold text-ink">
-                                  {fmt(displayData.pricePerPerson)}
-                                  <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
-                                </span>
-                                <span className="text-sm text-ink/45">
-                                  (Total: {fmt(displayData.totalCost)})
-                                </span>
-                              </div>
+                          {/* Price */}
+                          <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
+                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                              {!activeDateData && (
+                                <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
+                              )}
+                              <span className="font-heading text-3xl font-bold text-ink">
+                                {fmt(displayData.pricePerPerson)}
+                                <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                              </span>
+                              <span className="text-sm text-ink/45">
+                                (Total: {fmt(displayData.totalCost)})
+                              </span>
                             </div>
+                          </div>
 
-                            {/* Bus cost line */}
-                            <div className="flex items-center gap-1.5 pb-3">
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
-                                <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
-                                <circle cx="7" cy="18" r="2" />
-                                <path d="M9 18h5" />
-                                <circle cx="16" cy="18" r="2" />
-                              </svg>
-                              <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
-                            </div>
+                          {/* Bus cost line */}
+                          <div className="flex items-center gap-1.5 pb-3">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
+                              <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
+                              <circle cx="7" cy="18" r="2" />
+                              <path d="M9 18h5" />
+                              <circle cx="16" cy="18" r="2" />
+                            </svg>
+                            <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
+                          </div>
 
-                            {/* Dates — min-h-[120px] with border */}
-                            <div className="min-h-[120px] border-t border-ink/10 pt-4">
-                              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
-                                Available Dates
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {h.dates.map((d, di) => {
-                                  const dateActive = hotelActive && selectedDate === di;
-                                  return (
-                                    <motion.button
-                                      key={d.short}
-                                      whileTap={{ scale: 0.95 }}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        selectDate(i, di);
-                                      }}
-                                      className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                                        dateActive
-                                          ? "bg-brand text-white shadow-sm shadow-brand/25"
-                                          : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
+                          {/* Dates */}
+                          <div className="min-h-[120px] border-t border-ink/10 pt-4">
+                            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                              Available Dates
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {h.dates.map((d, di) => {
+                                const dateActive = hotelActive && selectedDate === di;
+                                return (
+                                  <motion.button
+                                    key={d.short}
+                                    whileTap={{ scale: 0.95 }}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      selectDate(i, di);
+                                    }}
+                                    className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                      dateActive
+                                        ? "bg-brand text-white shadow-sm shadow-brand/25"
+                                        : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
+                                    }`}
+                                  >
+                                    <span>{d.short}</span>
+                                    <span
+                                      className={`ml-1.5 text-xs ${
+                                        dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
                                       }`}
                                     >
-                                      <span>{d.short}</span>
-                                      <span
-                                        className={`ml-1.5 text-xs ${
-                                          dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
-                                        }`}
-                                      >
-                                        · {d.note}
-                                      </span>
-                                    </motion.button>
-                                  );
-                                })}
-                              </div>
-                            </div>
-
-                            {/* Select button — mt-auto pins to bottom */}
-                            <div className="mt-auto pt-4">
-                              <motion.button
-                                whileTap={{ scale: 0.97 }}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  selectHotel(i);
-                                }}
-                                className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
-                                  hotelActive
-                                    ? "bg-brand text-white"
-                                    : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
-                                }`}
-                              >
-                                {hotelActive ? "Selected ✓" : "Select This Hotel"}
-                              </motion.button>
+                                      · {d.note}
+                                    </span>
+                                  </motion.button>
+                                );
+                              })}
                             </div>
                           </div>
-                        </motion.div>
-                      );
+
+                          {/* Select button */}
+                          <div className="mt-auto pt-4">
+                            <motion.button
+                              whileTap={{ scale: 0.97 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                selectHotel(i);
+                              }}
+                              className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                                hotelActive
+                                  ? "bg-brand text-white"
+                                  : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
+                              }`}
+                            >
+                              {hotelActive ? "Selected ✓" : "Select This Hotel"}
+                            </motion.button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
                   })}
                 </div>
               );
@@ -644,7 +727,7 @@ export default function ProposalPage() {
                     {dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}
                   </p>
                   <p className="w-[100px] text-right font-semibold text-ink">
-                    {dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * PROPOSAL.groupSize * 100) / 100) : "—"}
+                    {dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100) : "—"}
                   </p>
                 </div>
               </div>
@@ -657,7 +740,7 @@ export default function ProposalPage() {
                     {hotel ? fmt(hotel.busPerPerson) : "—"}
                   </p>
                   <p className="w-[100px] text-right font-semibold text-ink">
-                    {hotel ? fmt(Math.round(hotel.busPerPerson * PROPOSAL.groupSize * 100) / 100) : "—"}
+                    {hotel ? fmt(Math.round(hotel.busPerPerson * groupSize * 100) / 100) : "—"}
                   </p>
                 </div>
               </div>
@@ -673,7 +756,7 @@ export default function ProposalPage() {
                 <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
                   <p className="text-sm font-semibold text-ink">
                     Total Trip Cost
-                    <span className="ml-1 font-normal text-ink/50">({PROPOSAL.groupSize} people)</span>
+                    <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
                   </p>
                   <p className="font-heading text-2xl font-bold text-brand">
                     {dateOpt ? fmt(totalCost) : "—"}
@@ -753,7 +836,7 @@ export default function ProposalPage() {
 
           {/* Quote */}
           <p className="mx-auto max-w-2xl text-center text-xl italic leading-relaxed text-white sm:text-2xl">
-            &ldquo;Hey PIKE UCF, really excited to put this trip together for you. We have handled hundreds of trips like this and take a lot of pride in making sure everything goes perfectly. If you have any questions before signing, reach out directly.&rdquo;
+            &ldquo;{proposal.message ?? "If you have any questions before signing, reach out directly."}&rdquo;
           </p>
 
           {/* Divider */}
