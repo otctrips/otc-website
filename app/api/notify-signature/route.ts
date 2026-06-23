@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await resend.emails.send({
     from: "notifications@otctrips.com",
-    to: "tdaley4466@gmail.com",
+    to: "tdmvofficial@otctrips.com",
     subject: `New Trip Confirmation - ${groupName}`,
     html: `
       <h2>New Trip Confirmation</h2>
