@@ -966,6 +966,7 @@ export default function ProposalPage() {
                 <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
                   <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
                   <div className="flex h-[52px] flex-col justify-start gap-1 mt-1">
+                    {proposal.venue_stars != null && proposal.venue_distance && (
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-1.5">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
@@ -980,6 +981,7 @@ export default function ProposalPage() {
                         </>
                       )}
                     </div>
+                    )}
                     {proposal.venue_address && (
                       <p className="text-sm text-ink/50">{proposal.venue_address}</p>
                     )}
