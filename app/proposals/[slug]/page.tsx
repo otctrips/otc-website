@@ -47,6 +47,9 @@ type ProposalDB = {
   venue_address: string | null;
   venue_image_url: string | null;
   venue_inclusions: string | null;
+  event_date: string | null;
+  venue_stars: number | null;
+  venue_distance: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -645,6 +648,18 @@ export default function ProposalPage() {
                         </div>
                         <p className="text-sm text-ink/50">{hotels[0].address}</p>
                       </div>
+                      <ul className="mt-2 space-y-1">
+                        {proposal.event_date && (
+                          <li className="flex items-center gap-2 text-sm text-ink/70">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
+                            {proposal.event_date}
+                          </li>
+                        )}
+                        <li className="flex items-center gap-2 text-sm text-ink/70">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
+                          {proposal.nights} Night Stay
+                        </li>
+                      </ul>
                       <div className="mt-3 border-t border-ink/10 pt-3">
                         <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Hotel Cost</p>
                         <p className="font-heading text-3xl font-bold text-ink">
@@ -675,11 +690,27 @@ export default function ProposalPage() {
                       {proposal.venue_address && (
                         <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
                       )}
+                      {(proposal.venue_stars || proposal.venue_distance) && (
+                        <div className="flex items-center gap-3 mt-1">
+                          {proposal.venue_stars && (
+                            <div className="flex items-center gap-1.5">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                              </svg>
+                              <span className="text-sm font-semibold text-ink">{proposal.venue_stars} Stars</span>
+                            </div>
+                          )}
+                          {proposal.venue_stars && proposal.venue_distance && <span className="text-ink/25">·</span>}
+                          {proposal.venue_distance && (
+                            <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
+                          )}
+                        </div>
+                      )}
                       {proposal.venue_inclusions && (
                         <ul className="mt-3 space-y-1.5 border-t border-ink/10 pt-3">
                           {proposal.venue_inclusions.split(",").map((item) => (
                             <li key={item.trim()} className="flex items-start gap-2 text-sm text-ink/70">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0">
                                 <polyline points="20 6 9 17 4 12" />
                               </svg>
                               {item.trim()}
