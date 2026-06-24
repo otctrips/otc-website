@@ -299,7 +299,7 @@ export default function ProposalPage() {
           return new Date(`${m[1]}, ${m[2]}`).getTime();
         };
 
-        const busPerPerson = BUS_PER_CITY[h.city] ?? 0;
+        const busPerPerson = h.bus_cost_per_person != null ? h.bus_cost_per_person : (BUS_PER_CITY[h.city] ?? 0);
         const cadConversion = proposalData.currency === "CAD" ? 0.73 : 1;
         const dates: DateOption[] = (dateRows ?? [])
           .map((d) => {
