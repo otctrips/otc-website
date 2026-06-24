@@ -748,7 +748,7 @@ export default function ProposalPage() {
           </div>
 
           {/* Hotels grouped by destination */}
-          <div className={`mt-14 ${isLambdaChiTexas || DESTINATIONS.length === 1 ? "flex flex-col gap-14" : "grid gap-x-8 gap-y-14 sm:grid-cols-2"}`}>
+          <div className="mt-14 flex flex-col gap-14">
             {(isLambdaChiTexas ? [DESTINATIONS.join(" · ")] : DESTINATIONS).map((dest) => {
               const destHotels = isLambdaChiTexas
                 ? hotels.map((h, i) => ({ h, i }))
