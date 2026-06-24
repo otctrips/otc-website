@@ -43,6 +43,7 @@ type ProposalDB = {
   proposal_type: string | null;
   hotel_per_person: number | null;
   venue_per_person: number | null;
+  fixed_bus_per_person: number | null;
   venue_name: string | null;
   venue_address: string | null;
   venue_image_url: string | null;
@@ -369,8 +370,9 @@ export default function ProposalPage() {
 
     if (isFixed) {
       const hotelPP = proposal.hotel_per_person ?? 0;
+      const busPP = proposal.fixed_bus_per_person ?? 0;
       const venuePP = proposal.venue_per_person ?? 0;
-      const totalPerPerson = hotelPP + venuePP;
+      const totalPerPerson = hotelPP + busPP + (proposal.venue_per_person != null ? venuePP : 0);
       const totalCostFixed = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
       signaturePayload = {
         proposal_id: proposal.id,
@@ -378,7 +380,7 @@ export default function ProposalPage() {
         selected_hotel: hotels[0]?.name ?? "N/A",
         selected_dates: "Fixed package",
         hotel_per_person: hotelPP,
-        bus_per_person: 0,
+        bus_per_person: busPP,
         total_per_person: totalPerPerson,
         total_cost: totalCostFixed,
         full_name: fullName,
@@ -454,8 +456,9 @@ export default function ProposalPage() {
   const canConfirm = isFixed ? agreed : selectedHotel !== null && selectedDate !== null && agreed;
 
   const fixedHotelPP = proposal?.hotel_per_person ?? 0;
+  const fixedBusPP = proposal?.fixed_bus_per_person ?? 0;
   const fixedVenuePP = proposal?.venue_per_person ?? 0;
-  const fixedTotalPP = fixedHotelPP + fixedVenuePP;
+  const fixedTotalPP = fixedHotelPP + fixedBusPP + (proposal?.venue_per_person != null ? fixedVenuePP : 0);
   const fixedTotalCost = Math.round(fixedTotalPP * (proposal?.group_size ?? 0) * 100) / 100;
 
   // ── Loading ────────────────────────────────────────────────────────────────
@@ -988,9 +991,17 @@ export default function ProposalPage() {
                   <p className="text-sm font-medium text-ink">Hotel</p>
                   <p className="font-semibold text-ink">{fmt(fixedHotelPP)}</p>
                 </div>
+                {fixedBusPP > 0 && (
+                  <div className="flex items-center justify-between border-t border-ink/10 py-3">
+                    <p className="text-sm font-medium text-ink">Charter Bus</p>
+                    <p className="font-semibold text-ink">{fmt(fixedBusPP)}</p>
+                  </div>
+                )}
                 <div className="flex items-center justify-between border-t border-ink/10 py-3">
                   <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
-                  <p className="font-semibold text-ink">{fmt(fixedVenuePP)}</p>
+                  <p className="font-semibold text-ink">
+                    {proposal?.venue_per_person != null ? fmt(fixedVenuePP) : "TBD"}
+                  </p>
                 </div>
                 <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
                   <div className="flex items-center justify-between">
