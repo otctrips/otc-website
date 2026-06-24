@@ -649,16 +649,16 @@ export default function ProposalPage() {
                         <p className="text-sm text-ink/50">{hotels[0].address}</p>
                       </div>
                       <ul className="mt-2 space-y-1">
+                        <li className="flex items-center gap-2 text-sm text-ink/70">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
+                          {proposal.nights} Night Stay
+                        </li>
                         {proposal.event_date && (
                           <li className="flex items-center gap-2 text-sm text-ink/70">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
                             {proposal.event_date}
                           </li>
                         )}
-                        <li className="flex items-center gap-2 text-sm text-ink/70">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
-                          {proposal.nights} Night Stay
-                        </li>
                       </ul>
                       <div className="mt-3 border-t border-ink/10 pt-3">
                         <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Hotel Cost</p>
@@ -666,7 +666,6 @@ export default function ProposalPage() {
                           {fmt(proposal.hotel_per_person ?? 0)}
                           <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
                         </p>
-                        <p className="mt-0.5 text-sm text-ink/50">{proposal.nights} nights included</p>
                       </div>
                     </div>
                   </div>
@@ -687,9 +686,6 @@ export default function ProposalPage() {
                     )}
                     <div className="flex flex-col px-6 pb-6 pt-4">
                       <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
-                      {proposal.venue_address && (
-                        <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
-                      )}
                       {(proposal.venue_stars || proposal.venue_distance) && (
                         <div className="flex items-center gap-3 mt-1">
                           {proposal.venue_stars && (
@@ -705,6 +701,9 @@ export default function ProposalPage() {
                             <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
                           )}
                         </div>
+                      )}
+                      {proposal.venue_address && (
+                        <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
                       )}
                       {proposal.venue_inclusions && (
                         <ul className="mt-3 space-y-1.5 border-t border-ink/10 pt-3">
