@@ -714,8 +714,8 @@ export default function ProposalPage() {
                       {proposal.venue_inclusions && (
                         <ul className="mt-3 space-y-1.5 border-t border-ink/10 pt-3">
                           {proposal.venue_inclusions.split(",").map((item) => (
-                            <li key={item.trim()} className="flex items-start gap-2 text-sm text-ink/70">
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0">
+                            <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
                                 <polyline points="20 6 9 17 4 12" />
                               </svg>
                               {item.trim()}
