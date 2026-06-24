@@ -648,6 +648,7 @@ export default function ProposalPage() {
                         </div>
                         <p className="text-sm text-ink/50">{hotels[0].address}</p>
                       </div>
+                      <div className="mt-3 border-t border-ink/10" />
                       <ul className="mt-2 space-y-1">
                         <li className="flex items-center gap-2 text-sm text-ink/70">
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><polyline points="20 6 9 17 4 12" /></svg>
