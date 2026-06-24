@@ -450,6 +450,11 @@ export default function ProposalPage() {
   const isFixed = proposal?.proposal_type === "fixed";
   const canConfirm = isFixed ? agreed : selectedHotel !== null && selectedDate !== null && agreed;
 
+  const fixedHotelPP = proposal?.hotel_per_person ?? 0;
+  const fixedVenuePP = proposal?.venue_per_person ?? 0;
+  const fixedTotalPP = fixedHotelPP + fixedVenuePP;
+  const fixedTotalCost = Math.round(fixedTotalPP * (proposal?.group_size ?? 0) * 100) / 100;
+
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
@@ -943,44 +948,36 @@ export default function ProposalPage() {
           <div className="mx-auto mt-14 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
             {isFixed ? (
               /* ── Fixed summary ── */
-              (() => {
-                const hotelPP = proposal.hotel_per_person ?? 0;
-                const venuePP = proposal.venue_per_person ?? 0;
-                const totalPP = hotelPP + venuePP;
-                const totalFixed = Math.round(totalPP * groupSize * 100) / 100;
-                return (
-                  <div className="space-y-0">
-                    <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
-                      <span>Item</span>
-                      <span className="text-right">Per Person</span>
-                    </div>
-                    <div className="flex items-center justify-between border-t border-ink/10 py-3">
-                      <p className="text-sm font-medium text-ink">Hotel</p>
-                      <p className="font-semibold text-ink">{fmt(hotelPP)}</p>
-                    </div>
-                    <div className="flex items-center justify-between border-t border-ink/10 py-3">
-                      <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
-                      <p className="font-semibold text-ink">{fmt(venuePP)}</p>
-                    </div>
-                    <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-ink/65">Total Per Person</p>
-                        <p className="font-heading font-bold text-ink">{fmt(totalPP)}</p>
-                      </div>
-                      <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
-                        <p className="text-sm font-semibold text-ink">
-                          Total Trip Cost
-                          <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
-                        </p>
-                        <p className="font-heading text-2xl font-bold text-brand">{fmt(totalFixed)}</p>
-                      </div>
-                    </div>
-                    <p className="mt-4 text-xs italic leading-relaxed text-ink/40">
-                      A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
-                    </p>
+              <div className="space-y-0">
+                <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
+                  <span>Item</span>
+                  <span className="text-right">Per Person</span>
+                </div>
+                <div className="flex items-center justify-between border-t border-ink/10 py-3">
+                  <p className="text-sm font-medium text-ink">Hotel</p>
+                  <p className="font-semibold text-ink">{fmt(fixedHotelPP)}</p>
+                </div>
+                <div className="flex items-center justify-between border-t border-ink/10 py-3">
+                  <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
+                  <p className="font-semibold text-ink">{fmt(fixedVenuePP)}</p>
+                </div>
+                <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-ink/65">Total Per Person</p>
+                    <p className="font-heading font-bold text-ink">{fmt(fixedTotalPP)}</p>
                   </div>
-                );
-              })()
+                  <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
+                    <p className="text-sm font-semibold text-ink">
+                      Total Trip Cost
+                      <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
+                    </p>
+                    <p className="font-heading text-2xl font-bold text-brand">{fmt(fixedTotalCost)}</p>
+                  </div>
+                </div>
+                <p className="mt-4 text-xs italic leading-relaxed text-ink/40">
+                  A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
+                </p>
+              </div>
             ) : (
               <>
             {/* Hotel row */}
