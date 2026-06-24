@@ -1073,6 +1073,7 @@ export default function ProposalPage() {
               <p className="mt-4 text-xs italic leading-relaxed text-ink/40">
                 A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
               </p>
+            </div>
             </>
             )}
           </div>
