@@ -924,6 +924,81 @@ export default function ProposalPage() {
               );
             })}
           </div>
+
+          {/* Venue card */}
+          {proposal.venue_name && (
+            <div className="mt-14">
+              <div className="flex items-center gap-5 mb-6">
+                <p className="eyebrow">Venue &amp; Event</p>
+                <div className="flex-1 border-t border-ink/15" />
+              </div>
+              <div className="flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm sm:flex-row">
+                {/* Left: image */}
+                {proposal.venue_image_url ? (
+                  <div className="relative h-52 shrink-0 overflow-hidden sm:h-auto sm:w-80">
+                    <Image
+                      src={proposal.venue_image_url}
+                      alt={proposal.venue_name}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 320px"
+                      className="object-cover object-center"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-52 shrink-0 items-center justify-center bg-ink/5 sm:h-auto sm:w-80">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="text-ink/20">
+                      <rect x="3" y="3" width="18" height="18" rx="2" />
+                      <circle cx="8.5" cy="8.5" r="1.5" />
+                      <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                  </div>
+                )}
+                {/* Right: content */}
+                <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
+                  <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
+                  <div className="flex h-[52px] flex-col justify-start gap-1 mt-1">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                        </svg>
+                        <span className="text-sm font-semibold text-ink">4 Stars</span>
+                      </div>
+                      {proposal.venue_distance && (
+                        <>
+                          <span className="text-ink/25">·</span>
+                          <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
+                        </>
+                      )}
+                    </div>
+                    {proposal.venue_address && (
+                      <p className="text-sm text-ink/50">{proposal.venue_address}</p>
+                    )}
+                  </div>
+                  {proposal.venue_inclusions && (
+                    <ul className="mt-3 space-y-1.5 border-t border-ink/10 pt-3">
+                      {proposal.venue_inclusions.split(",").map((item) => (
+                        <li key={item.trim()} className="flex items-start gap-2 text-sm text-ink/70">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                          {item.trim()}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <div className="mt-auto border-t border-ink/10 pt-3">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Venue Cost</p>
+                    <p className="font-heading text-3xl font-bold text-ink">
+                      {proposal.venue_per_person !== null ? (
+                        <>{fmt(proposal.venue_per_person)}<span className="ml-0.5 text-base font-normal text-ink/50">/person</span></>
+                      ) : "TBD"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
           </div>
           )}
         </div>
