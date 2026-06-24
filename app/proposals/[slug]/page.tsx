@@ -1169,6 +1169,21 @@ export default function ProposalPage() {
               </div>
               )}
 
+              {/* Venue & Event line item */}
+              {proposal.venue_name && (
+              <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
+                <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
+                <div className="flex shrink-0 gap-4">
+                  <p className="w-[88px] text-right font-semibold text-ink">
+                    {proposal.venue_per_person !== null ? fmt(proposal.venue_per_person) : "TBD"}
+                  </p>
+                  <p className="w-[100px] text-right font-semibold text-ink">
+                    {proposal.venue_per_person !== null ? fmt(Math.round(proposal.venue_per_person * groupSize * 100) / 100) : "TBD"}
+                  </p>
+                </div>
+              </div>
+              )}
+
               {/* Totals */}
               <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
                 <div className="flex items-center justify-between">
