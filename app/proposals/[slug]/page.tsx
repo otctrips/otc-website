@@ -822,22 +822,22 @@ export default function ProposalPage() {
                             <p className="eyebrow mb-0.5">{h.destination}</p>
                           )}
                           <div className="flex items-start overflow-hidden mb-1">
-                            <h3 className="font-heading text-lg font-bold text-ink">{h.name}</h3>
+                            <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                           </div>
 
                           {/* Stars + distance + address */}
                           <div className="flex h-[52px] flex-col justify-start gap-1 overflow-hidden mt-0">
-                            <div className="flex items-center gap-3 whitespace-nowrap overflow-hidden">
+                            <div className="flex items-center gap-3">
                               <div className="flex items-center gap-1.5">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
                                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
-                                <span className="text-xs font-semibold text-ink">4 Stars</span>
+                                <span className="text-sm font-semibold text-ink">4 Stars</span>
                               </div>
                               <span className="text-ink/25">·</span>
-                              <span className="text-xs text-ink/60">{h.distance}</span>
+                              <span className="text-sm text-ink/60">{h.distance}</span>
                             </div>
-                            <p className="text-xs text-ink/50 truncate">{h.address}</p>
+                            <p className="text-sm text-ink/50">{h.address}</p>
                           </div>
 
                           {/* Price */}
