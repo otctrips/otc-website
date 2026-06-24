@@ -746,7 +746,7 @@ export default function ProposalPage() {
           </div>
 
           {/* Hotels grouped by destination */}
-          <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2">
+          <div className="mt-14 flex flex-col gap-14">
             {DESTINATIONS.map((dest) => {
               const destHotels = hotels
                 .map((h, i) => ({ h, i }))
@@ -763,6 +763,7 @@ export default function ProposalPage() {
                     <div className="flex-1 border-t border-ink/15" />
                   </div>
 
+                  <div className="grid gap-6 sm:grid-cols-2">
                   {destHotels.map(({ h, i }) => {
                     const hotelActive = selectedHotel === i;
                     const activeDateData =
@@ -851,7 +852,6 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Bus cost line */}
-                          {h.busPerPerson > 0 && (
                           <div className="flex items-center gap-1.5 pb-3">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                               <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -859,9 +859,12 @@ export default function ProposalPage() {
                               <path d="M9 18h5" />
                               <circle cx="16" cy="18" r="2" />
                             </svg>
-                            <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
+                            {h.busPerPerson > 0 ? (
+                              <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
+                            ) : (
+                              <span className="text-base text-ink/40">Charter Bus: +TBD/person</span>
+                            )}
                           </div>
-                          )}
 
                           {/* Dates */}
                           <div className="min-h-[120px] border-t border-ink/10 pt-4">
@@ -920,6 +923,7 @@ export default function ProposalPage() {
                       </motion.div>
                     );
                   })}
+                  </div>
                 </div>
               );
             })}
