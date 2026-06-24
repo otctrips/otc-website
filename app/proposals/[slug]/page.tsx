@@ -40,6 +40,13 @@ type ProposalDB = {
   tax_rate: number;
   message: string | null;
   currency: string | null;
+  proposal_type: string | null;
+  hotel_per_person: number | null;
+  venue_per_person: number | null;
+  venue_name: string | null;
+  venue_address: string | null;
+  venue_image_url: string | null;
+  venue_inclusions: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -349,39 +356,76 @@ export default function ProposalPage() {
   }
 
   async function handleConfirm() {
-    if (!canConfirm || !proposal || !hotel || !dateOpt) return;
+    if (!canConfirm || !proposal) return;
 
     const signedAt = new Date().toISOString();
-    const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
+    const isFixed = proposal.proposal_type === "fixed";
 
-    await supabase.from("signatures").insert({
-      proposal_id: proposal.id,
-      group_name: proposal.group_name,
-      selected_hotel: hotel.name,
-      selected_dates: dateOpt.range,
-      hotel_per_person: dateOpt.pricePerPerson,
-      bus_per_person: hotel.busPerPerson,
-      total_per_person: totalPerPerson,
-      total_cost: dateOpt.totalCost,
-      full_name: fullName,
-      signature: signature,
-      signed_at: signedAt,
-    });
+    let signaturePayload: Record<string, unknown>;
+    let emailPayload: Record<string, string>;
+
+    if (isFixed) {
+      const hotelPP = proposal.hotel_per_person ?? 0;
+      const venuePP = proposal.venue_per_person ?? 0;
+      const totalPerPerson = hotelPP + venuePP;
+      const totalCostFixed = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
+      signaturePayload = {
+        proposal_id: proposal.id,
+        group_name: proposal.group_name,
+        selected_hotel: hotels[0]?.name ?? "N/A",
+        selected_dates: "Fixed package",
+        hotel_per_person: hotelPP,
+        bus_per_person: 0,
+        total_per_person: totalPerPerson,
+        total_cost: totalCostFixed,
+        full_name: fullName,
+        signature: signature,
+        signed_at: signedAt,
+      };
+      emailPayload = {
+        groupName: proposal.group_name,
+        selectedHotel: hotels[0]?.name ?? "N/A",
+        selectedDates: "Fixed package",
+        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCostFixed),
+        fullName,
+        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+      };
+    } else {
+      if (!hotel || !dateOpt) return;
+      const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
+      signaturePayload = {
+        proposal_id: proposal.id,
+        group_name: proposal.group_name,
+        selected_hotel: hotel.name,
+        selected_dates: dateOpt.range,
+        hotel_per_person: dateOpt.pricePerPerson,
+        bus_per_person: hotel.busPerPerson,
+        total_per_person: totalPerPerson,
+        total_cost: dateOpt.totalCost,
+        full_name: fullName,
+        signature: signature,
+        signed_at: signedAt,
+      };
+      emailPayload = {
+        groupName: proposal.group_name,
+        selectedHotel: hotel.name,
+        selectedDates: dateOpt.range,
+        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
+        fullName,
+        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+      };
+    }
+
+    await supabase.from("signatures").insert(signaturePayload);
 
     console.log("[handleConfirm] calling /api/notify-signature");
     try {
       const res = await fetch("/api/notify-signature", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          groupName: proposal.group_name,
-          selectedHotel: hotel.name,
-          selectedDates: dateOpt.range,
-          totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
-          totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
-          fullName,
-          signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
-        }),
+        body: JSON.stringify(emailPayload),
       });
       const data = await res.json();
       console.log("[handleConfirm] notify-signature response:", res.status, data);
@@ -403,7 +447,8 @@ export default function ProposalPage() {
 
   const totalCost = dateOpt ? dateOpt.totalCost : 0;
 
-  const canConfirm = selectedHotel !== null && selectedDate !== null && agreed;
+  const isFixed = proposal?.proposal_type === "fixed";
+  const canConfirm = isFixed ? agreed : selectedHotel !== null && selectedDate !== null && agreed;
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
@@ -558,6 +603,99 @@ export default function ProposalPage() {
       {/* ════════════════════════ HOTELS ══════════════════════════════════════ */}
       <section className="bg-cream px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-site">
+          {isFixed ? (
+            /* ── Fixed proposal: hotel + venue side by side ── */
+            <div>
+              <div className="text-center">
+                <p className="eyebrow">What&apos;s Included</p>
+                <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
+                  Your Trip Package
+                </h2>
+              </div>
+              <div className="mt-14 grid gap-8 sm:grid-cols-2">
+                {/* Hotel card */}
+                {hotels[0] && (
+                  <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm">
+                    <div className="relative h-52 overflow-hidden">
+                      <Image
+                        src={hotels[0].image}
+                        alt={hotels[0].name}
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 50vw"
+                        className="object-cover object-bottom"
+                      />
+                    </div>
+                    <div className="flex flex-col px-6 pb-6 pt-4">
+                      <h3 className="font-heading text-xl font-bold text-ink">{hotels[0].name}</h3>
+                      <div className="flex h-[52px] flex-col justify-start gap-1 mt-1">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1.5">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            </svg>
+                            <span className="text-sm font-semibold text-ink">4 Stars</span>
+                          </div>
+                          <span className="text-ink/25">·</span>
+                          <span className="text-sm text-ink/60">{hotels[0].distance.split(" from ")[0]} from downtown</span>
+                        </div>
+                        <p className="text-sm text-ink/50">{hotels[0].address}</p>
+                      </div>
+                      <div className="mt-3 border-t border-ink/10 pt-3">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Hotel Cost</p>
+                        <p className="font-heading text-3xl font-bold text-ink">
+                          {fmt(proposal.hotel_per_person ?? 0)}
+                          <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                        </p>
+                        <p className="mt-0.5 text-sm text-ink/50">{proposal.nights} nights included</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {/* Venue card */}
+                {proposal.venue_name && (
+                  <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm">
+                    {proposal.venue_image_url && (
+                      <div className="relative h-52 overflow-hidden">
+                        <Image
+                          src={proposal.venue_image_url}
+                          alt={proposal.venue_name}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover object-center"
+                        />
+                      </div>
+                    )}
+                    <div className="flex flex-col px-6 pb-6 pt-4">
+                      <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
+                      {proposal.venue_address && (
+                        <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
+                      )}
+                      {proposal.venue_inclusions && (
+                        <ul className="mt-3 space-y-1.5 border-t border-ink/10 pt-3">
+                          {proposal.venue_inclusions.split(",").map((item) => (
+                            <li key={item.trim()} className="flex items-start gap-2 text-sm text-ink/70">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                              {item.trim()}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      <div className="mt-3 border-t border-ink/10 pt-3">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Venue Cost</p>
+                        <p className="font-heading text-3xl font-bold text-ink">
+                          {fmt(proposal.venue_per_person ?? 0)}
+                          <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+          <div>
           <div className="text-center">
             <p className="eyebrow">Step 1 of 2</p>
             <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
@@ -747,6 +885,8 @@ export default function ProposalPage() {
               );
             })}
           </div>
+          </div>
+          )}
         </div>
       </section>
 
@@ -793,12 +933,56 @@ export default function ProposalPage() {
             <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
               Your Trip Summary
             </h2>
-            <p className="mt-4 text-lg text-ink/60">
-              Updates as you make your selections above.
-            </p>
+            {!isFixed && (
+              <p className="mt-4 text-lg text-ink/60">
+                Updates as you make your selections above.
+              </p>
+            )}
           </div>
 
           <div className="mx-auto mt-14 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
+            {isFixed ? (
+              /* ── Fixed summary ── */
+              (() => {
+                const hotelPP = proposal.hotel_per_person ?? 0;
+                const venuePP = proposal.venue_per_person ?? 0;
+                const totalPP = hotelPP + venuePP;
+                const totalFixed = Math.round(totalPP * groupSize * 100) / 100;
+                return (
+                  <div className="space-y-0">
+                    <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
+                      <span>Item</span>
+                      <span className="text-right">Per Person</span>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-ink/10 py-3">
+                      <p className="text-sm font-medium text-ink">Hotel</p>
+                      <p className="font-semibold text-ink">{fmt(hotelPP)}</p>
+                    </div>
+                    <div className="flex items-center justify-between border-t border-ink/10 py-3">
+                      <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
+                      <p className="font-semibold text-ink">{fmt(venuePP)}</p>
+                    </div>
+                    <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-ink/65">Total Per Person</p>
+                        <p className="font-heading font-bold text-ink">{fmt(totalPP)}</p>
+                      </div>
+                      <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
+                        <p className="text-sm font-semibold text-ink">
+                          Total Trip Cost
+                          <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
+                        </p>
+                        <p className="font-heading text-2xl font-bold text-brand">{fmt(totalFixed)}</p>
+                      </div>
+                    </div>
+                    <p className="mt-4 text-xs italic leading-relaxed text-ink/40">
+                      A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
+                    </p>
+                  </div>
+                );
+              })()
+            ) : (
+              <>
             {/* Hotel row */}
             <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
               <div>
@@ -892,9 +1076,10 @@ export default function ProposalPage() {
               <p className="mt-4 text-xs italic leading-relaxed text-ink/40">
                 A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
               </p>
-            </div>
-
+            </>
+            )}
           </div>
+
         </div>
       </section>
 
@@ -1090,11 +1275,13 @@ export default function ProposalPage() {
                 exit={{ opacity: 0 }}
                 className="mb-5 text-center text-sm text-cream/35"
               >
-                {selectedHotel === null
-                  ? "Select a hotel and dates to continue"
-                  : selectedDate === null
-                    ? "Pick your dates inside the hotel card to continue"
-                    : "Agree to the contract terms to continue"}
+                {isFixed
+                  ? "Agree to the contract terms to continue"
+                  : selectedHotel === null
+                    ? "Select a hotel and dates to continue"
+                    : selectedDate === null
+                      ? "Pick your dates inside the hotel card to continue"
+                      : "Agree to the contract terms to continue"}
               </motion.p>
             )}
           </AnimatePresence>
