@@ -65,39 +65,12 @@ function shortDateLabel(range: string): string {
 }
 
 const INCLUSIONS = [
-  {
-    label: "Hotel Room Block",
-    sublabel: "Reserved exclusively for your group",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18z" />
-        <path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
-        <path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2" />
-        <path d="M10 6h4M10 10h4M10 14h4M10 18h4" />
-      </svg>
-    ),
-  },
-  {
-    label: "Charter Bus Transportation",
-    sublabel: "Door-to-door group transit",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
-        <circle cx="7" cy="18" r="2" />
-        <path d="M9 18h5" />
-        <circle cx="16" cy="18" r="2" />
-      </svg>
-    ),
-  },
-  {
-    label: "24/7 Trip Support",
-    sublabel: "A real person who answers at midnight",
-    icon: (
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.07 19.79 19.79 0 0 1 1.61 4.44 2 2 0 0 1 3.6 2.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
-      </svg>
-    ),
-  },
+  { label: "Hotel Room Block",          sublabel: "Reserved exclusively for your group",                              icon: "ti-building" },
+  { label: "Transportation",            sublabel: "Flights, charter buses, transfers, and everything in between",    icon: "ti-plane" },
+  { label: "On-Site Coordinator",       sublabel: "Your point of contact the entire trip",                          icon: "ti-user" },
+  { label: "Venue & Event Coordination",sublabel: "Sourcing and managing your event space",                         icon: "ti-calendar-event" },
+  { label: "24/7 Trip Support",         sublabel: "A real person available at any hour",                            icon: "ti-phone" },
+  { label: "And More",                  sublabel: "Every trip is custom built around your group's needs",           icon: "ti-plus" },
 ];
 
 const CONTRACT_TEXT = `TRIP SERVICES AGREEMENT
@@ -800,12 +773,15 @@ export default function ProposalPage() {
                 transition={{ duration: 0.5, delay: i * 0.08 }}
                 className="rounded-2xl border border-cream/10 bg-white/5 p-7"
               >
-                <div className="text-brand-light">{item.icon}</div>
+                <i className={`ti ${item.icon} text-3xl text-brand-light`} />
                 <h3 className="mt-4 font-heading text-lg font-bold text-white">{item.label}</h3>
                 <p className="mt-1.5 text-sm text-cream/50">{item.sublabel}</p>
               </motion.div>
             ))}
           </div>
+          <p className="mt-10 text-center text-sm italic text-cream/40">
+            Not all inclusions apply to every trip. Your proposal reflects the specific services arranged for your group.
+          </p>
         </div>
       </section>
 
