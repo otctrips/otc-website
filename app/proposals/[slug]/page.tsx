@@ -446,6 +446,8 @@ export default function ProposalPage() {
     return acc;
   }, []);
 
+  const isLambdaChiTexas = slug === "lambdachitexas";
+
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
   const dateOpt = hotel && selectedDate !== null ? hotel.dates[selectedDate] : null;
@@ -747,17 +749,17 @@ export default function ProposalPage() {
 
           {/* Hotels grouped by destination */}
           <div className="mt-14 flex flex-col gap-14">
-            {DESTINATIONS.map((dest) => {
-              const destHotels = hotels
-                .map((h, i) => ({ h, i }))
-                .filter(({ h }) => h.destination === dest);
+            {(isLambdaChiTexas ? [DESTINATIONS.join(" · ")] : DESTINATIONS).map((dest) => {
+              const destHotels = isLambdaChiTexas
+                ? hotels.map((h, i) => ({ h, i }))
+                : hotels.map((h, i) => ({ h, i })).filter(({ h }) => h.destination === dest);
 
               return (
                 <div key={dest} className="flex flex-col gap-6">
                   {/* Destination label */}
                   <div className="flex items-center gap-5">
                     <div className="shrink-0">
-                      <p className="eyebrow">Destination</p>
+                      <p className="eyebrow">{isLambdaChiTexas ? "Destinations" : "Destination"}</p>
                       <h3 className="mt-1 font-heading text-2xl font-bold text-ink">{dest}</h3>
                     </div>
                     <div className="flex-1 border-t border-ink/15" />
@@ -816,6 +818,9 @@ export default function ProposalPage() {
                         <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
 
                           {/* Hotel name */}
+                          {isLambdaChiTexas && (
+                            <p className="eyebrow mb-0.5">{h.destination}</p>
+                          )}
                           <div className="flex items-start overflow-hidden mb-1">
                             <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
                           </div>
