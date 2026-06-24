@@ -644,7 +644,7 @@ export default function ProposalPage() {
                             <span className="text-sm font-semibold text-ink">4 Stars</span>
                           </div>
                           <span className="text-ink/25">·</span>
-                          <span className="text-sm text-ink/60">{hotels[0].distance.split(" from ")[0]} from downtown</span>
+                          <span className="text-sm text-ink/60">{hotels[0].distance}</span>
                         </div>
                         <p className="text-sm text-ink/50">{hotels[0].address}</p>
                       </div>
@@ -826,7 +826,7 @@ export default function ProposalPage() {
                                 <span className="text-sm font-semibold text-ink">4 Stars</span>
                               </div>
                               <span className="text-ink/25">·</span>
-                              <span className="text-sm text-ink/60">{h.distance.split(" from ")[0]} from downtown</span>
+                              <span className="text-sm text-ink/60">{h.distance}</span>
                             </div>
                             <p className="text-sm text-ink/50">{h.address}</p>
                           </div>
