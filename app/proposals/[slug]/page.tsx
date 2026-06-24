@@ -1058,6 +1058,7 @@ export default function ProposalPage() {
                       </AnimatePresence>
                       <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
                         <h3 className="font-heading text-xl font-bold text-ink pr-10">{pkg.name}</h3>
+                        {pkg.inclusions && (
                         <ul className="mt-4 space-y-2">
                           {pkg.inclusions.split(",").map((item) => (
                             <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
@@ -1068,6 +1069,7 @@ export default function ProposalPage() {
                             </li>
                           ))}
                         </ul>
+                        )}
                         <div className="mt-6 border-t border-ink/10 pt-4">
                           <p className="font-heading text-3xl font-bold text-ink">
                             {fmt(pkg.pricePerPerson)}
