@@ -59,6 +59,9 @@ type ProposalDB = {
   event_date: string | null;
   venue_stars: number | null;
   venue_distance: string | null;
+  original_price_per_person: number | null;
+  discount_label: string | null;
+  payment_notes: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -1257,7 +1260,19 @@ export default function ProposalPage() {
                 <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-ink/65">Total Per Person</p>
-                    <p className="font-heading font-bold text-ink">{fmt(fixedTotalPP)}</p>
+                    <div className="text-right">
+                      {proposal.original_price_per_person != null && (
+                        <>
+                          <p className="text-sm line-through text-ink/40">{fmt(proposal.original_price_per_person)}/person</p>
+                          {proposal.discount_label && (
+                            <p className="text-xs text-ink/50">{proposal.discount_label}</p>
+                          )}
+                        </>
+                      )}
+                      <p className="font-heading font-bold text-ink">
+                        {fmt(fixedTotalPP)}{proposal.original_price_per_person != null ? "/person" : ""}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
                     <p className="text-sm font-semibold text-ink">
@@ -1267,9 +1282,11 @@ export default function ProposalPage() {
                     <p className="font-heading text-2xl font-bold text-brand">{fmt(fixedTotalCost)}</p>
                   </div>
                 </div>
-                <p className="mt-8 text-xs italic leading-relaxed text-ink/40">
-                  A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
-                </p>
+                {!proposal.payment_notes && (
+                  <p className="mt-8 text-xs italic leading-relaxed text-ink/40">
+                    A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
+                  </p>
+                )}
               </div>
             ) : isHybrid ? (
               /* ── Hybrid summary ── */
@@ -1479,6 +1496,17 @@ export default function ProposalPage() {
             </>
             )}
           </div>
+
+          {isFixed && proposal.payment_notes && (
+            <div className="mx-auto mt-6 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
+              <h3 className="font-heading text-xl font-bold text-ink">Payment Schedule</h3>
+              <div className="mt-4 space-y-3">
+                {proposal.payment_notes.split("\n\n").map((para, i) => (
+                  <p key={i} className="text-sm leading-relaxed text-ink/70 whitespace-pre-line">{para}</p>
+                ))}
+              </div>
+            </div>
+          )}
 
         </div>
       </section>
