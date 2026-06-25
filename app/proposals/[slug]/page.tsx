@@ -316,17 +316,20 @@ export default function ProposalPage() {
         const cadConversion = proposalData.currency === "CAD" ? 0.73 : 1;
         const dates: DateOption[] = (dateRows ?? [])
           .map((d) => {
-            const hotelTotal =
-              Math.round(
-                d.nightly_rate *
-                  cadConversion *
-                  (1 + proposalData.tax_rate) *
-                  proposalData.nights *
-                  proposalData.rooms *
-                  100
-              ) / 100;
-            const pricePerPerson =
-              Math.round((hotelTotal / proposalData.group_size + 20) * 100) / 100;
+            const pricePerPerson = d.override_price_per_person != null
+              ? d.override_price_per_person
+              : (() => {
+                  const hotelTotal =
+                    Math.round(
+                      d.nightly_rate *
+                        cadConversion *
+                        (1 + proposalData.tax_rate) *
+                        proposalData.nights *
+                        proposalData.rooms *
+                        100
+                    ) / 100;
+                  return Math.round((hotelTotal / proposalData.group_size + 20) * 100) / 100;
+                })();
             const totalCost =
               Math.round(
                 (pricePerPerson + busPerPerson) * proposalData.group_size * 100
