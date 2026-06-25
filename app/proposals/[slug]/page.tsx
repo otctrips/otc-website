@@ -51,6 +51,7 @@ type ProposalDB = {
   hotel_per_person: number | null;
   venue_per_person: number | null;
   fixed_bus_per_person: number | null;
+  bus_cost_per_person: number | null;
   venue_name: string | null;
   venue_address: string | null;
   venue_image_url: string | null;
@@ -308,7 +309,7 @@ export default function ProposalPage() {
           return new Date(`${m[1]}, ${m[2]}`).getTime();
         };
 
-        const busPerPerson = h.bus_cost_per_person != null ? h.bus_cost_per_person : (BUS_PER_CITY[h.city] ?? 0);
+        const busPerPerson = h.bus_cost_per_person != null ? h.bus_cost_per_person : (BUS_PER_CITY[h.city] ?? proposalData.bus_cost_per_person ?? 0);
         const cadConversion = proposalData.currency === "CAD" ? 0.73 : 1;
         const dates: DateOption[] = (dateRows ?? [])
           .map((d) => {
