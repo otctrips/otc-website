@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   description:
     "Fully custom group travel for fraternities, sororities, and college organizations. Flights included through our major carrier partnerships, one coordinator start to finish, no packages.",
   icons: {
-    icon: '/favicon.ico',
+    icon: '/favicon.png',
   },
   openGraph: {
     siteName: "OTC Trips",
