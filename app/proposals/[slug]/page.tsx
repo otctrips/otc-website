@@ -62,6 +62,7 @@ type ProposalDB = {
   original_price_per_person: number | null;
   discount_label: string | null;
   payment_notes: string | null;
+  has_bus: boolean | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -918,6 +919,7 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Bus cost line */}
+                          {proposal?.has_bus && (
                           <div className="flex items-center gap-1.5 pb-3">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                               <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -927,6 +929,7 @@ export default function ProposalPage() {
                             </svg>
                             <span className="text-base text-ink/70">Charter Bus: +{h.busPerPerson > 0 ? fmt(h.busPerPerson) : "TBD"}/person</span>
                           </div>
+                          )}
 
                           {/* Dates */}
                           <div className="min-h-[120px] border-t border-ink/10 pt-4">
