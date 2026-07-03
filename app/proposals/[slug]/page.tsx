@@ -66,13 +66,6 @@ type ProposalDB = {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const BUS_PER_CITY: Record<string, number> = {
-  Nashville: 155.55,
-  Savannah: 88.59,
-  Miami: 75.00,
-  Austin: 65.00,
-};
-
 const CITY_TO_DESTINATION: Record<string, string> = {
   Nashville: "Nashville, TN",
   Savannah: "Savannah, GA",
@@ -312,7 +305,7 @@ export default function ProposalPage() {
           return new Date(`${m[1]}, ${m[2]}`).getTime();
         };
 
-        const busPerPerson = h.bus_cost_per_person != null ? h.bus_cost_per_person : (BUS_PER_CITY[h.city] ?? proposalData.bus_cost_per_person ?? 0);
+        const busPerPerson = h.bus_cost_per_person != null ? h.bus_cost_per_person : (proposalData.bus_cost_per_person ?? 0);
         const cadConversion = proposalData.currency === "CAD" ? 0.73 : 1;
         const dates: DateOption[] = (dateRows ?? [])
           .map((d) => {
@@ -925,7 +918,6 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Bus cost line */}
-                          {h.busPerPerson > 0 && (
                           <div className="flex items-center gap-1.5 pb-3">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                               <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -933,9 +925,8 @@ export default function ProposalPage() {
                               <path d="M9 18h5" />
                               <circle cx="16" cy="18" r="2" />
                             </svg>
-                            <span className="text-base text-ink/70">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
+                            <span className="text-base text-ink/70">Charter Bus: +{h.busPerPerson > 0 ? fmt(h.busPerPerson) : "TBD"}/person</span>
                           </div>
-                          )}
 
                           {/* Dates */}
                           <div className="min-h-[120px] border-t border-ink/10 pt-4">
