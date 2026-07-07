@@ -21,6 +21,7 @@ type DateOption = {
 type Hotel = {
   name: string;
   destination: string;
+  city: string;
   image: string;
   stars: number;
   address: string;
@@ -48,6 +49,7 @@ type ProposalDB = {
   message: string | null;
   currency: string | null;
   proposal_type: string | null;
+  venue_city: string | null;
   hotel_per_person: number | null;
   venue_per_person: number | null;
   fixed_bus_per_person: number | null;
@@ -342,6 +344,7 @@ export default function ProposalPage() {
         built.push({
           name: h.name,
           destination: CITY_TO_DESTINATION[h.city] ?? h.city,
+          city: h.city,
           image: h.image_url,
           stars: h.stars,
           address: h.address,
@@ -513,6 +516,7 @@ export default function ProposalPage() {
   const isFixed = proposal?.proposal_type === "fixed";
   const isHybrid = proposal?.proposal_type === "hybrid";
   const selectedPkg = selectedPackage !== null ? venuePackages[selectedPackage] : null;
+  const showVenuePackages = !hotel || !proposal?.venue_city || hotel.city === proposal.venue_city;
   const canConfirm = isFixed
     ? agreed
     : isHybrid
@@ -1002,99 +1006,110 @@ export default function ProposalPage() {
                 <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">Choose Your Venue Package</h2>
                 <p className="mt-4 text-lg text-ink/60">Select the package that fits your group.</p>
               </div>
-              {proposal.venue_name && (
-                <div className="mt-10 flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm sm:flex-row">
-                  {proposal.venue_image_url ? (
-                    <div className="relative h-48 shrink-0 overflow-hidden sm:h-auto sm:w-64">
-                      <Image src={proposal.venue_image_url} alt={proposal.venue_name} fill sizes="(max-width: 640px) 100vw, 256px" className="object-cover object-center" />
-                    </div>
-                  ) : null}
-                  <div className="flex flex-col justify-center px-6 py-5">
-                    <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
-                    {proposal.venue_stars != null && proposal.venue_distance && (
-                      <div className="mt-1 flex items-center gap-3">
-                        <div className="flex items-center gap-1.5">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
-                          <span className="text-sm font-semibold text-ink">{proposal.venue_stars} Stars</span>
+              {showVenuePackages ? (
+                <>
+                  {proposal.venue_name && (
+                    <div className="mt-10 flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm sm:flex-row">
+                      {proposal.venue_image_url ? (
+                        <div className="relative h-48 shrink-0 overflow-hidden sm:h-auto sm:w-64">
+                          <Image src={proposal.venue_image_url} alt={proposal.venue_name} fill sizes="(max-width: 640px) 100vw, 256px" className="object-cover object-center" />
                         </div>
-                        <span className="text-ink/25">·</span>
-                        <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
+                      ) : null}
+                      <div className="flex flex-col justify-center px-6 py-5">
+                        <h3 className="font-heading text-xl font-bold text-ink">{proposal.venue_name}</h3>
+                        {proposal.venue_stars != null && proposal.venue_distance && (
+                          <div className="mt-1 flex items-center gap-3">
+                            <div className="flex items-center gap-1.5">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                              <span className="text-sm font-semibold text-ink">{proposal.venue_stars} Stars</span>
+                            </div>
+                            <span className="text-ink/25">·</span>
+                            <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
+                          </div>
+                        )}
+                        {proposal.venue_address && (
+                          <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
+                        )}
                       </div>
-                    )}
-                    {proposal.venue_address && (
-                      <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
-                    )}
+                    </div>
+                  )}
+                  <div className="mt-8 grid gap-6 sm:grid-cols-2">
+                    {venuePackages.map((pkg, pi) => {
+                      const pkgActive = selectedPackage === pi;
+                      return (
+                        <motion.div
+                          key={pkg.id}
+                          initial={{ opacity: 0, y: 32 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true, margin: "-60px" }}
+                          transition={{ duration: 0.5, delay: pi * 0.1 }}
+                          onClick={() => setSelectedPackage(pi)}
+                          className={`relative flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                            pkgActive
+                              ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
+                              : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
+                          }`}
+                        >
+                          <AnimatePresence>
+                            {pkgActive && (
+                              <motion.div
+                                initial={{ scale: 0.5, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.5, opacity: 0 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
+                              >
+                                <Check white />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                          <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
+                            <h3 className="font-heading text-xl font-bold text-ink pr-10">{pkg.name}</h3>
+                            {pkg.inclusions && (
+                            <ul className="mt-4 space-y-2">
+                              {pkg.inclusions.split(",").map((item) => (
+                                <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                    <polyline points="20 6 9 17 4 12" />
+                                  </svg>
+                                  {item.trim()}
+                                </li>
+                              ))}
+                            </ul>
+                            )}
+                            <div className="mt-6 border-t border-ink/10 pt-4">
+                              <p className="font-heading text-3xl font-bold text-ink">
+                                {fmt(pkg.pricePerPerson)}
+                                <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                              </p>
+                            </div>
+                            <div className="mt-4">
+                              <motion.button
+                                whileTap={{ scale: 0.97 }}
+                                onClick={(e) => { e.stopPropagation(); setSelectedPackage(pi); }}
+                                className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                                  pkgActive
+                                    ? "bg-brand text-white"
+                                    : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
+                                }`}
+                              >
+                                {pkgActive ? "Selected ✓" : "Select This Package"}
+                              </motion.button>
+                            </div>
+                          </div>
+                        </motion.div>
+                      );
+                    })}
                   </div>
+                </>
+              ) : (
+                <div className="mt-10 flex flex-col items-center justify-center rounded-2xl bg-white px-6 py-16 text-center ring-1 ring-ink/8 shadow-sm">
+                  <h3 className="font-heading text-2xl font-bold text-ink">Venue TBD</h3>
+                  <p className="mt-3 max-w-md text-sm text-ink/60">
+                    Venue packages aren&apos;t available for {hotel?.destination ?? "this destination"}. We&apos;ll follow up with venue options once confirmed.
+                  </p>
                 </div>
               )}
-              <div className="mt-8 grid gap-6 sm:grid-cols-2">
-                {venuePackages.map((pkg, pi) => {
-                  const pkgActive = selectedPackage === pi;
-                  return (
-                    <motion.div
-                      key={pkg.id}
-                      initial={{ opacity: 0, y: 32 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true, margin: "-60px" }}
-                      transition={{ duration: 0.5, delay: pi * 0.1 }}
-                      onClick={() => setSelectedPackage(pi)}
-                      className={`relative flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
-                        pkgActive
-                          ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
-                          : "ring-1 ring-ink/8 hover:shadow-md hover:-translate-y-0.5"
-                      }`}
-                    >
-                      <AnimatePresence>
-                        {pkgActive && (
-                          <motion.div
-                            initial={{ scale: 0.5, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.5, opacity: 0 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                            className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
-                          >
-                            <Check white />
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                      <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
-                        <h3 className="font-heading text-xl font-bold text-ink pr-10">{pkg.name}</h3>
-                        {pkg.inclusions && (
-                        <ul className="mt-4 space-y-2">
-                          {pkg.inclusions.split(",").map((item) => (
-                            <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
-                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                              {item.trim()}
-                            </li>
-                          ))}
-                        </ul>
-                        )}
-                        <div className="mt-6 border-t border-ink/10 pt-4">
-                          <p className="font-heading text-3xl font-bold text-ink">
-                            {fmt(pkg.pricePerPerson)}
-                            <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
-                          </p>
-                        </div>
-                        <div className="mt-4">
-                          <motion.button
-                            whileTap={{ scale: 0.97 }}
-                            onClick={(e) => { e.stopPropagation(); setSelectedPackage(pi); }}
-                            className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
-                              pkgActive
-                                ? "bg-brand text-white"
-                                : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
-                            }`}
-                          >
-                            {pkgActive ? "Selected ✓" : "Select This Package"}
-                          </motion.button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
             </div>
           )}
 
