@@ -65,6 +65,14 @@ type ProposalDB = {
   discount_label: string | null;
   payment_notes: string | null;
   has_bus: boolean | null;
+  cruise_name: string | null;
+  cruise_ship: string | null;
+  cruise_sail_date: string | null;
+  cruise_departs: string | null;
+  cruise_ports: string | null;
+  cruise_price_per_person: number | null;
+  cruise_inclusions: string | null;
+  cruise_exclusions: string | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -244,6 +252,7 @@ export default function ProposalPage() {
 
   const [selectedHotel, setSelectedHotel] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
+  const [selectedCruise, setSelectedCruise] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [fullName, setFullName] = useState("");
   const [signature, setSignature] = useState("");
@@ -382,11 +391,19 @@ export default function ProposalPage() {
       setSelectedHotel(idx);
       setSelectedDate(null);
     }
+    setSelectedCruise(false);
   }
 
   function selectDate(hotelIdx: number, dateIdx: number) {
     if (selectedHotel !== hotelIdx) setSelectedHotel(hotelIdx);
     setSelectedDate(dateIdx);
+    setSelectedCruise(false);
+  }
+
+  function selectCruise() {
+    setSelectedCruise(true);
+    setSelectedHotel(null);
+    setSelectedDate(null);
   }
 
   async function handleConfirm() {
@@ -423,6 +440,32 @@ export default function ProposalPage() {
         selectedDates: "Fixed package",
         totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
         totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCostFixed),
+        fullName,
+        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+      };
+    } else if (isHybrid && selectedCruise) {
+      const cruisePP = proposal.cruise_price_per_person ?? 0;
+      const totalCostCruise = Math.round(cruisePP * proposal.group_size * 100) / 100;
+      const cruiseLabel = `${proposal.cruise_name} (${proposal.cruise_ship})`;
+      signaturePayload = {
+        proposal_id: proposal.id,
+        group_name: proposal.group_name,
+        selected_hotel: cruiseLabel,
+        selected_dates: proposal.cruise_sail_date ?? "N/A",
+        hotel_per_person: cruisePP,
+        bus_per_person: 0,
+        total_per_person: cruisePP,
+        total_cost: totalCostCruise,
+        full_name: fullName,
+        signature: signature,
+        signed_at: signedAt,
+      };
+      emailPayload = {
+        groupName: proposal.group_name,
+        selectedHotel: cruiseLabel,
+        selectedDates: proposal.cruise_sail_date ?? "N/A",
+        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(cruisePP),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCostCruise),
         fullName,
         signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
       };
@@ -520,7 +563,9 @@ export default function ProposalPage() {
   const canConfirm = isFixed
     ? agreed
     : isHybrid
-      ? selectedHotel !== null && selectedDate !== null && selectedPackage !== null && agreed
+      ? selectedCruise
+        ? agreed
+        : selectedHotel !== null && selectedDate !== null && selectedPackage !== null && agreed
       : selectedHotel !== null && selectedDate !== null && agreed;
 
   const fixedHotelPP = proposal?.hotel_per_person ?? 0;
@@ -999,7 +1044,7 @@ export default function ProposalPage() {
           </div>
 
           {/* Venue packages (hybrid only) */}
-          {isHybrid && (
+          {isHybrid && !selectedCruise && (
             <div className="mt-14">
               <div className="text-center">
                 <p className="eyebrow">Step 2 of 3</p>
@@ -1110,6 +1155,130 @@ export default function ProposalPage() {
                   </p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Cruise option (hybrid only) */}
+          {isHybrid && proposal.cruise_name && (
+            <div className="mt-20">
+              <div className="relative py-6 text-center">
+                <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                  <div className="h-px w-full bg-ink/15" />
+                </div>
+                <div className="relative inline-block bg-cream px-6">
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-ink/40">
+                    Or Set Sail Instead
+                  </p>
+                </div>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5 }}
+                className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 sm:flex-row ${
+                  selectedCruise
+                    ? "ring-2 ring-brand shadow-xl shadow-brand/15"
+                    : "ring-1 ring-ink/8 hover:shadow-md"
+                }`}
+              >
+                <AnimatePresence>
+                  {selectedCruise && (
+                    <motion.div
+                      initial={{ scale: 0.5, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0.5, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
+                    >
+                      <Check white />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <div className="relative h-56 shrink-0 overflow-hidden sm:h-auto sm:w-96">
+                  <Image
+                    src="https://images.unsplash.com/photo-1548032885-b5e38734688a?w=800"
+                    alt={proposal.cruise_name}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 384px"
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col px-6 pb-6 pt-5 sm:px-8 sm:py-6">
+                  <h3 className="font-heading text-2xl font-bold text-ink">
+                    {proposal.cruise_name}
+                    {proposal.cruise_ship && (
+                      <span className="text-ink/50"> — {proposal.cruise_ship}</span>
+                    )}
+                  </h3>
+
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-ink/60">
+                    {proposal.cruise_sail_date && <span>Sail Date: {proposal.cruise_sail_date}</span>}
+                    {proposal.cruise_departs && (
+                      <>
+                        <span className="text-ink/25">·</span>
+                        <span>Departs/Returns: {proposal.cruise_departs}</span>
+                      </>
+                    )}
+                  </div>
+
+                  {proposal.cruise_ports && (
+                    <div className="mt-3 border-t border-ink/10 pt-3">
+                      <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Ports of Call</p>
+                      <ul className="space-y-1">
+                        {proposal.cruise_ports.split(",").map((port) => (
+                          <li key={port.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                            <span className="h-1 w-1 shrink-0 rounded-full bg-ink/40" />
+                            {port.trim()}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {proposal.cruise_inclusions && (
+                    <div className="mt-3 border-t border-ink/10 pt-3">
+                      <ul className="space-y-1.5">
+                        {proposal.cruise_inclusions.split(",").map((item) => (
+                          <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                            {item.trim()}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {proposal.cruise_exclusions && (
+                    <p className="mt-3 text-xs italic text-ink/40">
+                      Does not include: {proposal.cruise_exclusions}
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex flex-1 items-end justify-between gap-6 border-t border-ink/10 pt-4">
+                    <p className="font-heading text-3xl font-bold text-ink">
+                      {fmt(proposal.cruise_price_per_person ?? 0)}
+                      <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                    </p>
+                    <motion.button
+                      whileTap={{ scale: 0.97 }}
+                      onClick={selectCruise}
+                      className={`shrink-0 rounded-full px-8 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                        selectedCruise
+                          ? "bg-brand text-white"
+                          : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
+                      }`}
+                    >
+                      {selectedCruise ? "Selected ✓" : "Select This Option"}
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
             </div>
           )}
 
@@ -1302,6 +1471,65 @@ export default function ProposalPage() {
               </div>
             ) : isHybrid ? (
               /* ── Hybrid summary ── */
+              selectedCruise ? (
+              <>
+            {/* Cruise row */}
+            <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Cruise</p>
+                <p className="mt-1 font-heading text-lg font-bold text-ink">
+                  {proposal.cruise_name}{proposal.cruise_ship ? ` — ${proposal.cruise_ship}` : ""}
+                </p>
+              </div>
+              <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">Selected</span>
+            </div>
+            {/* Sail date row */}
+            <div className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Sail Date</p>
+                <p className="mt-1 font-heading text-lg font-bold text-ink">
+                  {proposal.cruise_sail_date ?? "—"}
+                </p>
+              </div>
+            </div>
+            {/* Cost breakdown */}
+            <div className="py-5">
+              <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
+                <span>Item</span>
+                <div className="flex shrink-0 gap-4">
+                  <span className="w-[88px] text-right">Per Person</span>
+                  <span className="w-[100px] text-right">Total</span>
+                </div>
+              </div>
+              <div className="flex items-start justify-between gap-3 border-t border-ink/10 py-3">
+                <div>
+                  <p className="text-sm font-medium text-ink">Cruise</p>
+                  <p className="mt-0.5 text-xs text-ink/45">{proposal.cruise_name}</p>
+                </div>
+                <div className="flex shrink-0 gap-4">
+                  <p className="w-[88px] text-right font-semibold text-ink">{fmt(proposal.cruise_price_per_person ?? 0)}</p>
+                  <p className="w-[100px] text-right font-semibold text-ink">{fmt(Math.round((proposal.cruise_price_per_person ?? 0) * groupSize * 100) / 100)}</p>
+                </div>
+              </div>
+              <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-ink/65">Total Per Person</p>
+                  <p className="font-heading font-bold text-ink">{fmt(proposal.cruise_price_per_person ?? 0)}</p>
+                </div>
+                <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
+                  <p className="text-sm font-semibold text-ink">
+                    Total Trip Cost
+                    <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
+                  </p>
+                  <p className="font-heading text-2xl font-bold text-brand">{fmt(Math.round((proposal.cruise_price_per_person ?? 0) * groupSize * 100) / 100)}</p>
+                </div>
+              </div>
+              <p className="mt-6 text-xs italic leading-relaxed text-ink/40">
+                A deposit is required upon signing to secure your cabin block and sail date. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
+              </p>
+            </div>
+            </>
+              ) : (
               <>
             {/* Hotel row */}
             <div className="flex items-start justify-between gap-4 border-b border-ink/10 pb-5">
@@ -1394,6 +1622,7 @@ export default function ProposalPage() {
               </p>
             </div>
             </>
+              )
             ) : (
               <>
             {/* Hotel row */}
@@ -1717,13 +1946,15 @@ export default function ProposalPage() {
               >
                 {isFixed
                   ? "Agree to the contract terms to continue"
-                  : selectedHotel === null
-                    ? "Select a hotel and dates to continue"
-                    : selectedDate === null
-                      ? "Pick your dates inside the hotel card to continue"
-                      : isHybrid && selectedPackage === null
-                        ? "Select a venue package to continue"
-                        : "Agree to the contract terms to continue"}
+                  : isHybrid && selectedCruise
+                    ? "Agree to the contract terms to continue"
+                    : selectedHotel === null
+                      ? "Select a hotel and dates to continue"
+                      : selectedDate === null
+                        ? "Pick your dates inside the hotel card to continue"
+                        : isHybrid && selectedPackage === null
+                          ? "Select a venue package to continue"
+                          : "Agree to the contract terms to continue"}
               </motion.p>
             )}
           </AnimatePresence>
