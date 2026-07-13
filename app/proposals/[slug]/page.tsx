@@ -35,6 +35,7 @@ type VenuePackage = {
   name: string;
   inclusions: string;
   pricePerPerson: number;
+  isIncluded: boolean;
 };
 
 type ProposalDB = {
@@ -377,6 +378,7 @@ export default function ProposalPage() {
             name: p.name,
             inclusions: p.inclusions,
             pricePerPerson: p.price_per_person,
+            isIncluded: p.is_included ?? false,
           }))
         );
       }
@@ -471,9 +473,15 @@ export default function ProposalPage() {
       };
     } else if (isHybrid) {
       if (!hotel || !dateOpt) return;
-      if (!hasFixedHybridVenue && !selectedPkg) return;
-      const venuePP = hasFixedHybridVenue ? (proposal.venue_per_person ?? 0) : (selectedPkg?.pricePerPerson ?? 0);
-      const venueLabel = hasFixedHybridVenue ? (proposal.venue_name ?? "Venue") : (selectedPkg?.name ?? "Venue");
+      if (!venueSelectionSatisfied) return;
+      const baseVenuePP = hasFixedHybridVenue ? (proposal.venue_per_person ?? 0) : includedVenuePackagesTotalPP;
+      const venuePP = baseVenuePP + (selectedPkg ? selectedPkg.pricePerPerson : 0);
+      const venueLabelParts = [
+        ...(hasFixedHybridVenue && proposal.venue_name ? [proposal.venue_name] : []),
+        ...includedVenuePackages.map(({ pkg }) => pkg.name),
+        ...(selectedPkg ? [selectedPkg.name] : []),
+      ];
+      const venueLabel = venueLabelParts.length > 0 ? venueLabelParts.join(" + ") : "Venue";
       const totalPerPerson = Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100;
       const totalCostHybrid = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
       signaturePayload = {
@@ -564,12 +572,21 @@ export default function ProposalPage() {
   const selectedPkg = selectedPackage !== null ? venuePackages[selectedPackage] : null;
   const showVenuePackages = !hotel || !proposal?.venue_city || hotel.city === proposal.venue_city;
   const hasFixedHybridVenue = isHybrid && venuePackages.length === 0 && proposal?.venue_per_person != null;
+  const includedVenuePackages = venuePackages
+    .map((p, i) => ({ pkg: p, idx: i }))
+    .filter(({ pkg }) => pkg.isIncluded);
+  const selectableVenuePackages = venuePackages
+    .map((p, i) => ({ pkg: p, idx: i }))
+    .filter(({ pkg }) => !pkg.isIncluded);
+  const hasSelectableVenuePackages = selectableVenuePackages.length > 0;
+  const includedVenuePackagesTotalPP = includedVenuePackages.reduce((sum, { pkg }) => sum + pkg.pricePerPerson, 0);
+  const venueSelectionSatisfied = hasFixedHybridVenue || !hasSelectableVenuePackages || selectedPackage !== null;
   const canConfirm = isFixed
     ? agreed
     : isHybrid
       ? selectedCruise
         ? agreed
-        : selectedHotel !== null && selectedDate !== null && (hasFixedHybridVenue || selectedPackage !== null) && agreed
+        : selectedHotel !== null && selectedDate !== null && venueSelectionSatisfied && agreed
       : selectedHotel !== null && selectedDate !== null && agreed;
 
   const fixedHotelPP = proposal?.hotel_per_person ?? 0;
@@ -1154,16 +1171,51 @@ export default function ProposalPage() {
                     </div>
                   )}
                   <div className="mt-8 grid gap-6 sm:grid-cols-2">
-                    {venuePackages.map((pkg, pi) => {
-                      const pkgActive = selectedPackage === pi;
+                    {includedVenuePackages.map(({ pkg }) => (
+                      <motion.div
+                        key={pkg.id}
+                        initial={{ opacity: 0, y: 32 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-60px" }}
+                        transition={{ duration: 0.5 }}
+                        className="relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-brand shadow-xl shadow-brand/15"
+                      >
+                        <span className="absolute right-4 top-4 z-10 rounded-full bg-brand px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white">
+                          Included
+                        </span>
+                        <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
+                          <h3 className="font-heading text-xl font-bold text-ink pr-20">{pkg.name}</h3>
+                          {pkg.inclusions && (
+                          <ul className="mt-4 space-y-2">
+                            {pkg.inclusions.split(",").map((item) => (
+                              <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                {item.trim()}
+                              </li>
+                            ))}
+                          </ul>
+                          )}
+                          <div className="mt-6 border-t border-ink/10 pt-4">
+                            <p className="font-heading text-3xl font-bold text-ink">
+                              {fmt(pkg.pricePerPerson)}
+                              <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {selectableVenuePackages.map(({ pkg, idx }) => {
+                      const pkgActive = selectedPackage === idx;
                       return (
                         <motion.div
                           key={pkg.id}
                           initial={{ opacity: 0, y: 32 }}
                           whileInView={{ opacity: 1, y: 0 }}
                           viewport={{ once: true, margin: "-60px" }}
-                          transition={{ duration: 0.5, delay: pi * 0.1 }}
-                          onClick={() => setSelectedPackage(pi)}
+                          transition={{ duration: 0.5 }}
+                          onClick={() => setSelectedPackage(idx)}
                           className={`relative flex cursor-pointer flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
                             pkgActive
                               ? "ring-2 ring-brand shadow-xl shadow-brand/15 -translate-y-1"
@@ -1206,7 +1258,7 @@ export default function ProposalPage() {
                             <div className="mt-4">
                               <motion.button
                                 whileTap={{ scale: 0.97 }}
-                                onClick={(e) => { e.stopPropagation(); setSelectedPackage(pi); }}
+                                onClick={(e) => { e.stopPropagation(); setSelectedPackage(idx); }}
                                 className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
                                   pkgActive
                                     ? "bg-brand text-white"
@@ -1627,18 +1679,36 @@ export default function ProposalPage() {
               </div>
               {dateOpt && <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">{dateOpt.nights} nights</span>}
             </div>
-            {/* Venue row */}
-            <div className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">
-                  {hasFixedHybridVenue ? "Venue" : "Venue Package"}
-                </p>
-                <p className={`mt-1 font-heading text-lg font-bold transition-colors ${hasFixedHybridVenue || selectedPkg ? "text-ink" : "text-ink/25"}`}>
-                  {hasFixedHybridVenue ? (proposal.venue_name ?? "—") : selectedPkg ? selectedPkg.name : "—"}
-                </p>
+            {/* Venue row(s) */}
+            {hasFixedHybridVenue && (
+              <div className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Venue</p>
+                  <p className="mt-1 font-heading text-lg font-bold text-ink">{proposal.venue_name ?? "—"}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">Included</span>
               </div>
-              {(hasFixedHybridVenue || selectedPkg) && <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">{hasFixedHybridVenue ? "Included" : "Selected"}</span>}
-            </div>
+            )}
+            {includedVenuePackages.map(({ pkg }) => (
+              <div key={pkg.id} className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Venue</p>
+                  <p className="mt-1 font-heading text-lg font-bold text-ink">{pkg.name}</p>
+                </div>
+                <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">Included</span>
+              </div>
+            ))}
+            {hasSelectableVenuePackages && (
+              <div className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Venue Package</p>
+                  <p className={`mt-1 font-heading text-lg font-bold transition-colors ${selectedPkg ? "text-ink" : "text-ink/25"}`}>
+                    {selectedPkg ? selectedPkg.name : "—"}
+                  </p>
+                </div>
+                {selectedPkg && <span className="shrink-0 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">Selected</span>}
+              </div>
+            )}
             {/* Cost breakdown */}
             <div className="py-5">
               <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
@@ -1667,20 +1737,38 @@ export default function ProposalPage() {
                   </div>
                 </div>
               )}
-              {(() => {
-                const venuePP = hasFixedHybridVenue ? proposal.venue_per_person : (selectedPkg ? selectedPkg.pricePerPerson : null);
-                return (
-                  <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
-                    <p className="text-sm font-medium text-ink">{hasFixedHybridVenue ? "Venue" : "Venue Package"}</p>
-                    <div className="flex shrink-0 gap-4">
-                      <p className="w-[88px] text-right font-semibold text-ink">{venuePP != null ? fmt(venuePP) : "—"}</p>
-                      <p className="w-[100px] text-right font-semibold text-ink">{venuePP != null ? fmt(Math.round(venuePP * groupSize * 100) / 100) : "—"}</p>
-                    </div>
+              {hasFixedHybridVenue && (
+                <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
+                  <p className="text-sm font-medium text-ink">Venue</p>
+                  <div className="flex shrink-0 gap-4">
+                    <p className="w-[88px] text-right font-semibold text-ink">{proposal.venue_per_person != null ? fmt(proposal.venue_per_person) : "—"}</p>
+                    <p className="w-[100px] text-right font-semibold text-ink">{proposal.venue_per_person != null ? fmt(Math.round(proposal.venue_per_person * groupSize * 100) / 100) : "—"}</p>
                   </div>
-                );
-              })()}
+                </div>
+              )}
+              {includedVenuePackages.map(({ pkg }) => (
+                <div key={pkg.id} className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
+                  <p className="text-sm font-medium text-ink">{pkg.name}</p>
+                  <div className="flex shrink-0 gap-4">
+                    <p className="w-[88px] text-right font-semibold text-ink">{fmt(pkg.pricePerPerson)}</p>
+                    <p className="w-[100px] text-right font-semibold text-ink">{fmt(Math.round(pkg.pricePerPerson * groupSize * 100) / 100)}</p>
+                  </div>
+                </div>
+              ))}
+              {hasSelectableVenuePackages && (
+                <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
+                  <p className="text-sm font-medium text-ink">Venue Package</p>
+                  <div className="flex shrink-0 gap-4">
+                    <p className="w-[88px] text-right font-semibold text-ink">{selectedPkg ? fmt(selectedPkg.pricePerPerson) : "—"}</p>
+                    <p className="w-[100px] text-right font-semibold text-ink">{selectedPkg ? fmt(Math.round(selectedPkg.pricePerPerson * groupSize * 100) / 100) : "—"}</p>
+                  </div>
+                </div>
+              )}
               {(() => {
-                const venuePP = hasFixedHybridVenue ? proposal.venue_per_person : (selectedPkg ? selectedPkg.pricePerPerson : null);
+                const baseVenuePP = hasFixedHybridVenue ? proposal.venue_per_person : includedVenuePackagesTotalPP;
+                const venuePP = venueSelectionSatisfied && baseVenuePP != null
+                  ? baseVenuePP + (selectedPkg ? selectedPkg.pricePerPerson : 0)
+                  : null;
                 const hybridPP = dateOpt && hotel && venuePP != null
                   ? Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100
                   : null;
@@ -2036,7 +2124,7 @@ export default function ProposalPage() {
                       ? "Select a hotel and dates to continue"
                       : selectedDate === null
                         ? "Pick your dates inside the hotel card to continue"
-                        : isHybrid && !hasFixedHybridVenue && selectedPackage === null
+                        : isHybrid && !venueSelectionSatisfied
                           ? "Select a venue package to continue"
                           : "Agree to the contract terms to continue"}
               </motion.p>
