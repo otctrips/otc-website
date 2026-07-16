@@ -902,9 +902,9 @@ export default function ProposalPage() {
                     const hotelActive = selectedHotel === i;
                     const activeDateData =
                       hotelActive && selectedDate !== null ? h.dates[selectedDate] : null;
-                    const lowestDate = h.dates.reduce((a, b) =>
-                      a.pricePerPerson < b.pricePerPerson ? a : b
-                    );
+                    const lowestDate = h.dates.length > 0
+                      ? h.dates.reduce((a, b) => (a.pricePerPerson < b.pricePerPerson ? a : b))
+                      : null;
                     const displayData = activeDateData ?? lowestDate;
 
                     return (
@@ -975,16 +975,18 @@ export default function ProposalPage() {
                           {/* Price */}
                           <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
                             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                              {!activeDateData && (
+                              {!activeDateData && displayData && (
                                 <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
                               )}
                               <span className="font-heading text-3xl font-bold text-ink">
-                                {fmt(displayData.pricePerPerson)}
+                                {displayData ? fmt(displayData.pricePerPerson) : "TBD"}
                                 <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
                               </span>
+                              {displayData && (
                               <span className="text-sm text-ink/45">
                                 (Total: {fmt(displayData.totalCost)})
                               </span>
+                              )}
                             </div>
                           </div>
 
