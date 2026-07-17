@@ -2267,7 +2267,7 @@ export default function ProposalPage() {
             )}
           </div>
 
-          {isFixed && proposal.payment_notes && (
+          {(isFixed || isHybrid) && proposal.payment_notes && (
             <div className="mx-auto mt-6 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
               <h3 className="font-heading text-xl font-bold text-ink">Payment Schedule</h3>
               <div className="mt-4 space-y-3">
