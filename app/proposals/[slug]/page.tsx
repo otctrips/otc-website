@@ -664,6 +664,7 @@ export default function ProposalPage() {
   }, []);
 
   const isLambdaChiTexas = slug === "lambdachitexas";
+  const isBingpike = slug === "bingpike";
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -1262,6 +1263,9 @@ export default function ProposalPage() {
                             </div>
                             <p className="text-sm text-ink/50">{h.address}</p>
                           </div>
+                          {isBingpike && h.dates.length === 1 && (
+                            <p className="mt-0.5 text-sm text-ink/50">{h.dates[0].range}</p>
+                          )}
 
                           {/* Price */}
                           <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
@@ -1295,40 +1299,42 @@ export default function ProposalPage() {
                           )}
 
                           {/* Dates */}
-                          <div className="min-h-[120px] border-t border-ink/10 pt-4">
-                            <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
-                              Available Dates
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {h.dates.map((d, di) => {
-                                const dateActive = hotelActive && selectedDate === di;
-                                return (
-                                  <motion.button
-                                    key={d.short}
-                                    whileTap={{ scale: 0.95 }}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      selectDate(i, di);
-                                    }}
-                                    className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
-                                      dateActive
-                                        ? "bg-brand text-white shadow-sm shadow-brand/25"
-                                        : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
-                                    }`}
-                                  >
-                                    <span>{d.short}</span>
-                                    <span
-                                      className={`ml-1.5 text-xs ${
-                                        dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
+                          {!(isBingpike && h.dates.length === 1) && (
+                            <div className="min-h-[120px] border-t border-ink/10 pt-4">
+                              <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-ink/40">
+                                Available Dates
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {h.dates.map((d, di) => {
+                                  const dateActive = hotelActive && selectedDate === di;
+                                  return (
+                                    <motion.button
+                                      key={d.short}
+                                      whileTap={{ scale: 0.95 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        selectDate(i, di);
+                                      }}
+                                      className={`group relative rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 ${
+                                        dateActive
+                                          ? "bg-brand text-white shadow-sm shadow-brand/25"
+                                          : "bg-ink/5 text-ink/65 hover:bg-brand/10 hover:text-brand"
                                       }`}
                                     >
-                                      · {d.note}
-                                    </span>
-                                  </motion.button>
-                                );
-                              })}
+                                      <span>{d.short}</span>
+                                      <span
+                                        className={`ml-1.5 text-xs ${
+                                          dateActive ? "text-white/70" : "text-ink/35 group-hover:text-brand/60"
+                                        }`}
+                                      >
+                                        · {d.note}
+                                      </span>
+                                    </motion.button>
+                                  );
+                                })}
+                              </div>
                             </div>
-                          </div>
+                          )}
 
                           {/* Select button */}
                           <div className="mt-auto pt-4">
@@ -1336,7 +1342,11 @@ export default function ProposalPage() {
                               whileTap={{ scale: 0.97 }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                selectHotel(i);
+                                if (isBingpike && h.dates.length === 1) {
+                                  selectDate(i, 0);
+                                } else {
+                                  selectHotel(i);
+                                }
                               }}
                               className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
                                 hotelActive
