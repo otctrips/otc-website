@@ -38,6 +38,25 @@ type VenuePackage = {
   isIncluded: boolean;
 };
 
+type DestinationHotel = {
+  id: string;
+  name: string;
+  address: string;
+  stars: number;
+  distance: string | null;
+  imageUrl: string | null;
+  perPerson: number;
+};
+
+type DestinationPackage = {
+  city: string;
+  hotels: DestinationHotel[];
+  venueName: string;
+  venueAddress: string | null;
+  venuePerPerson: number;
+  venueInclusions: string | null;
+};
+
 type ProposalDB = {
   id: string;
   slug: string;
@@ -251,6 +270,10 @@ export default function ProposalPage() {
   const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
   const [existingSignature, setExistingSignature] = useState<{ full_name: string; signed_at: string } | null>(null);
 
+  const [destinationPackages, setDestinationPackages] = useState<DestinationPackage[]>([]);
+  const [selectedDestination, setSelectedDestination] = useState<number | null>(null);
+  const [destHotelChoice, setDestHotelChoice] = useState<Record<number, number>>({});
+
   const [selectedHotel, setSelectedHotel] = useState<number | null>(null);
   const [selectedDate, setSelectedDate] = useState<number | null>(null);
   const [selectedCruise, setSelectedCruise] = useState(false);
@@ -381,6 +404,42 @@ export default function ProposalPage() {
             isIncluded: p.is_included ?? false,
           }))
         );
+      } else if (proposalData.proposal_type === "destination") {
+        const { data: destRows } = await supabase
+          .from("destination_packages")
+          .select("*")
+          .eq("proposal_id", proposalData.id)
+          .order("display_order", { ascending: true })
+          .order("created_at", { ascending: true });
+
+        const groups: DestinationPackage[] = [];
+        const cityIndex = new Map<string, number>();
+        for (const r of destRows ?? []) {
+          const hotel: DestinationHotel = {
+            id: r.id,
+            name: r.hotel_name,
+            address: r.hotel_address,
+            stars: r.hotel_stars ?? 4,
+            distance: r.hotel_distance,
+            imageUrl: r.hotel_image_url,
+            perPerson: r.hotel_per_person,
+          };
+          const existingIdx = cityIndex.get(r.city);
+          if (existingIdx !== undefined) {
+            groups[existingIdx].hotels.push(hotel);
+          } else {
+            cityIndex.set(r.city, groups.length);
+            groups.push({
+              city: r.city,
+              hotels: [hotel],
+              venueName: r.venue_name,
+              venueAddress: r.venue_address,
+              venuePerPerson: r.venue_per_person,
+              venueInclusions: r.venue_inclusions,
+            });
+          }
+        }
+        setDestinationPackages(groups);
       }
 
       setLoading(false);
@@ -408,11 +467,26 @@ export default function ProposalPage() {
     setSelectedDate(null);
   }
 
+  function chooseDestHotel(destIdx: number, hotelIdx: number) {
+    setDestHotelChoice((prev) => ({ ...prev, [destIdx]: hotelIdx }));
+  }
+
+  function selectDestination(destIdx: number) {
+    const pkg = destinationPackages[destIdx];
+    if (!pkg) return;
+    if (pkg.hotels.length > 1 && destHotelChoice[destIdx] == null) return;
+    if (pkg.hotels.length === 1 && destHotelChoice[destIdx] == null) {
+      setDestHotelChoice((prev) => ({ ...prev, [destIdx]: 0 }));
+    }
+    setSelectedDestination(destIdx);
+  }
+
   async function handleConfirm() {
     if (!canConfirm || !proposal) return;
 
     const signedAt = new Date().toISOString();
     const isFixed = proposal.proposal_type === "fixed";
+    const isDestinationConfirm = proposal.proposal_type === "destination";
 
     let signaturePayload: Record<string, unknown>;
     let emailPayload: Record<string, string>;
@@ -509,6 +583,36 @@ export default function ProposalPage() {
         fullName,
         signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
       };
+    } else if (isDestinationConfirm) {
+      if (!selectedDestPkg || !selectedDestHotelObj) return;
+      const totalPerPerson = Math.round((selectedDestHotelObj.perPerson + selectedDestPkg.venuePerPerson) * 100) / 100;
+      const totalCostDest = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
+      const hotelLabel = `${selectedDestPkg.city} — ${selectedDestHotelObj.name}`;
+      signaturePayload = {
+        proposal_id: proposal.id,
+        group_name: proposal.group_name,
+        selected_hotel: hotelLabel,
+        selected_dates: selectedDestPkg.city,
+        hotel_per_person: selectedDestHotelObj.perPerson,
+        bus_per_person: 0,
+        venue_package: selectedDestPkg.venueName,
+        venue_package_per_person: selectedDestPkg.venuePerPerson,
+        total_per_person: totalPerPerson,
+        total_cost: totalCostDest,
+        full_name: fullName,
+        signature: signature,
+        signed_at: signedAt,
+      };
+      emailPayload = {
+        groupName: proposal.group_name,
+        selectedHotel: hotelLabel,
+        selectedDates: selectedDestPkg.city,
+        venuePackage: selectedDestPkg.venueName,
+        totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCostDest),
+        fullName,
+        signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
+      };
     } else {
       if (!hotel || !dateOpt) return;
       const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
@@ -569,6 +673,11 @@ export default function ProposalPage() {
 
   const isFixed = proposal?.proposal_type === "fixed";
   const isHybrid = proposal?.proposal_type === "hybrid";
+  const isDestination = proposal?.proposal_type === "destination";
+  const selectedDestPkg = selectedDestination !== null ? destinationPackages[selectedDestination] : null;
+  const selectedDestHotelIdx = selectedDestination !== null ? destHotelChoice[selectedDestination] : undefined;
+  const selectedDestHotelObj =
+    selectedDestPkg && selectedDestHotelIdx !== undefined ? selectedDestPkg.hotels[selectedDestHotelIdx] ?? null : null;
   const selectedPkg = selectedPackage !== null ? venuePackages[selectedPackage] : null;
   const showVenuePackages = !hotel || !proposal?.venue_city || hotel.city === proposal.venue_city;
   const hasFixedHybridVenue = isHybrid && venuePackages.length === 0 && proposal?.venue_per_person != null;
@@ -587,7 +696,9 @@ export default function ProposalPage() {
       ? selectedCruise
         ? agreed
         : selectedHotel !== null && selectedDate !== null && venueSelectionSatisfied && agreed
-      : selectedHotel !== null && selectedDate !== null && agreed;
+      : isDestination
+        ? selectedDestination !== null && selectedDestHotelObj !== null && agreed
+        : selectedHotel !== null && selectedDate !== null && agreed;
 
   const fixedHotelPP = proposal?.hotel_per_person ?? 0;
   const fixedBusPP = proposal?.fixed_bus_per_person ?? 0;
@@ -865,6 +976,186 @@ export default function ProposalPage() {
                     </div>
                   </div>
                 )}
+              </div>
+            </div>
+          ) : isDestination ? (
+            /* ── Destination proposal: list of selectable destination packages ── */
+            <div>
+              <div className="text-center">
+                <p className="eyebrow">Step 1 of 2</p>
+                <h2 className="mt-3 font-heading text-4xl font-bold text-ink sm:text-5xl">
+                  Choose Your Destination
+                </h2>
+                <p className="mt-4 text-lg text-ink/60">
+                  Each package includes hotel accommodations and your venue &amp; event. Select the destination that fits your group.
+                </p>
+              </div>
+
+              <div className="mt-14 flex flex-col gap-10">
+                {destinationPackages.map((pkg, di) => {
+                  const isSelected = selectedDestination === di;
+                  const chosenHotelIdx = destHotelChoice[di] ?? null;
+                  const needsHotelChoice = pkg.hotels.length > 1 && chosenHotelIdx === null;
+
+                  return (
+                    <motion.div
+                      key={`${pkg.city}-${di}`}
+                      initial={{ opacity: 0, y: 32 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true, margin: "-60px" }}
+                      transition={{ duration: 0.5 }}
+                      className={`rounded-2xl p-6 transition-all duration-300 sm:p-8 ${
+                        isSelected ? "ring-2 ring-brand bg-brand/5" : "ring-1 ring-ink/8 bg-white/60"
+                      }`}
+                    >
+                      <p className="font-heading text-3xl font-bold text-ink">{pkg.city}</p>
+
+                      {/* Hotel(s) */}
+                      <div className={`mt-6 grid gap-6 ${pkg.hotels.length > 1 ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}>
+                        {pkg.hotels.map((h, hi) => {
+                          const multiHotel = pkg.hotels.length > 1;
+                          const hotelActive = multiHotel ? chosenHotelIdx === hi : true;
+                          return (
+                            <div
+                              key={h.id}
+                              onClick={multiHotel ? () => chooseDestHotel(di, hi) : undefined}
+                              className={`relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-300 ${
+                                multiHotel ? "cursor-pointer" : ""
+                              } ${
+                                multiHotel && hotelActive
+                                  ? "ring-2 ring-brand shadow-md"
+                                  : "ring-1 ring-ink/8"
+                              }`}
+                            >
+                              {multiHotel && (
+                                <AnimatePresence>
+                                  {hotelActive && (
+                                    <motion.div
+                                      initial={{ scale: 0.5, opacity: 0 }}
+                                      animate={{ scale: 1, opacity: 1 }}
+                                      exit={{ scale: 0.5, opacity: 0 }}
+                                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                                      className="absolute right-4 top-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-brand shadow-md"
+                                    >
+                                      <Check white />
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              )}
+
+                              <div className="relative h-52 overflow-hidden">
+                                {h.imageUrl && (
+                                  <Image
+                                    src={h.imageUrl}
+                                    alt={h.name}
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
+                                    className="object-cover object-bottom"
+                                  />
+                                )}
+                              </div>
+
+                              <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
+                                <h3 className="font-heading text-xl font-bold text-ink">{h.name}</h3>
+                                <div className="flex h-[52px] flex-col justify-start gap-1 mt-1">
+                                  <div className="flex items-center gap-3">
+                                    <div className="flex items-center gap-1.5">
+                                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                      </svg>
+                                      <span className="text-sm font-semibold text-ink">{h.stars} Stars</span>
+                                    </div>
+                                    {h.distance && (
+                                      <>
+                                        <span className="text-ink/25">·</span>
+                                        <span className="text-sm text-ink/60">{h.distance}</span>
+                                      </>
+                                    )}
+                                  </div>
+                                  <p className="text-sm text-ink/50">{h.address}</p>
+                                </div>
+                                <div className="mt-3 border-t border-ink/10 pt-3">
+                                  <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Hotel Cost</p>
+                                  <p className="font-heading text-3xl font-bold text-ink">
+                                    {fmt(h.perPerson)}
+                                    <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                                  </p>
+                                </div>
+                                {multiHotel && (
+                                  <div className="mt-4">
+                                    <motion.button
+                                      whileTap={{ scale: 0.97 }}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        chooseDestHotel(di, hi);
+                                      }}
+                                      className={`w-full rounded-full py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                                        hotelActive
+                                          ? "bg-brand text-white"
+                                          : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
+                                      }`}
+                                    >
+                                      {hotelActive ? "Selected ✓" : "Select This Hotel"}
+                                    </motion.button>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* Venue card */}
+                      <div className="mt-6 flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm sm:flex-row">
+                        <div className="flex flex-1 flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+                          <div>
+                            <h3 className="font-heading text-xl font-bold text-ink">{pkg.venueName}</h3>
+                            {pkg.venueAddress && (
+                              <p className="mt-1 text-sm text-ink/50">{pkg.venueAddress}</p>
+                            )}
+                            {pkg.venueInclusions && (
+                              <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+                                {pkg.venueInclusions.split(",").map((item) => (
+                                  <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    {item.trim()}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                          <div className="shrink-0 sm:text-right">
+                            <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Venue Cost</p>
+                            <p className="font-heading text-3xl font-bold text-ink">
+                              {fmt(pkg.venuePerPerson)}
+                              <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Select destination button */}
+                      <div className="mt-6">
+                        <motion.button
+                          whileTap={needsHotelChoice ? {} : { scale: 0.98 }}
+                          onClick={() => selectDestination(di)}
+                          disabled={needsHotelChoice}
+                          className={`w-full rounded-full py-4 text-sm font-semibold uppercase tracking-widest transition-all duration-300 ${
+                            isSelected
+                              ? "bg-brand text-white"
+                              : needsHotelChoice
+                                ? "cursor-not-allowed border-2 border-ink/15 text-ink/30"
+                                : "border-2 border-brand text-brand hover:bg-brand hover:text-white"
+                          }`}
+                        >
+                          {isSelected ? "Selected ✓" : needsHotelChoice ? "Choose a Hotel Above First" : "Select This Destination"}
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           ) : (
@@ -1599,6 +1890,60 @@ export default function ProposalPage() {
                   </p>
                 )}
               </div>
+            ) : isDestination ? (
+              /* ── Destination summary ── */
+              <div className="space-y-0">
+                <div className="mb-1 flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-ink/35">
+                  <span>Item</span>
+                  <span className="text-right">Per Person</span>
+                </div>
+                <div className="flex items-start justify-between border-t border-ink/10 py-3">
+                  <div>
+                    <p className="text-sm font-medium text-ink">Hotel</p>
+                    <p className={`mt-0.5 text-xs ${selectedDestHotelObj ? "text-ink/45" : "text-ink/25"}`}>
+                      {selectedDestHotelObj ? `${selectedDestPkg?.city} — ${selectedDestHotelObj.name}` : "—"}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-ink">
+                    {selectedDestHotelObj ? fmt(selectedDestHotelObj.perPerson) : "—"}
+                  </p>
+                </div>
+                <div className="flex items-start justify-between border-t border-ink/10 py-3">
+                  <div>
+                    <p className="text-sm font-medium text-ink">Venue &amp; Event</p>
+                    <p className={`mt-0.5 text-xs ${selectedDestPkg ? "text-ink/45" : "text-ink/25"}`}>
+                      {selectedDestPkg ? selectedDestPkg.venueName : "—"}
+                    </p>
+                  </div>
+                  <p className="font-semibold text-ink">
+                    {selectedDestPkg ? fmt(selectedDestPkg.venuePerPerson) : "—"}
+                  </p>
+                </div>
+                <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-ink/65">Total Per Person</p>
+                    <p className="font-heading font-bold text-ink">
+                      {selectedDestHotelObj && selectedDestPkg
+                        ? fmt(selectedDestHotelObj.perPerson + selectedDestPkg.venuePerPerson)
+                        : "—"}
+                    </p>
+                  </div>
+                  <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
+                    <p className="text-sm font-semibold text-ink">
+                      Total Trip Cost
+                      <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
+                    </p>
+                    <p className="font-heading text-2xl font-bold text-brand">
+                      {selectedDestHotelObj && selectedDestPkg
+                        ? fmt(Math.round((selectedDestHotelObj.perPerson + selectedDestPkg.venuePerPerson) * groupSize * 100) / 100)
+                        : "—"}
+                    </p>
+                  </div>
+                </div>
+                <p className="mt-6 text-xs italic leading-relaxed text-ink/40">
+                  A deposit is required upon signing to secure your room block and trip dates. Remaining balance and final payment schedule will be confirmed once vendor contracts are finalized.
+                </p>
+              </div>
             ) : isHybrid ? (
               /* ── Hybrid summary ── */
               selectedCruise ? (
@@ -2122,13 +2467,17 @@ export default function ProposalPage() {
                   ? "Agree to the contract terms to continue"
                   : isHybrid && selectedCruise
                     ? "Agree to the contract terms to continue"
-                    : selectedHotel === null
-                      ? "Select a hotel and dates to continue"
-                      : selectedDate === null
-                        ? "Pick your dates inside the hotel card to continue"
-                        : isHybrid && !venueSelectionSatisfied
-                          ? "Select a venue package to continue"
-                          : "Agree to the contract terms to continue"}
+                    : isDestination
+                      ? selectedDestination === null
+                        ? "Select a destination to continue"
+                        : "Agree to the contract terms to continue"
+                      : selectedHotel === null
+                        ? "Select a hotel and dates to continue"
+                        : selectedDate === null
+                          ? "Pick your dates inside the hotel card to continue"
+                          : isHybrid && !venueSelectionSatisfied
+                            ? "Select a venue package to continue"
+                            : "Agree to the contract terms to continue"}
               </motion.p>
             )}
           </AnimatePresence>
