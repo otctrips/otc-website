@@ -678,6 +678,7 @@ export default function ProposalPage() {
 
   const isLambdaChiTexas = slug === "lambdachitexas";
   const isBingpike = slug === "bingpike";
+  const isBoisepike = slug === "boisepike";
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -1461,7 +1462,7 @@ export default function ProposalPage() {
                   </div>
                 ) : (
                 <>
-                  {proposal.venue_name && (
+                  {!isBoisepike && proposal.venue_name && (
                     <div className="mt-10 flex flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm sm:flex-row">
                       {proposal.venue_image_url ? (
                         <div className="relative h-48 shrink-0 overflow-hidden sm:h-auto sm:w-64">
@@ -1552,9 +1553,24 @@ export default function ProposalPage() {
                             )}
                           </AnimatePresence>
                           <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
-                            <h3 className="font-heading text-xl font-bold text-ink pr-10">{pkg.name}</h3>
+                            <h3 className="font-heading text-xl font-bold text-ink pr-10">
+                              {isBoisepike ? proposal.venue_name : pkg.name}
+                            </h3>
+                            {isBoisepike && (proposal.venue_stars != null && proposal.venue_distance) && (
+                              <div className="mt-1 flex items-center gap-3">
+                                <div className="flex items-center gap-1.5">
+                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                                  <span className="text-sm font-semibold text-ink">{proposal.venue_stars} Stars</span>
+                                </div>
+                                <span className="text-ink/25">·</span>
+                                <span className="text-sm text-ink/60">{proposal.venue_distance}</span>
+                              </div>
+                            )}
+                            {isBoisepike && proposal.venue_address && (
+                              <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
+                            )}
                             {pkg.inclusions && (
-                            <ul className="mt-4 space-y-2">
+                            <ul className={isBoisepike ? "mt-4 space-y-2 border-t border-ink/10 pt-4" : "mt-4 space-y-2"}>
                               {pkg.inclusions.split(",").map((item) => (
                                 <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
                                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
