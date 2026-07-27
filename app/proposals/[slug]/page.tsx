@@ -400,15 +400,23 @@ export default function ProposalPage() {
           .select("*")
           .eq("proposal_id", proposalData.id)
           .order("created_at", { ascending: true });
-        setVenuePackages(
-          (pkgRows ?? []).map((p) => ({
-            id: p.id,
-            name: p.name,
-            inclusions: p.inclusions,
-            pricePerPerson: p.price_per_person,
-            isIncluded: p.is_included ?? false,
-          }))
-        );
+        const builtPackages = (pkgRows ?? []).map((p) => ({
+          id: p.id,
+          name: p.name,
+          inclusions: p.inclusions,
+          pricePerPerson: p.price_per_person,
+          isIncluded: p.is_included ?? false,
+        }));
+        setVenuePackages(builtPackages);
+
+        if (slug === "boisepike") {
+          const selectableIdx = builtPackages
+            .map((p, i) => ({ p, i }))
+            .filter(({ p }) => !p.isIncluded);
+          if (selectableIdx.length === 1) {
+            setSelectedPackage(selectableIdx[0].i);
+          }
+        }
       } else if (proposalData.proposal_type === "destination") {
         const { data: destRows } = await supabase
           .from("destination_packages")
