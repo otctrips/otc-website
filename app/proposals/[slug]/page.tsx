@@ -389,6 +389,11 @@ export default function ProposalPage() {
 
       setHotels(built);
 
+      if (slug === "lambdachifsu" && built.length === 1 && built[0].dates.length === 1) {
+        setSelectedHotel(0);
+        setSelectedDate(0);
+      }
+
       if (proposalData.proposal_type === "hybrid") {
         const { data: pkgRows } = await supabase
           .from("venue_packages")
