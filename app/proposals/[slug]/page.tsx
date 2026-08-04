@@ -46,6 +46,7 @@ type DestinationHotel = {
   distance: string | null;
   imageUrl: string | null;
   perPerson: number;
+  dateRange: string | null;
 };
 
 type DestinationPackage = {
@@ -436,6 +437,7 @@ export default function ProposalPage() {
             distance: r.hotel_distance,
             imageUrl: r.hotel_image_url,
             perPerson: r.hotel_per_person,
+            dateRange: r.hotel_date_range,
           };
           const existingIdx = cityIndex.get(r.city);
           if (existingIdx !== undefined) {
@@ -1088,6 +1090,9 @@ export default function ProposalPage() {
                                     )}
                                   </div>
                                   <p className="text-sm text-ink/50">{h.address}</p>
+                                  {h.dateRange && (
+                                    <p className="text-sm text-ink/50">{h.dateRange}</p>
+                                  )}
                                 </div>
                                 <div className="mt-3 border-t border-ink/10 pt-3">
                                   <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1">Hotel Cost</p>
