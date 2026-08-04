@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -19,10 +19,12 @@ type DateOption = {
 };
 
 type Hotel = {
+  id: string;
   name: string;
   destination: string;
   city: string;
   image: string;
+  images: string[];
   stars: number;
   address: string;
   distance: string;
@@ -232,6 +234,79 @@ The Client and its travelers are solely responsible for obtaining and maintainin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) {
+  const [index, setIndex] = useState(0);
+
+  if (images.length <= 1) {
+    return (
+      <div className="relative h-52 overflow-hidden">
+        {images[0] && (
+          <Image
+            src={images[0]}
+            alt={alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 33vw"
+            className="object-cover object-bottom transition-transform duration-500 hover:scale-105"
+          />
+        )}
+      </div>
+    );
+  }
+
+  const goPrev = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIndex((i) => (i - 1 + images.length) % images.length);
+  };
+  const goNext = (e: MouseEvent) => {
+    e.stopPropagation();
+    setIndex((i) => (i + 1) % images.length);
+  };
+
+  return (
+    <div className="relative h-52 overflow-hidden">
+      <Image
+        src={images[index]}
+        alt={alt}
+        fill
+        sizes="(max-width: 1024px) 100vw, 33vw"
+        className="object-cover object-bottom"
+      />
+
+      <button
+        type="button"
+        onClick={goPrev}
+        aria-label="Previous photo"
+        className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <button
+        type="button"
+        onClick={goNext}
+        aria-label="Next photo"
+        className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white transition-colors hover:bg-black/60"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+
+      <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5">
+        {images.map((img, i) => (
+          <span
+            key={img + i}
+            className={`h-1.5 w-1.5 rounded-full transition-all ${
+              i === index ? "bg-white" : "bg-white/50"
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Check({ white = false, size = 14 }: { white?: boolean; size?: number }) {
   return (
     <svg
@@ -336,6 +411,15 @@ export default function ProposalPage() {
           .eq("hotel_id", h.id)
           .order("created_at", { ascending: true });
 
+        const { data: imageRows } = await supabase
+          .from("hotel_images")
+          .select("*")
+          .eq("hotel_id", h.id)
+          .order("display_order", { ascending: true });
+        const images = imageRows && imageRows.length > 0
+          ? imageRows.map((img) => img.image_url)
+          : [h.image_url];
+
         const parseDateRange = (range: string) => {
           const m = range.match(/^([A-Za-z]+ \d+)[^,]+,\s*(\d{4})/);
           if (!m) return 0;
@@ -376,10 +460,12 @@ export default function ProposalPage() {
           .sort((a, b) => parseDateRange(a.range) - parseDateRange(b.range));
 
         built.push({
+          id: h.id,
           name: h.name,
           destination: CITY_TO_DESTINATION[h.city] ?? h.city,
           city: h.city,
           image: h.image_url,
+          images,
           stars: h.stars,
           address: h.address,
           distance: h.distance,
@@ -1247,15 +1333,7 @@ export default function ProposalPage() {
                         </AnimatePresence>
 
                         {/* Hotel image */}
-                        <div className="relative h-52 overflow-hidden">
-                          <Image
-                            src={h.image}
-                            alt={h.name}
-                            fill
-                            sizes="(max-width: 1024px) 100vw, 33vw"
-                            className="object-cover object-bottom transition-transform duration-500 hover:scale-105"
-                          />
-                        </div>
+                        <HotelImageCarousel images={h.images} alt={h.name} />
 
                         {/* Card body */}
                         <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
