@@ -30,6 +30,7 @@ type Hotel = {
   distance: string;
   busPerPerson: number;
   dates: DateOption[];
+  inclusions: string | null;
 };
 
 type VenuePackage = {
@@ -471,6 +472,7 @@ export default function ProposalPage() {
           distance: h.distance,
           busPerPerson,
           dates,
+          inclusions: h.hotel_inclusions,
         });
       }
 
@@ -999,6 +1001,21 @@ export default function ProposalPage() {
                         </div>
                         <p className="text-sm text-ink/50">{hotels[0].address}</p>
                       </div>
+                      {hotels[0].inclusions && (
+                        <div className="mt-3 border-t border-ink/10 pt-3">
+                          <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Dining &amp; Drinks</p>
+                          <ul className="space-y-1.5">
+                            {hotels[0].inclusions.split(",").map((item) => (
+                              <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                  <polyline points="20 6 9 17 4 12" />
+                                </svg>
+                                {item.trim()}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                       <div className="mt-3 border-t border-ink/10" />
                       <ul className="mt-2 space-y-1">
                         <li className="flex items-center gap-2 text-sm text-ink/70">
@@ -1362,6 +1379,21 @@ export default function ProposalPage() {
                           </div>
                           {isBingpike && h.dates.length === 1 && (
                             <p className="mt-0.5 text-sm text-ink/50">{h.dates[0].range}</p>
+                          )}
+                          {h.inclusions && (
+                            <div className="mt-2 border-t border-ink/10 pt-2">
+                              <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Dining &amp; Drinks</p>
+                              <ul className="space-y-1.5">
+                                {h.inclusions.split(",").map((item) => (
+                                  <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    {item.trim()}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
                           )}
 
                           {/* Price */}
