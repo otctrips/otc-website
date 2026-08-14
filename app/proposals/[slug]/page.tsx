@@ -326,8 +326,11 @@ function Check({ white = false, size = 14 }: { white?: boolean; size?: number })
   );
 }
 
-function VenuePackagePrice({ pkg }: { pkg: VenuePackage }) {
+function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; uniform?: boolean }) {
   if (pkg.displayPrice) {
+    if (uniform) {
+      return <p className="font-heading text-3xl font-bold text-ink">{pkg.displayPrice}</p>;
+    }
     const [main, ...rest] = pkg.displayPrice.trim().split(" ");
     const suffix = rest.join(" ");
     return (
@@ -1667,7 +1670,7 @@ export default function ProposalPage() {
                           </ul>
                           )}
                           <div className="mt-6 border-t border-ink/10 pt-4">
-                            <VenuePackagePrice pkg={pkg} />
+                            <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
                           </div>
                         </div>
                       </motion.div>
@@ -1731,7 +1734,7 @@ export default function ProposalPage() {
                             </ul>
                             )}
                             <div className="mt-6 border-t border-ink/10 pt-4">
-                              <VenuePackagePrice pkg={pkg} />
+                              <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
                             </div>
                             <div className="mt-4">
                               <motion.button
