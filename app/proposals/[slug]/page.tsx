@@ -235,12 +235,12 @@ The Client and its travelers are solely responsible for obtaining and maintainin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function HotelImageCarousel({ images, alt, shortImage = false }: { images: string[]; alt: string; shortImage?: boolean }) {
+function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = useState(0);
 
   if (images.length <= 1) {
     return (
-      <div className={`relative overflow-hidden ${shortImage ? "h-48" : "h-52"}`}>
+      <div className="relative h-52 overflow-hidden">
         {images[0] && (
           <Image
             src={images[0]}
@@ -264,7 +264,7 @@ function HotelImageCarousel({ images, alt, shortImage = false }: { images: strin
   };
 
   return (
-    <div className={`relative overflow-hidden ${shortImage ? "h-48" : "h-52"}`}>
+    <div className="relative h-52 overflow-hidden">
       <Image
         src={images[index]}
         alt={alt}
@@ -769,7 +769,6 @@ export default function ProposalPage() {
   const isLambdaChiTexas = slug === "lambdachitexas";
   const isBingpike = slug === "bingpike";
   const isBoisepike = slug === "boisepike";
-  const isKalsu = slug === "kalsu";
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -1351,7 +1350,7 @@ export default function ProposalPage() {
                         </AnimatePresence>
 
                         {/* Hotel image */}
-                        <HotelImageCarousel images={h.images} alt={h.name} shortImage={isKalsu} />
+                        <HotelImageCarousel images={h.images} alt={h.name} />
 
                         {/* Card body */}
                         <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
