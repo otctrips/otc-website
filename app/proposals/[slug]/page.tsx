@@ -235,12 +235,12 @@ The Client and its travelers are solely responsible for obtaining and maintainin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function HotelImageCarousel({ images, alt, square = false }: { images: string[]; alt: string; square?: boolean }) {
+function HotelImageCarousel({ images, alt, shortImage = false }: { images: string[]; alt: string; shortImage?: boolean }) {
   const [index, setIndex] = useState(0);
 
   if (images.length <= 1) {
     return (
-      <div className={`relative overflow-hidden ${square ? "aspect-square" : "h-52"}`}>
+      <div className={`relative overflow-hidden ${shortImage ? "h-48" : "h-52"}`}>
         {images[0] && (
           <Image
             src={images[0]}
@@ -264,7 +264,7 @@ function HotelImageCarousel({ images, alt, square = false }: { images: string[];
   };
 
   return (
-    <div className={`relative overflow-hidden ${square ? "aspect-square" : "h-52"}`}>
+    <div className={`relative overflow-hidden ${shortImage ? "h-48" : "h-52"}`}>
       <Image
         src={images[index]}
         alt={alt}
@@ -1351,7 +1351,7 @@ export default function ProposalPage() {
                         </AnimatePresence>
 
                         {/* Hotel image */}
-                        <HotelImageCarousel images={h.images} alt={h.name} square={isKalsu} />
+                        <HotelImageCarousel images={h.images} alt={h.name} shortImage={isKalsu} />
 
                         {/* Card body */}
                         <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
