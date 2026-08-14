@@ -2316,7 +2316,7 @@ export default function ProposalPage() {
                         <p className="text-sm font-medium text-ink">{pkg.name}</p>
                         <div className="flex shrink-0 gap-4">
                           <p className="w-[88px] text-right font-semibold text-ink">{pkg.displayPrice ? "" : fmt(pkg.pricePerPerson)}</p>
-                          <p className="w-[100px] text-right font-semibold text-ink">{pkg.displayPrice ? pkg.displayPrice : fmt(Math.round(pkg.pricePerPerson * groupSize * 100) / 100)}</p>
+                          <p className="w-[100px] text-right font-semibold text-ink">{pkg.displayPrice ? pkg.displayPrice.trim().split(" ")[0] : fmt(Math.round(pkg.pricePerPerson * groupSize * 100) / 100)}</p>
                         </div>
                       </div>
                     ))
