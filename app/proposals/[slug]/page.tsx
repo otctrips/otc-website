@@ -235,12 +235,12 @@ The Client and its travelers are solely responsible for obtaining and maintainin
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) {
+function HotelImageCarousel({ images, alt, square = false }: { images: string[]; alt: string; square?: boolean }) {
   const [index, setIndex] = useState(0);
 
   if (images.length <= 1) {
     return (
-      <div className="relative h-52 overflow-hidden">
+      <div className={`relative overflow-hidden ${square ? "aspect-square" : "h-52"}`}>
         {images[0] && (
           <Image
             src={images[0]}
@@ -264,7 +264,7 @@ function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) 
   };
 
   return (
-    <div className="relative h-52 overflow-hidden">
+    <div className={`relative overflow-hidden ${square ? "aspect-square" : "h-52"}`}>
       <Image
         src={images[index]}
         alt={alt}
@@ -769,6 +769,7 @@ export default function ProposalPage() {
   const isLambdaChiTexas = slug === "lambdachitexas";
   const isBingpike = slug === "bingpike";
   const isBoisepike = slug === "boisepike";
+  const isKalsu = slug === "kalsu";
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -1350,7 +1351,7 @@ export default function ProposalPage() {
                         </AnimatePresence>
 
                         {/* Hotel image */}
-                        <HotelImageCarousel images={h.images} alt={h.name} />
+                        <HotelImageCarousel images={h.images} alt={h.name} square={isKalsu} />
 
                         {/* Card body */}
                         <div className="flex flex-1 flex-col px-6 pb-6 pt-4">
