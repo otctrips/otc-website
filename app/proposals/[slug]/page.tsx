@@ -39,6 +39,7 @@ type VenuePackage = {
   inclusions: string;
   pricePerPerson: number;
   isIncluded: boolean;
+  displayPrice: string | null;
 };
 
 type DestinationHotel = {
@@ -325,6 +326,25 @@ function Check({ white = false, size = 14 }: { white?: boolean; size?: number })
   );
 }
 
+function VenuePackagePrice({ pkg }: { pkg: VenuePackage }) {
+  if (pkg.displayPrice) {
+    const [main, ...rest] = pkg.displayPrice.trim().split(" ");
+    const suffix = rest.join(" ");
+    return (
+      <p className="font-heading text-3xl font-bold text-ink">
+        {main}
+        {suffix && <span className="ml-0.5 text-base font-normal text-ink/50">{suffix}</span>}
+      </p>
+    );
+  }
+  return (
+    <p className="font-heading text-3xl font-bold text-ink">
+      {fmt(pkg.pricePerPerson)}
+      <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+    </p>
+  );
+}
+
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
     style: "currency",
@@ -495,6 +515,7 @@ export default function ProposalPage() {
           inclusions: p.inclusions,
           pricePerPerson: p.price_per_person,
           isIncluded: p.is_included ?? false,
+          displayPrice: p.display_price,
         }));
         setVenuePackages(builtPackages);
 
@@ -1630,10 +1651,7 @@ export default function ProposalPage() {
                           </ul>
                           )}
                           <div className="mt-6 border-t border-ink/10 pt-4">
-                            <p className="font-heading text-3xl font-bold text-ink">
-                              {fmt(pkg.pricePerPerson)}
-                              <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
-                            </p>
+                            <VenuePackagePrice pkg={pkg} />
                           </div>
                         </div>
                       </motion.div>
@@ -1697,10 +1715,7 @@ export default function ProposalPage() {
                             </ul>
                             )}
                             <div className="mt-6 border-t border-ink/10 pt-4">
-                              <p className="font-heading text-3xl font-bold text-ink">
-                                {fmt(pkg.pricePerPerson)}
-                                <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
-                              </p>
+                              <VenuePackagePrice pkg={pkg} />
                             </div>
                             <div className="mt-4">
                               <motion.button
