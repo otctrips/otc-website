@@ -744,7 +744,8 @@ export default function ProposalPage() {
       };
     } else {
       if (!hotel || !dateOpt) return;
-      const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson;
+      const totalPerPerson = dateOpt.pricePerPerson + hotel.busPerPerson + autoIncludedVenuePP;
+      const totalCostStandard = Math.round((dateOpt.totalCost + autoIncludedVenuePP * proposal.group_size) * 100) / 100;
       signaturePayload = {
         proposal_id: proposal.id,
         group_name: proposal.group_name,
@@ -753,7 +754,7 @@ export default function ProposalPage() {
         hotel_per_person: dateOpt.pricePerPerson,
         bus_per_person: hotel.busPerPerson,
         total_per_person: totalPerPerson,
-        total_cost: dateOpt.totalCost,
+        total_cost: totalCostStandard,
         full_name: fullName,
         signature: signature,
         signed_at: signedAt,
@@ -763,7 +764,7 @@ export default function ProposalPage() {
         selectedHotel: hotel.name,
         selectedDates: dateOpt.range,
         totalPerPerson: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalPerPerson),
-        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(dateOpt.totalCost),
+        totalCost: new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(totalCostStandard),
         fullName,
         signedAt: new Date(signedAt).toLocaleString("en-US", { month: "long", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" }),
       };
@@ -802,6 +803,7 @@ export default function ProposalPage() {
   const dateOpt = hotel && selectedDate !== null ? hotel.dates[selectedDate] : null;
 
   const totalCost = dateOpt ? dateOpt.totalCost : 0;
+  const autoIncludedVenuePP = proposal?.venue_name && (proposal.venue_per_person ?? 0) > 0 ? (proposal.venue_per_person as number) : 0;
 
   const isFixed = proposal?.proposal_type === "fixed";
   const isHybrid = proposal?.proposal_type === "hybrid";
@@ -2459,7 +2461,7 @@ export default function ProposalPage() {
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-ink/65">Total Per Person</p>
                   <p className="font-heading font-bold text-ink">
-                    {dateOpt && hotel ? fmt(dateOpt.pricePerPerson + hotel.busPerPerson) : "—"}
+                    {dateOpt && hotel ? fmt(dateOpt.pricePerPerson + hotel.busPerPerson + autoIncludedVenuePP) : "—"}
                   </p>
                 </div>
                 <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
@@ -2468,7 +2470,7 @@ export default function ProposalPage() {
                     <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
                   </p>
                   <p className="font-heading text-2xl font-bold text-brand">
-                    {dateOpt ? fmt(totalCost) : "—"}
+                    {dateOpt ? fmt(Math.round((totalCost + autoIncludedVenuePP * groupSize) * 100) / 100) : "—"}
                   </p>
                 </div>
               </div>
