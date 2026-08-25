@@ -78,25 +78,11 @@ export default function WhatWeDoPage() {
               Why OTC Over Everyone Else?
             </h2>
           </FadeIn>
-          <div className="mx-auto mt-16 max-w-3xl space-y-12">
-            {WHY_OTC.map((item, i) => (
-              <FadeIn key={item.title} delay={(i % 2) * 0.08}>
-                <div className="flex gap-6 border-b border-cream/10 pb-12 last:border-0 last:pb-0">
-                  <span className="font-heading text-3xl font-bold text-brand-light/40">
-                    {i + 1}
-                  </span>
-                  <div>
-                    <h3 className="font-heading text-3xl text-white sm:text-4xl">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-lg leading-relaxed text-cream/60">
-                      {item.text}
-                    </p>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
+          <FadeIn className="mx-auto mt-12 max-w-3xl">
+            <p className="text-lg leading-relaxed text-cream/70">
+              Our entire business is built around one goal: making sure your group gets the most out of every dollar. We negotiate directly with vendors to lock in the best possible rates, and we&apos;re completely transparent about where your money goes. No hidden markups, no inflated packages. Just a custom trip built around your budget, with someone in your corner making sure you&apos;re never overpaying.
+            </p>
+          </FadeIn>
         </div>
       </section>
 
