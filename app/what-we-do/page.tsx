@@ -79,7 +79,7 @@ export default function WhatWeDoPage() {
             </h2>
           </FadeIn>
           <FadeIn className="mx-auto mt-12 max-w-3xl">
-            <p className="text-lg leading-relaxed text-cream/70">
+            <p className="text-lg leading-relaxed text-cream/70 text-center">
               Our entire business is built around one goal: making sure your group gets the most out of every dollar. We negotiate directly with vendors to lock in the best possible rates, and we&apos;re completely transparent about where your money goes. No hidden markups, no inflated packages. Just a custom trip built around your budget, with someone in your corner making sure you&apos;re never overpaying.
             </p>
           </FadeIn>
