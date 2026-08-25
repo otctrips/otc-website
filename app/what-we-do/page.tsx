@@ -4,7 +4,7 @@ import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
 import CTABanner from "@/components/CTABanner";
-import { IMAGES, SERVICES, WHY_OTC } from "@/lib/data";
+import { IMAGES, SERVICES } from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "What We Do",
