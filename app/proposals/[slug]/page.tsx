@@ -1645,38 +1645,6 @@ export default function ProposalPage() {
                     </div>
                   )}
                   <div className="mt-8 grid gap-6 sm:grid-cols-2">
-                    {includedVenuePackages.map(({ pkg }) => (
-                      <motion.div
-                        key={pkg.id}
-                        initial={{ opacity: 0, y: 32 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true, margin: "-60px" }}
-                        transition={{ duration: 0.5 }}
-                        className="relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-brand shadow-xl shadow-brand/15"
-                      >
-                        <span className="absolute right-4 top-4 z-10 rounded-full bg-brand px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white">
-                          Included
-                        </span>
-                        <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
-                          <h3 className="font-heading text-xl font-bold text-ink pr-20">{pkg.name}</h3>
-                          {pkg.inclusions && (
-                          <ul className="mt-4 space-y-2">
-                            {pkg.inclusions.split(",").map((item) => (
-                              <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
-                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
-                                  <polyline points="20 6 9 17 4 12" />
-                                </svg>
-                                {item.trim()}
-                              </li>
-                            ))}
-                          </ul>
-                          )}
-                          <div className="mt-6 border-t border-ink/10 pt-4">
-                            <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
                     {selectableVenuePackages.map(({ pkg, idx }) => {
                       const pkgActive = isPkgSelected(idx);
                       return (
@@ -1756,6 +1724,47 @@ export default function ProposalPage() {
                       );
                     })}
                   </div>
+                  {includedVenuePackages.length > 0 && (
+                    <>
+                      <p className="mt-10 text-center text-xs font-semibold uppercase tracking-widest text-ink/40">
+                        Also Included
+                      </p>
+                      <div className="mt-4 grid gap-6 sm:grid-cols-2">
+                        {includedVenuePackages.map(({ pkg }) => (
+                          <motion.div
+                            key={pkg.id}
+                            initial={{ opacity: 0, y: 32 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.5 }}
+                            className="relative flex flex-col overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-brand shadow-xl shadow-brand/15"
+                          >
+                            <span className="absolute right-4 top-4 z-10 rounded-full bg-brand px-3 py-1 text-xs font-semibold uppercase tracking-widest text-white">
+                              Included
+                            </span>
+                            <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
+                              <h3 className="font-heading text-xl font-bold text-ink pr-20">{pkg.name}</h3>
+                              {pkg.inclusions && (
+                              <ul className="mt-4 space-y-2">
+                                {pkg.inclusions.split(",").map((item) => (
+                                  <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    {item.trim()}
+                                  </li>
+                                ))}
+                              </ul>
+                              )}
+                              <div className="mt-6 border-t border-ink/10 pt-4">
+                                <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
+                              </div>
+                            </div>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </>
                 )
               ) : (
