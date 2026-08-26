@@ -58,8 +58,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-black">
-            Main
+          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-white font-bold">
+            Navigate
           </h3>
           <ul className="mt-5 space-y-3">
             {MAIN_LINKS.map((link) => (
@@ -76,8 +76,8 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-light">
-            Company
+          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-white font-bold">
+            Learn More
           </h3>
           <ul className="mt-5 space-y-3">
             {COMPANY_LINKS.map((link) => (
