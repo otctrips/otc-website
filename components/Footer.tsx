@@ -20,14 +20,14 @@ const COMPANY_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="bg-night text-cream">
+    <footer className="bg-[#4D8397] text-white">
       <div className="container-site grid gap-12 py-16 md:grid-cols-[2fr_1fr_1fr]">
         <div>
-          <Link href="/" className="font-heading text-3xl font-bold tracking-wide">
-            OTC <span className="text-brand-light">TRIPS</span>
+          <Link href="/">
+            <img src="/logo.png" alt="OTC Trips" className="h-10 w-auto" />
           </Link>
           <p className="mt-4 max-w-sm font-heading text-lg italic leading-relaxed text-cream/70">
-            {SITE.tagline}
+            Making Group Travel Affordable
           </p>
           <div className="mt-6 flex gap-4">
             <a
@@ -58,7 +58,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-brand-light">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.25em] text-black">
             Main
           </h3>
           <ul className="mt-5 space-y-3">
@@ -66,7 +66,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-cream/70 transition-colors hover:text-white"
+                  className="text-sm text-white/80 transition-colors hover:text-black"
                 >
                   {link.label}
                 </Link>
@@ -84,7 +84,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-cream/70 transition-colors hover:text-white"
+                  className="text-sm text-white/80 transition-colors hover:text-black"
                 >
                   {link.label}
                 </Link>
@@ -94,9 +94,9 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-cream/10">
+      <div className="border-t border-white/20">
         <div className="container-site py-6">
-          <p className="text-center text-xs leading-relaxed text-cream/40">
+          <p className="text-center text-xs leading-relaxed text-white/60">
             © 2026 OTC Trips, LLC. All rights reserved.
           </p>
         </div>
