@@ -54,6 +54,9 @@ export default function HomePage() {
         </FadeIn>
       </section>
 
+      {/* Partner strip */}
+      <PartnerLogos />
+
       {/* Trip types */}
       <section className="container-site py-24">
         <FadeIn className="text-center">
@@ -94,8 +97,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Partner strip */}
-      <PartnerLogos />
+      
     </>
   );
 }
