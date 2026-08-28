@@ -5,7 +5,6 @@ import HomeHero from "@/components/HomeHero";
 import FadeIn from "@/components/FadeIn";
 import PartnerLogos from "@/components/PartnerLogos";
 import {
-  PAIN_POINTS,
   SITE,
   TESTIMONIALS,
   TRIP_TYPE_CARDS,
@@ -23,16 +22,16 @@ export default function HomePage() {
       <HomeHero />
 
       {/* Social proof */}
-      <section className="container-site py-24">
-        <FadeIn className="text-center">
+      <section className="py-24 overflow-hidden">
+        <FadeIn className="text-center container-site">
           <h2 className="heading-lg">
-            Trusted By Chapters Across the Country
+            Trusted By Groups Across the World
           </h2>
         </FadeIn>
-        <div className="mt-14 grid gap-8 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
-            <FadeIn key={t.quote} delay={i * 0.12}>
-              <figure className="flex h-full flex-col rounded-2xl bg-white p-8 shadow-sm shadow-ink/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10">
+        <div className="mt-14 relative">
+          <div className="flex animate-scroll gap-8 w-max">
+            {[...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS, ...TESTIMONIALS].map((t, i) => (
+              <figure key={i} className="w-[380px] shrink-0 flex flex-col rounded-2xl bg-white p-8 shadow-sm shadow-ink/5">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="text-brand/30">
                   <path d="M9.6 4C6 6 3.6 9.2 3.6 13.6c0 3.6 2 6.4 5.2 6.4 2.4 0 4.4-1.8 4.4-4.2 0-2.4-1.7-4-4-4-.4 0-.9.1-1 .1.3-2.3 2.2-4.6 4.4-5.7L9.6 4zm10.8 0c-3.6 2-6 5.2-6 9.6 0 3.6 2 6.4 5.2 6.4 2.4 0 4.4-1.8 4.4-4.2 0-2.4-1.7-4-4-4-.4 0-.9.1-1 .1.3-2.3 2.2-4.6 4.4-5.7L20.4 4z" />
                 </svg>
@@ -45,11 +44,11 @@ export default function HomePage() {
                   </p>
                 </figcaption>
               </figure>
-            </FadeIn>
-          ))}
+            ))}
+          </div>
         </div>
         <FadeIn delay={0.3}>
-          <p className="mt-12 text-center font-heading text-2xl text-ink/70">
+          <p className="mt-12 text-center font-heading text-2xl text-ink/70 container-site">
             {SITE.tripsPlanned} trips planned and counting
           </p>
         </FadeIn>

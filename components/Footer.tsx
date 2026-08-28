@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE } from "@/lib/data";
+import Image from "next/image";
 
 const MAIN_LINKS = [
   { href: "/", label: "Home" },
@@ -23,7 +24,7 @@ export default function Footer() {
       <div className="container-site grid gap-12 py-16 md:grid-cols-[2fr_1fr_1fr]">
         <div>
           <Link href="/">
-            <img src="/logo.png" alt="OTC Trips" className="h-10 w-auto" />
+            <Image src="/logo.png" alt="OTC Trips" width={120} height={40} className="h-10 w-auto" />
           </Link>
           <p className="mt-4 max-w-sm font-heading text-lg italic leading-relaxed text-cream/70">
             Making Group Travel Affordable
