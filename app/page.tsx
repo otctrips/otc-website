@@ -55,40 +55,6 @@ export default function HomePage() {
         </FadeIn>
       </section>
 
-      {/* Problem / Solution */}
-      <section className="bg-night py-24 text-cream">
-        <div className="container-site grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <FadeIn>
-            <h2 className="font-heading text-4xl leading-tight text-white sm:text-5xl">
-              Planning a group trip shouldn&apos;t feel like a second job.
-            </h2>
-            <p className="mt-6 text-lg leading-relaxed text-cream/60">
-              If you&apos;re the one organizing, you know the drill: the
-              spreadsheet, the group chat, the money, the &ldquo;wait, what
-              time is our flight?&rdquo; We exist so none of that is your
-              problem.
-            </p>
-          </FadeIn>
-          <div className="space-y-5">
-            {PAIN_POINTS.map((item, i) => (
-              <FadeIn key={item.pain} delay={i * 0.1}>
-                <div className="rounded-2xl border border-cream/10 bg-white/5 p-6">
-                  <p className="text-cream/50 line-through decoration-cream/30">
-                    {item.pain}
-                  </p>
-                  <p className="mt-2 flex items-start gap-2.5 font-medium text-white">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mt-0.5 shrink-0 text-brand-light">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                    {item.fix}
-                  </p>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Trip types */}
       <section className="container-site py-24">
         <FadeIn className="text-center">
