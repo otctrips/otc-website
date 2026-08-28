@@ -106,26 +106,18 @@ export const TRIP_TYPE_CARDS = [
 ];
 
 export const PARTNERS = [
+  "Marriott International",
+  "Hilton Hotels & Resorts",
+  "Hyatt Hotels Corporation",
+  "IHG Hotels & Resorts",
+  "Wyndham Hotels & Resorts",
   "American Airlines",
-  "Hilton",
-  "Marriott",
-  "Hyatt",
-  "IHG",
-  "Wyndham",
-  "Best Western",
-  "Radisson",
-  "Delta Hotels",
-  "Autograph Collection",
-  "Curio Collection",
-  "Tapestry Collection",
-  "Tribute Portfolio",
-  "W Hotels",
-  "Westin",
-  "Sheraton",
-  "Renaissance",
-  "Courtyard",
-  "Fairfield",
-  "Aloft",
+  "JetBlue Airways",
+  "Air Canada",
+  "Royal Caribbean",
+  "Carnival Cruise Line",
+  "MSC Cruises",
+  "Virgin Voyages",
 ];
 
 // ---------- What We Do ----------
