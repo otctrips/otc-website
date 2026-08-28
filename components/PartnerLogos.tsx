@@ -5,7 +5,7 @@ export default function PartnerLogos() {
     <section className="bg-[#4D8397] py-16">
       <h2 className="text-center font-heading text-3xl font-bold text-white sm:text-4xl">
         Our Trusted Partners
-      </p>
+      </h2>
       <div className="container-site mt-10 flex flex-wrap justify-center gap-x-10 gap-y-5">
         {PARTNERS.map((name) => (
           <span key={name} className="whitespace-nowrap font-sans text-base font-semibold uppercase tracking-[0.2em] text-white">
