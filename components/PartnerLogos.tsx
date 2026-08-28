@@ -34,6 +34,9 @@ export default function PartnerLogos() {
           </div>
         ))}
       </div>
+      <h2 className="mt-10 text-center text-sm text-white/60">
+        Plus Many More
+      </h2>
     </section>
   );
 }
