@@ -12,7 +12,6 @@ const MAIN_LINKS = [
 const COMPANY_LINKS = [
   { href: "/about", label: "About" },
   { href: "/faqs", label: "FAQs" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/referral", label: "Referral Program" },
   { href: "/travel-tips", label: "Travel Tips" },
   { href: "/privacy", label: "Privacy Policy" },
@@ -66,7 +65,7 @@ export default function Footer() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-sm text-white/80 transition-colors hover:text-black"
+                  className="text-sm text-white/80 transition-colors hover:text-white hover:underline"
                 >
                   {link.label}
                 </Link>

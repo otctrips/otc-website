@@ -84,26 +84,22 @@ export const PAIN_POINTS = [
 
 export const TRIP_TYPE_CARDS = [
   {
-    title: "Fraternity Formals",
-    line: "The biggest night of the year. We make sure it goes off without a hitch.",
+    title: "Greek Formals",
     image: u("photo-1511795409834-ef04bbd61622"),
     href: "/what-we-do#formals",
   },
   {
-    title: "Sorority Retreats",
-    line: "Curated experiences for your whole chapter. Every detail handled.",
+    title: "Group Retreats",
     image: u("photo-1529156069898-49953e39b3ac"),
     href: "/what-we-do#retreats",
   },
   {
     title: "Spring Break",
-    line: "Beach, sun, and zero logistics stress. Just show up.",
     image: u("photo-1507525428034-b723cf961d3e"),
     href: "/what-we-do#spring-break",
   },
   {
-    title: "Corporate & Sales Teams",
-    line: "Incentive trips and team offsites your team will actually remember.",
+    title: "Corporate Travel",
     image: u("photo-1556761175-5973dc0f32e7"),
     href: "/what-we-do#corporate",
   },
