@@ -115,7 +115,7 @@ export default function HomePage() {
                   <h3 className="card-text-shadow font-heading text-3xl font-bold text-white">
                     {card.title}
                   </h3>
-                  <p className="card-text-shadow mt-2 max-w-md text-white/80">{card.line}</p>
+                  
                   <span className="card-text-shadow mt-4 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-brand-light transition-transform duration-300 group-hover:translate-x-1">
                     See What&apos;s Included
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
