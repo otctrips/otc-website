@@ -34,7 +34,7 @@ export default function PartnerLogos() {
           </div>
         ))}
       </div>
-      <h2 className="mt-20 text-center text-sm font-bold text-white/60">
+      <h2 className="mt-10 font-heading text-center text-sm font-bold text-white/60">
         Plus Many More
       </h2>
     </section>
