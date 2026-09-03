@@ -797,6 +797,7 @@ export default function ProposalPage() {
   const isBingpike = slug === "bingpike";
   const isBoisepike = slug === "boisepike";
   const isKalsu = slug === "kalsu";
+  const isDeltaChiSyracuse = slug === "deltachisyracuse";
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -1045,7 +1046,7 @@ export default function ProposalPage() {
                       </div>
                       {hotels[0].inclusions && (
                         <div className="mt-3 border-t border-ink/10 pt-3">
-                          <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Dining &amp; Drinks</p>
+                          <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">{isDeltaChiSyracuse ? "Room Types" : "Dining & Drinks"}</p>
                           <ul className="space-y-1.5">
                             {hotels[0].inclusions.split(",").map((item) => (
                               <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
@@ -1424,7 +1425,7 @@ export default function ProposalPage() {
                           )}
                           {h.inclusions && (
                             <div className="mt-2 border-t border-ink/10 pt-2">
-                              <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Dining &amp; Drinks</p>
+                              <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">{isDeltaChiSyracuse ? "Room Types" : "Dining & Drinks"}</p>
                               <ul className="space-y-1.5">
                                 {h.inclusions.split(",").map((item) => (
                                   <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
