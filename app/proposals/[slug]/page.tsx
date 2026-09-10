@@ -238,36 +238,39 @@ The Client and its travelers are solely responsible for obtaining and maintainin
 
 function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = useState(0);
+  const validImages = images.filter(Boolean);
 
-  if (images.length <= 1) {
+  if (validImages.length === 0) {
+    return null;
+  }
+
+  if (validImages.length === 1) {
     return (
       <div className="relative h-52 overflow-hidden">
-        {images[0] && (
-          <Image
-            src={images[0]}
-            alt={alt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 33vw"
-            className="object-cover object-bottom transition-transform duration-500 hover:scale-105"
-          />
-        )}
+        <Image
+          src={validImages[0]}
+          alt={alt}
+          fill
+          sizes="(max-width: 1024px) 100vw, 33vw"
+          className="object-cover object-bottom transition-transform duration-500 hover:scale-105"
+        />
       </div>
     );
   }
 
   const goPrev = (e: MouseEvent) => {
     e.stopPropagation();
-    setIndex((i) => (i - 1 + images.length) % images.length);
+    setIndex((i) => (i - 1 + validImages.length) % validImages.length);
   };
   const goNext = (e: MouseEvent) => {
     e.stopPropagation();
-    setIndex((i) => (i + 1) % images.length);
+    setIndex((i) => (i + 1) % validImages.length);
   };
 
   return (
     <div className="relative h-52 overflow-hidden">
       <Image
-        src={images[index]}
+        src={validImages[index]}
         alt={alt}
         fill
         sizes="(max-width: 1024px) 100vw, 33vw"
@@ -296,7 +299,7 @@ function HotelImageCarousel({ images, alt }: { images: string[]; alt: string }) 
       </button>
 
       <div className="absolute bottom-2 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5">
-        {images.map((img, i) => (
+        {validImages.map((img, i) => (
           <span
             key={img + i}
             className={`h-1.5 w-1.5 rounded-full transition-all ${
@@ -1021,15 +1024,17 @@ export default function ProposalPage() {
                 {/* Hotel card */}
                 {hotels[0] && (
                   <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-ink/8 shadow-sm">
-                    <div className="relative h-52 overflow-hidden">
-                      <Image
-                        src={hotels[0].image}
-                        alt={hotels[0].name}
-                        fill
-                        sizes="(max-width: 1024px) 100vw, 50vw"
-                        className="object-cover object-bottom"
-                      />
-                    </div>
+                    {hotels[0].image && (
+                      <div className="relative h-52 overflow-hidden">
+                        <Image
+                          src={hotels[0].image}
+                          alt={hotels[0].name}
+                          fill
+                          sizes="(max-width: 1024px) 100vw, 50vw"
+                          className="object-cover object-bottom"
+                        />
+                      </div>
+                    )}
                     <div className="flex flex-col px-6 pb-6 pt-4">
                       <h3 className="font-heading text-xl font-bold text-ink">{hotels[0].name}</h3>
                       <div className="flex h-[52px] flex-col justify-start gap-1 mt-1">
