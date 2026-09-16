@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
-import CTABanner from "@/components/CTABanner";
 import { ARTICLES } from "@/lib/data";
 
 export const metadata: Metadata = {
