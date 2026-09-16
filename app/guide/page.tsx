@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
 import { ARTICLES } from "@/lib/data";
 
@@ -14,11 +13,12 @@ export const metadata: Metadata = {
 export default function TravelTipsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="OTC Guide"
-        title="The OTC Guide."
-        subtitle="Everything you need to know before, during, and after your group trip."
-      />
+      <div className="container-site pt-32 pb-12">
+        <h1 className="font-heading text-4xl font-bold text-ink sm:text-5xl">The OTC Guide</h1>
+        <p className="mt-4 max-w-2xl text-lg text-ink/60">
+          Everything you need to know before your next group trip. Explore destination guides, planning advice, travel tips and more from the OTC team.
+        </p>
+      </div>
 
       <section className="container-site py-24">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
