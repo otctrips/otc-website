@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function TravelTipsPage() {
   return (
     <>
-      <div className="container-site pt-32 pb-12 text-center">
+      <div className="container-site pt-42 pb-12 text-center">
         <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">The OTC Guide</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
           Everything you need to know before your next group trip. Explore destination guides, planning advice, travel tips and more from the OTC team.
