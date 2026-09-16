@@ -13,17 +13,18 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <div className="container-site pt-32 pb-12">
-        <p className="eyebrow">About</p>
-        <h1 className="font-heading text-4xl font-bold text-ink mt-3 sm:text-5xl">We Built OTC Because Group Travel Was Broken.</h1>
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">About Us</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+        </p>
       </div>
 
       {/* Story */}
-      <section className="container-site py-24">
+      <section className="container-site pt-10 pb-32">
         <div className="mx-auto max-w-3xl">
           <FadeIn>
-            <p className="eyebrow">The Story</p>
-            <div className="mt-6 space-y-6 text-lg leading-relaxed text-ink/70">
+            <p className="eyebrow"></p>
+            <div className="mt-6 space-y-6 text-lg leading-relaxed text-ink/70 text-center">
               <p>
                 We planned our chapter&apos;s trips ourselves. That meant working directly with hotels, transportation companies, venues, and other vendors and seeing what these trips actually cost.
               </p>

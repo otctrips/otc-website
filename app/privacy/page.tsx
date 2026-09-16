@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
 
 export const metadata: Metadata = {
@@ -68,7 +67,7 @@ const SECTIONS = [
   {
     title: "10. Contact Us",
     body: [
-      "Questions about this policy or your personal information? Reach us at hello@otctrips.com, or by mail at OTC Trips, LLC, Florida, USA. OTC Trips, LLC is an Independent Affiliate of A.S.A.P. Cruises Inc., Florida Seller of Travel No. FST ST15578. California Seller of Travel No. 2090937-50.",
+      "Questions about this policy or your personal information? Reach us at contact@otctrips.com",
     ],
   },
 ];
@@ -76,11 +75,14 @@ const SECTIONS = [
 export default function PrivacyPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Legal"
-        title="Privacy Policy"
-        subtitle="Effective date: January 1, 2025"
-      />
+      
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Privacy Policy</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+          Effective / Updated Date: September 16th, 2026
+        </p>
+      </div>
+
       <section className="container-site py-20">
         <div className="mx-auto max-w-3xl">
           <FadeIn>

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
-import CTABanner from "@/components/CTABanner";
 
 export const metadata: Metadata = {
   title: "Referral Program",
@@ -30,16 +28,17 @@ const STEPS = [
 export default function ReferralPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Referral Program"
-        title="Know a Chapter That Needs a Trip?"
-        subtitle="Send them our way. We'll take care of them, and take care of you."
-      />
+      
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Know A Group That Needs a Trip?</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+        </p>
+      </div>
 
-      <section className="container-site py-24">
+      <section className="container-site pt-8 pb-24">
         <FadeIn className="text-center">
-          <p className="eyebrow">How It Works</p>
-          <h2 className="heading-lg mt-3">Three Steps. That&apos;s It.</h2>
+          <p className="eyebrow"></p>
+          <h2 className="heading-lg mt-3"></h2>
         </FadeIn>
         <div className="mt-14 grid gap-8 md:grid-cols-3">
           {STEPS.map((item, i) => (
@@ -70,11 +69,7 @@ export default function ReferralPage() {
         </FadeIn>
       </section>
 
-      <CTABanner
-        title="Got someone in mind?"
-        subtitle="Start a quote and put their name, or yours, in the notes. We'll handle the rest."
-        buttonLabel="Start Referring"
-      />
+      
     </>
   );
 }

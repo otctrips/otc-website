@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
 import FaqAccordion from "@/components/FaqAccordion";
-import CTABanner from "@/components/CTABanner";
 
 export const metadata: Metadata = {
   title: "FAQs",
@@ -12,21 +10,18 @@ export const metadata: Metadata = {
 export default function FaqsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="FAQs"
-        title="Questions? We've Got Answers."
-        subtitle="Everything groups ask us before booking, answered the way we'd answer on the phone."
-      />
+      
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Questions? We've Got Answers.</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+        </p>
+      </div>
       <section className="container-site py-24">
         <div className="mx-auto max-w-3xl">
           <FaqAccordion />
         </div>
       </section>
-      <CTABanner
-        title="Didn't see your question?"
-        subtitle="Drop it in the form and a real person will answer it, usually the same day."
-        buttonLabel="Ask Us Directly"
-      />
+      
     </>
   );
 }

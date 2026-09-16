@@ -135,7 +135,7 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     id: "formals",
-    title: "Fraternity Formals",
+    title: "Greek Formals",
     headline: "The Formal Your Chapter Will Talk About for Years.",
     copy: [
       "You got handed the formal. Congratulations, and condolences. A hundred guys and their dates, a venue that has to be perfect, buses that have to show up, and a budget the treasurer keeps asking about. Pull it off and nobody remembers it was hard. Miss one detail and that's the only thing anyone remembers.",
@@ -154,8 +154,8 @@ export const SERVICES: Service[] = [
   },
   {
     id: "retreats",
-    title: "Sorority Retreats",
-    headline: "Every Detail. Every Member. Every Moment.",
+    title: "Group Retreats",
+    headline: "Every Detail. Every Person. Every Moment.",
     copy: [
       "A retreat is only relaxing for the people who didn't plan it. Rooming lists, activity schedules, the member who's gluten-free and the one who can't do stairs, transportation timed so nobody's standing in a parking lot. It's a lot, and it all lands on one person's plate.",
       "We take the plate. Every retreat we build is curated around what your chapter actually wants, whether that's a sisterhood weekend, an officer transition, or a big-little getaway, with an itinerary managed down to the minute and a coordinator who has already thought of the thing you were about to worry about.",
@@ -192,7 +192,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: "corporate",
-    title: "Corporate & Sales Teams",
+    title: "Corporate Travel",
     headline: "Give Your Team a Trip They Actually Earn.",
     copy: [
       "An incentive trip only works if it feels like a reward, not a conference with a beach view. And an offsite only works if your ops lead isn't buried in logistics for a quarter to make it happen.",

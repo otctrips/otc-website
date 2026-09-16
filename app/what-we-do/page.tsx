@@ -17,7 +17,6 @@ export default function WhatWeDoPage() {
       <PageHero
         eyebrow="What We Do"
         title="Full-Service Group Travel. Built Around You."
-        subtitle="From the first conversation to the last flight home, we handle everything. Here's exactly what that looks like."
         image={IMAGES.resortPool}
       />
 
