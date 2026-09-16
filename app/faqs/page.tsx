@@ -12,7 +12,7 @@ export default function FaqsPage() {
     <>
       
       <div className="container-site pt-48 pb-0 text-center">
-        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Questions? We've Got Answers.</h1>
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Questions? We&apos;ve Got Answers.</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
         </p>
       </div>
