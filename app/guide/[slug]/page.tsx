@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FadeIn from "@/components/FadeIn";
-import CTABanner from "@/components/CTABanner";
 import { ARTICLES } from "@/lib/data";
 
 export function generateStaticParams() {
