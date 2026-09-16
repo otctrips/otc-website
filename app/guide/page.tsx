@@ -7,7 +7,7 @@ import CTABanner from "@/components/CTABanner";
 import { ARTICLES } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: "Travel Tips",
+  title: "OTC Guide",
   description:
     "The OTC Travel Guide: everything you need to know before, during, and after your group trip, from the people who plan them for a living.",
 };
@@ -16,8 +16,8 @@ export default function TravelTipsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Travel Tips"
-        title="The OTC Travel Guide."
+        eyebrow="OTC Guide"
+        title="The OTC Guide."
         subtitle="Everything you need to know before, during, and after your group trip."
       />
 
@@ -26,7 +26,7 @@ export default function TravelTipsPage() {
           {ARTICLES.map((article, i) => (
             <FadeIn key={article.slug} delay={(i % 3) * 0.1}>
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm shadow-ink/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-ink/10">
-                <Link href={`/travel-tips/${article.slug}`} className="relative block h-52 overflow-hidden">
+                <Link href={`/guide/${article.slug}`} className="relative block h-52 overflow-hidden">
                   <Image
                     src={article.image}
                     alt={article.title}
@@ -44,7 +44,7 @@ export default function TravelTipsPage() {
                   </p>
                   <h2 className="mt-2 font-heading text-xl leading-snug">
                     <Link
-                      href={`/travel-tips/${article.slug}`}
+                      href={`/guide/${article.slug}`}
                       className="transition-colors hover:text-brand"
                     >
                       {article.title}
@@ -54,7 +54,7 @@ export default function TravelTipsPage() {
                     {article.excerpt}
                   </p>
                   <Link
-                    href={`/travel-tips/${article.slug}`}
+                    href={`/guide/${article.slug}`}
                     className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold uppercase tracking-widest text-brand transition-colors hover:text-brand-dark"
                   >
                     Read More
