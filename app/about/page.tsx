@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+
 import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
-import { IMAGES } from "@/lib/data";
+
 
 export const metadata: Metadata = {
   title: "About",
