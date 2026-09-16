@@ -15,10 +15,10 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow="About"
-        title="We Built OTC Because Group Travel Was Broken."
-      />
+      <div className="container-site pt-32 pb-12">
+        <p className="eyebrow">About</p>
+        <h1 className="font-heading text-4xl font-bold text-ink mt-3 sm:text-5xl">We Built OTC Because Group Travel Was Broken.</h1>
+      </div>
 
       {/* Story */}
       <section className="container-site py-24">
