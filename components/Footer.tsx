@@ -14,7 +14,7 @@ const COMPANY_LINKS = [
   { href: "/about", label: "About" },
   { href: "/faqs", label: "FAQs" },
   { href: "/referral", label: "Referral Program" },
-  { href: "/travel-tips", label: "Travel Tips" },
+  { href: "/guide", label: "OTC Guide" },
   { href: "/privacy", label: "Privacy Policy" },
 ];
 

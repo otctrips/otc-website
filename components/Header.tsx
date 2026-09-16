@@ -17,7 +17,7 @@ const DRAWER_LINKS = [
   { href: "https://otctrips.com/about", label: "About" },
   { href: "https://otctrips.com/pricing", label: "Pricing" },
   { href: "https://otctrips.com/faqs", label: "FAQs" },
-  { href: "https://otctrips.com/travel-tips", label: "Travel Tips" },
+  { href: "https://otctrips.com/guide", label: "Travel Tips" },
 ];
 
 export default function Header() {
@@ -48,12 +48,13 @@ export default function Header() {
     return path === "/" ? pathname === "/" : pathname.startsWith(path);
   };
 
-  const onDark = !scrolled && !open;
+  const isGuidePage = pathname === "/guide";
+  const onDark = !scrolled && !open && !isGuidePage;
 
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled
+        scrolled || isGuidePage
           ? "border-b border-white/20 bg-[#4D8397]"
           : "border-b border-transparent bg-gradient-to-b from-night/60 to-transparent"
       }`}
