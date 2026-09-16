@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-
-import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
 
 
