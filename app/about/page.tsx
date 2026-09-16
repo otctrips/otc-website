@@ -10,12 +10,7 @@ export const metadata: Metadata = {
     "OTC Trips started with one person who watched student organizations get overcharged, underserved, and left to figure out flights on their own. So we fixed it.",
 };
 
-const STATS = [
-  "Flights Included. Always.",
-  "Custom Trips Only. No Packages.",
-  "One Coordinator, Start to Finish.",
-  "100+ Destinations and Counting.",
-];
+
 
 export default function AboutPage() {
   return (
