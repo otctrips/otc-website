@@ -427,96 +427,15 @@ export type Article = {
   body: string[];
 };
 
-export const ARTICLES: Article[] = [
+export const ARTICLES = [
   {
-    slug: "how-to-plan-a-fraternity-formal",
-    title: "How to Plan a Fraternity Formal (Without Losing Your Mind)",
-    category: "Formals",
+    slug: "how-early-should-you-start-planning-a-spring-formal",
+    title: "HOW EARLY SHOULD YOU START PLANNING A SPRING FORMAL?",
     excerpt:
-      "You got voted social chair, and now formal is your problem. Here's the playbook for pulling it off, and the mistakes that sink it.",
+      "Planning a spring formal starts earlier than you might think. Learn when to secure your destination, hotel, transportation, events, and final trip details to give your group the most options.",
+    category: "Planning",
+    readTime: "3 min read",
     image: u("photo-1511795409834-ef04bbd61622"),
-    readTime: "6 min read",
-    body: [
-      "Every formal that goes wrong goes wrong the same way: decisions made too late. The venue you wanted is booked, the hotel block is gone, and suddenly you're explaining to 90 brothers why formal is at the same place as last year. The fix isn't working harder in March. It's making three decisions in the fall: the city, the weekend, and the budget per person. Everything else hangs off those three.",
-      "Pick a city that carries the weekend by itself. Nashville, Charleston, and New Orleans are formal capitals for a reason. When the venue is one great night, the city fills in the other two. Book your hotel block for 10 to 15 percent more rooms than your confirmed count, because formals always grow once dates start getting asked.",
-      "The most underrated line item is transportation. Charter buses between the hotel and the venue mean no one is negotiating surge pricing in formal wear at 1am, and they're the cheapest insurance you'll ever buy against the night going sideways. Budget for them first, not last.",
-      "And the meta-tip: you don't actually have to do any of this. When OTC plans a formal, the venue sourcing, hotel block, buses, and individual payment collection are all one plan with one person responsible for it. Your job becomes picking between good options, which is the only fun part anyway.",
-    ],
-  },
-  {
-    slug: "ultimate-group-trip-packing-list",
-    title: "The Ultimate Group Trip Packing List",
-    category: "Travel Tips",
-    excerpt:
-      "Forty people, one destination, and somebody always forgets sunscreen. The list that keeps your whole group covered without overpacking.",
-    image: u("photo-1530789253388-582c481c54b0"),
-    readTime: "4 min read",
-    body: [
-      "Group trips have a packing superpower that solo trips don't: you don't all need to bring everything. The chapters that travel well keep a shared list where bulky, shareable items get claimed by one person each instead of packed forty times. Think speakers, first-aid kits, sunscreen by the liter, card games, and a power strip for the room that never has enough outlets.",
-      "Individually, the non-negotiables are boring and essential: government ID (passport for international, with six months validity, checked the day you book, not the week before), payment cards plus one backup, chargers, medications in original packaging, and one outfit a notch nicer than you think the trip requires. Every trip has a dinner that calls for it.",
-      "Destination changes the details. Beach trips: reef-safe sunscreen, after-sun, and shoes that can get wet. Ski trips: gloves and base layers, because renting a jacket is possible but renting warm socks is not. City formals: comfortable shoes for the day and the formal shoes you'll regret by midnight.",
-      "When you travel with OTC, your coordinator sends a destination-specific packing list with the final itinerary, so the group chat question 'wait, do we need towels?' gets answered before it's asked.",
-    ],
-  },
-  {
-    slug: "book-spring-break-earlier",
-    title: "Why You Should Book Your Spring Break Trip Earlier Than You Think",
-    category: "Spring Break",
-    excerpt:
-      "The math is brutal: every month your group waits to book, the same trip costs more. Here's the actual timeline that saves you money.",
-    image: u("photo-1510414842594-a61c69b5ae57"),
-    readTime: "5 min read",
-    body: [
-      "Here's the uncomfortable truth about spring break pricing: the trip your group books in January is the same trip it could have booked in September, for 20 to 30 percent more per person. Flights are the culprit. March airfare to Cancun, Punta Cana, and Miami climbs steadily from late fall, and group inventory (blocks of 30+ seats on the same flight) disappears long before individual seats do.",
-      "Resorts work the same way. The properties that are actually good for big groups, the all-inclusives with group-friendly layouts and event space, sell their blocks first. Wait too long and your options aren't bad, exactly, but they're whatever's left.",
-      "The ideal timeline looks like this: destination and rough headcount decided by early October, deposits collected by Halloween, flights and resort locked by Thanksgiving. That's it. Groups on that schedule routinely pay hundreds less per person than groups that start in January, for the identical trip.",
-      "The reason groups miss the window isn't ignorance, it's inertia: nobody wants to collect 40 deposits in October. That's exactly the part OTC removes. We send every traveler their own payment link, deposits trickle in without you chasing anyone, and your group hits the cheap window without a single spreadsheet.",
-    ],
-  },
-  {
-    slug: "how-to-split-costs-50-plus",
-    title: "How to Split Costs Fairly in a Group of 50+",
-    category: "Planning",
-    excerpt:
-      "The fastest way to ruin a group trip is money. The second fastest is one person fronting it. Here's the system that avoids both.",
-    image: u("photo-1554224155-6726b3ff858f"),
-    readTime: "5 min read",
-    body: [
-      "Every big group trip has a financial horror story candidate: the organizer who puts $30,000 of hotel rooms on a personal credit card and spends three months as an unpaid collections agency. It usually works out. When it doesn't, it really doesn't. Either way, that person never organizes anything again.",
-      "The principle that fixes it: no traveler should ever hold another traveler's money. Each person pays their own share, directly, on their own schedule. That means individual payment links with deposits and installments. Not one Venmo target, not a shared spreadsheet of who's 'good for it.'",
-      "Deposits matter more than people think, and not just for cash flow. A traveler with $200 down is a traveler who shows up; a traveler who's 'definitely in' but hasn't paid is a rounding error waiting to happen. Set the deposit deadline before you lock headcount-dependent bookings, never after.",
-      "This is also, frankly, the system OTC runs on every trip: individual links, automated installment schedules, and dropped travelers handled by written cancellation terms instead of a group vote. The organizer's financial job shrinks to zero, which is the correct size for it.",
-    ],
-  },
-  {
-    slug: "top-international-destinations-2025",
-    title: "Top 5 International Destinations for College Groups in 2025",
-    category: "Destinations",
-    excerpt:
-      "Where the group trips that people brag about are actually going this year, and what each spot does best.",
-    image: u("photo-1473116763249-2faaef81ccda"),
-    readTime: "6 min read",
-    body: [
-      "Punta Cana keeps the crown for big-group value. All-inclusive pricing makes budgeting painless, the resorts are built for groups of 50+, and short direct flights from most of the East Coast keep the travel day humane. If your group wants maximum beach for minimum logistics, this is still the answer.",
-      "Cancun and the Bahamas round out the proven picks. Cancun for groups that want the full spring break ecosystem, the Bahamas for crews that want international bragging rights on a long-weekend timeline. Both are forgiving for first-time international travelers, which matters more than people admit.",
-      "The two risers: Ibiza and Costa Rica. Ibiza is the once-in-a-lifetime pick, with villas, beach clubs, and nightlife that makes Vegas look like a rehearsal. It's best for groups that plan early and budget honestly. Costa Rica is the opposite energy: surf mornings, jungle excursions, and group houses that turn a chapter into a family. It's quietly become our most-requested retreat destination.",
-      "Whatever you pick, international raises the stakes on coordination. Passports, entry requirements, transfers in a country where the group chat has no signal. It's exactly the kind of trip where having one person responsible for the whole thing stops being a luxury and starts being the plan. That's the job. Tell us where you're thinking.",
-    ],
-  },
-  {
-    slug: "what-to-look-for-in-a-group-travel-company",
-    title: "What to Look for in a Group Travel Company (And What to Avoid)",
-    category: "Planning",
-    excerpt:
-      "Most student travel companies are selling the same package with different logos. The five questions that separate the real ones.",
-    image: u("photo-1556761175-5973dc0f32e7"),
-    readTime: "5 min read",
-    body: [
-      "Start with the question that ends most sales calls: 'Are flights included?' Most group travel companies sell land-only packages, a hotel and a wristband, and leave 80 people to book airfare individually, on different airlines, at different prices, landing at different times. If the answer involves the phrase 'we can recommend,' you've learned what you needed to know.",
-      "Second question: 'Who exactly will I be talking to in February?' If the answer is a support queue, an app, or 'one of our team,' expect to feel that in February. The companies worth hiring give you one named person with a phone number, and that person is the same one who built your proposal.",
-      "Third: 'Is this a package or is it built for us?' Packages are how companies scale, and they're fine, if your group happens to be the group the package was designed for. The tell is whether they ask real questions about your chapter before quoting, or just send a PDF with this year's dates on last year's trip.",
-      "Then check the boring things, because the boring things are where trips die: written cancellation terms before any deposit, individual payment collection so no student fronts money, and a Seller of Travel registration you can verify. A company that's vague on any of those is asking you to absorb risk that's supposed to be their job. We built OTC to be the company that passes this checklist. But honestly, whoever you book with, make them pass it.",
-    ],
   },
 ];
 
