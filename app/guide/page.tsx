@@ -69,11 +69,8 @@ export default function TravelTipsPage() {
         </div>
       </section>
 
-      <CTABanner
-        title="Reading about trips is the slow way to take one."
-        subtitle="Tell us where your group wants to go. We'll do the rest."
-        buttonLabel="Plan Your Trip"
-      />
+      
+      
     </>
   );
 }
