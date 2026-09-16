@@ -48,7 +48,7 @@ export default function Header() {
     return path === "/" ? pathname === "/" : pathname.startsWith(path);
   };
 
-  const isGuidePage = pathname === "/guide";
+  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/");
   const onDark = !scrolled && !open && !isGuidePage;
 
   return (
