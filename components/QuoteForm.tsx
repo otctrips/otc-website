@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { GROUP_SIZES, TRIP_TYPES } from "@/lib/data";
 
 const initialState = {
@@ -20,17 +20,24 @@ const initialState = {
 
 export default function QuoteForm() {
   const router = useRouter();
-  const [form, setForm] = useState(initialState);
+  const params = useSearchParams();
+  const [form, setForm] = useState({
+    ...initialState,
+    destination: params.get("destination") ?? "",
+    startDate: params.get("depart") ?? "",
+    endDate: params.get("return") ?? "",
+    groupSize: params.get("groupSize") ?? "",
+  });
   const [submitting, setSubmitting] = useState(false);
 
   const update =
     (field: keyof typeof initialState) =>
-    (
-      e: React.ChangeEvent<
-        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-      >
-    ) =>
-      setForm({ ...form, [field]: e.target.value });
+      (
+        e: React.ChangeEvent<
+          HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+        >
+      ) =>
+        setForm({ ...form, [field]: e.target.value });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -131,88 +138,83 @@ export default function QuoteForm() {
         </select>
       </div>
       <div>
-        <label htmlFor="groupSize" className="mb-2 block text-sm font-semibold text-ink/80">
-          Estimated Group Size *
-        </label>
-        <select
-          id="groupSize"
-          required
-          value={form.groupSize}
-          onChange={update("groupSize")}
-          className="input-field"
-        >
-          <option value="" disabled>
-            Select a range
-          </option>
-          {GROUP_SIZES.map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="sm:col-span-2">
-        <label htmlFor="destination" className="mb-2 block text-sm font-semibold text-ink/80">
-          Destination
-        </label>
-        <input
-          id="destination"
-          value={form.destination}
-          onChange={update("destination")}
-          placeholder="Have somewhere in mind? Tell us. Not sure? That's fine too."
-          className="input-field"
-        />
-      </div>
-      <div>
-        <label htmlFor="startDate" className="mb-2 block text-sm font-semibold text-ink/80">
-          Travel Dates: From
-        </label>
-        <input
-          id="startDate"
-          type="date"
-          value={form.startDate}
-          onChange={update("startDate")}
-          className="input-field"
-        />
-      </div>
-      <div>
-        <label htmlFor="endDate" className="mb-2 block text-sm font-semibold text-ink/80">
-          Travel Dates: To
-        </label>
-        <input
-          id="endDate"
-          type="date"
-          value={form.endDate}
-          onChange={update("endDate")}
-          className="input-field"
-        />
-      </div>
-      <div className="sm:col-span-2">
-        <label htmlFor="notes" className="mb-2 block text-sm font-semibold text-ink/80">
-          Anything else we should know?
-        </label>
-        <textarea
-          id="notes"
-          rows={4}
-          value={form.notes}
-          onChange={update("notes")}
-          placeholder="Budget per person, the vibe you're going for, a referral name. Anything helps."
-          className="input-field resize-none"
-        />
-      </div>
+        
+          <label htmlFor="groupSize" className="mb-2 block text-sm font-semibold text-ink/80">
+            Estimated Group Size *
+          </label>
+          <input
+            id="groupSize"
+            type="number"
+            min="1"
+            required
+            value={form.groupSize}
+            onChange={update("groupSize")}
+            placeholder="Enter number of people"
+            className="input-field"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="destination" className="mb-2 block text-sm font-semibold text-ink/80">
+            Destination
+          </label>
+          <input
+            id="destination"
+            value={form.destination}
+            onChange={update("destination")}
+            placeholder="Have somewhere in mind? Tell us. Not sure? That's fine too."
+            className="input-field"
+          />
+        </div>
+        <div>
+          <label htmlFor="startDate" className="mb-2 block text-sm font-semibold text-ink/80">
+            Travel Dates: From
+          </label>
+          <input
+            id="startDate"
+            type="date"
+            value={form.startDate}
+            onChange={update("startDate")}
+            className="input-field"
+          />
+        </div>
+        <div>
+          <label htmlFor="endDate" className="mb-2 block text-sm font-semibold text-ink/80">
+            Travel Dates: To
+          </label>
+          <input
+            id="endDate"
+            type="date"
+            value={form.endDate}
+            onChange={update("endDate")}
+            className="input-field"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label htmlFor="notes" className="mb-2 block text-sm font-semibold text-ink/80">
+            Anything else we should know?
+          </label>
+          <textarea
+            id="notes"
+            rows={4}
+            value={form.notes}
+            onChange={update("notes")}
+            placeholder="Budget per person, the vibe you're going for, a referral name. Anything helps."
+            className="input-field resize-none"
+          />
+        </div>
 
-      <div className="sm:col-span-2">
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn-primary w-full !py-4 !text-base disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {submitting ? "Sending..." : "Send It Over"}
-        </button>
-        <p className="mt-4 text-center text-xs text-ink/40">
-          No commitment, no spam. A real person reads every one of these.
-        </p>
-      </div>
+        <div className="sm:col-span-2">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="btn-primary w-full !py-4 !text-base disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {submitting ? "Sending..." : "Send It Over"}
+          </button>
+          <p className="mt-4 text-center text-xs text-ink/40">
+            No commitment, no spam. A real person reads every one of these.
+          </p>
+        </div>
     </form>
   );
 }

@@ -48,7 +48,7 @@ export default function Header() {
     return path === "/" ? pathname === "/" : pathname.startsWith(path);
   };
 
-  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote" || pathname === "/";
+  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote" || pathname === "/" || pathname === "/our-trips";
   const onDark = !scrolled && !open && !isGuidePage;
 
   return (

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
 import FadeIn from "@/components/FadeIn";
-import CTABanner from "@/components/CTABanner";
 import DestinationCard from "@/components/DestinationCard";
 import { DESTINATION_CATEGORIES, IMAGES } from "@/lib/data";
 
@@ -41,11 +40,7 @@ export default function DestinationsPage() {
         </div>
       </section>
 
-      <CTABanner
-        title="Don't See Your Spot?"
-        subtitle="We've planned trips to over 50 destinations. If you have somewhere in mind, we'll make it happen."
-        buttonLabel="Tell Us Where You Want to Go"
-      />
+      
     </>
   );
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import PageHero from "@/components/PageHero";
-import CTABanner from "@/components/CTABanner";
 import TripGallery from "@/components/TripGallery";
 import { IMAGES } from "@/lib/data";
 
@@ -13,18 +12,16 @@ export const metadata: Metadata = {
 export default function OurTripsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Our Trips"
-        title="The Trips We've Built."
-        subtitle="Every photo is a group that handed off the planning. Yours could be next."
-        image={IMAGES.celebration}
-      />
+      
+      
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Where Do You Want To Go?</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+          We'll take your group anywhere. Here are some of our most popular destinations.
+        </p>
+      </div>
       <TripGallery />
-      <CTABanner
-        title="Your trip could be next."
-        subtitle="Tell us where you want to go. We'll handle everything else."
-        buttonLabel="Start Planning"
-      />
+      
     </>
   );
 }
