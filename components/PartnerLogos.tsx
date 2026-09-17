@@ -17,11 +17,30 @@ const PARTNER_LOGOS = [
 
 export default function PartnerLogos() {
   return (
-    <section className="bg-[#4D8397] py-16">
+    <section className="bg-[#4D8397] py-16 overflow-hidden">
       <h2 className="text-center font-heading text-3xl font-bold text-white sm:text-4xl">
         Our Trusted Partners
       </h2>
-      <div className="container-site mt-12 grid grid-cols-3 gap-8 sm:grid-cols-4 lg:grid-cols-6">
+
+      {/* Mobile: infinite horizontal scroll */}
+      <div className="mt-12 overflow-hidden sm:hidden">
+        <div className="flex w-max animate-scroll gap-8">
+          {[...PARTNER_LOGOS, ...PARTNER_LOGOS].map((partner, i) => (
+            <div key={`${partner.name}-${i}`} className="flex min-w-[120px] shrink-0 items-center justify-center">
+              <Image
+                src={partner.url}
+                alt={partner.name}
+                width={160}
+                height={60}
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop: static grid */}
+      <div className="container-site mt-12 hidden grid-cols-3 gap-8 sm:grid sm:grid-cols-4 lg:grid-cols-6">
         {PARTNER_LOGOS.map((partner) => (
           <div key={partner.name} className="flex items-center justify-center">
             <Image
@@ -34,6 +53,7 @@ export default function PartnerLogos() {
           </div>
         ))}
       </div>
+
       <h2 className="mt-10 font-heading text-center text-sm font-bold text-white/60">
         Plus Many More
       </h2>
