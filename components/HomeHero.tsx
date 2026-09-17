@@ -1,58 +1,41 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { IMAGES, SITE } from "@/lib/data";
+import QuoteBar from "@/components/QuoteBar";
 
 export default function HomeHero() {
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-night">
-      <Image
-        src={IMAGES.homeHero}
-        alt="Luxury beachfront resort at dusk"
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        <source src="/homepagevideo.mp4" type="video/mp4" />
+      </video>
       <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.65) 100%)" }} />
 
-      <div className="container-site relative py-32 text-center text-white">
-        <motion.h1
+      <div className="container-site relative pt-32 pb-0 text-center text-white">
+        <motion.div
           initial={{ opacity: 0, y: 36 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: "easeOut" }}
-          className="mx-auto max-w-5xl font-heading text-4xl leading-[1.15] sm:text-6xl lg:text-7xl"
+          className="mx-auto mt-[0px] mb-[40px]"
         >
-          {SITE.tagline}
-        </motion.h1>
+          <Image src="/out-the-chat.png" alt="OTC Trips" width={700} height={400} className="mx-auto" />
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-10"
+          className="mt-[120px] mb-[70px] flex w-full max-w-4xl mx-auto"
         >
-          <Link href="/get-a-quote" className="btn-primary !px-12 !py-4 !text-base">
-            Plan Your Trip
-          </Link>
+          <QuoteBar />
         </motion.div>
       </div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="h-10 w-6 rounded-full border-2 border-white/40 p-1.5"
-        >
-          <div className="mx-auto h-2 w-1 rounded-full bg-white/60" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

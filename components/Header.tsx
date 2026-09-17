@@ -48,7 +48,7 @@ export default function Header() {
     return path === "/" ? pathname === "/" : pathname.startsWith(path);
   };
 
-  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote";
+  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote" || pathname === "/";
   const onDark = !scrolled && !open && !isGuidePage;
 
   return (
@@ -92,7 +92,7 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <Link
             href="https://otctrips.com/get-a-quote"
-            className={`btn-primary hidden !px-6 !py-2.5 sm:inline-flex${scrolled ? " !border-2 !border-white" : ""}`}
+            className="btn-primary hidden !px-6 !py-2.5 !border-2 !border-white sm:inline-flex"
           >
             Plan Your Trip
           </Link>

@@ -67,27 +67,7 @@ export default function WhatWeDoPage() {
         </div>
       </section>
 
-      {/* Why OTC */}
-      <section className="bg-night py-24 text-cream">
-        <div className="container-site">
-          <FadeIn className="text-center">
-            <p className="eyebrow-light">The Honest Comparison</p>
-            <h2 className="heading-lg mt-3 text-white">
-              Why OTC Over Everyone Else?
-            </h2>
-          </FadeIn>
-          <FadeIn className="mx-auto mt-8 max-w-3xl text-center">
-            <p className="text-lg leading-relaxed text-cream/70">
-              Our entire business is built around one goal: making sure your group gets the most out of every dollar. We negotiate directly with vendors to lock in the best possible rates, and we&apos;re completely transparent about where your money goes. No hidden markups, no inflated packages. Just a custom trip built around your budget, with someone in your corner making sure you&apos;re never overpaying.
-            </p>
-            <div className="mt-10">
-              <a href="/get-a-quote" className="btn-primary">
-                Plan Your Trip
-              </a>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
+      
     </>
   );
 }
