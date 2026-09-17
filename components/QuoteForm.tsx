@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { GROUP_SIZES, TRIP_TYPES } from "@/lib/data";
+import { TRIP_TYPES } from "@/lib/data";
 
 const initialState = {
   firstName: "",
