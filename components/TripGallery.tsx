@@ -39,7 +39,8 @@ export default function TripGallery() {
             initial={{ opacity: 0, scale: 0.94 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.35 }}
-            className={`group relative overflow-hidden rounded-2xl ${i % 3 === 0 ? "h-96" : "h-72"
+            onClick={() => setSelected(item)}
+            className={`group relative overflow-hidden rounded-2xl cursor-pointer ${i % 3 === 0 ? "h-96" : "h-72"
               }`}
           >
             <Image
@@ -115,17 +116,25 @@ export default function TripGallery() {
                 />
               </div>
               <div className="p-6">
-                <div className="flex flex-wrap gap-1.5 mb-3">
-                  {selected.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-brand/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-brand"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    {selected.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-brand/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-widest text-brand"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  {selected.avgPrice && (
+                    <div className="text-right ml-4 shrink-0">
+                      <p className="text-[10px] font-semibold uppercase tracking-widest text-ink/40">Average Price</p>
+                      <p className="font-heading text-2xl font-bold text-ink leading-none">{selected.avgPrice}</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-widest text-ink/40">Per Person</p>
+                    </div>
+                  )}
                 </div>
-                
                 <h2 className="mt-1 font-heading text-2xl font-bold text-ink">
                   {selected.destination}
                 </h2>

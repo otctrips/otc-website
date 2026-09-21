@@ -54,8 +54,43 @@ export default function HomePage() {
         </FadeIn>
       </section>
 
-      {/* Partner strip */}
-      <PartnerLogos />
+      {/* Hot Destinations */}
+      <section className="bg-[#4D8397] py-16">
+        <div className="container-site">
+        <FadeIn className="text-center mb-10">
+          
+            <h2 className="heading-lg mt-3 text-white">Hottest Destinations This Year</h2>
+        </FadeIn>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
+            {[
+              { city: "Nashville, TN", photo: "https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?w=800&auto=format&fit=crop", badge: "🔥 22 groups this year" },
+              { city: "New Orleans, LA", photo: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop", badge: "🔥 19 groups this year" },
+              { city: "Austin, TX", photo: "https://images.unsplash.com/photo-1531218150217-54595bc2b934?w=800&auto=format&fit=crop", badge: "🔥 13 groups this year" },
+              { city: "Toronto, ON", photo: "https://images.unsplash.com/photo-1582902281758-a4f26e3e0f61?w=800&auto=format&fit=crop", badge: "🔥 12 groups this year" },
+              { city: "Miami, FL", photo: "https://images.unsplash.com/photo-1506966953602-c20cc11f75e3?w=800&auto=format&fit=crop", badge: "🔥 8 groups this year" },
+            ].map((dest) => (
+              <Link key={dest.city} href="/get-a-quote" className="group relative h-64 overflow-hidden rounded-2xl block">
+                <Image
+                  src={dest.photo}
+                  alt={dest.city}
+                  fill
+                  sizes="(max-width: 640px) 50vw, 20vw"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="card-overlay-gradient absolute inset-x-0 bottom-0 h-2/5" />
+                {dest.badge && (
+                  <div className="absolute top-3 right-3 rounded-full bg-black/50 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                    {dest.badge}
+                  </div>
+                )}
+                <p className="absolute bottom-0 left-0 right-0 p-4 card-text-shadow font-heading text-lg font-bold text-white">
+                  {dest.city}
+                </p>
+              </Link>
+            ))}
+        </div>
+        </div>
+      </section>
 
       {/* Trip types */}
       <section className="container-site py-24">
@@ -83,6 +118,8 @@ export default function HomePage() {
                   <h3 className="card-text-shadow font-heading text-3xl font-bold text-white">
                     {card.title}
                   </h3>
+
+                  
                   
                   <span className="card-text-shadow mt-4 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-brand-light transition-transform duration-300 group-hover:translate-x-1">
                     See What&apos;s Included
@@ -97,7 +134,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      
+      {/* Partner strip */}
+      <PartnerLogos />
     </>
   );
 }
