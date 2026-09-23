@@ -680,12 +680,12 @@ export default function ProposalPage() {
       if (!hotel || !dateOpt) return;
       if (!venueSelectionSatisfied) return;
       const baseVenuePP = hasFixedHybridVenue ? (proposal.venue_per_person ?? 0) : includedVenuePackagesTotalPP;
-      const selectedVenuePP = isKalsu ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0);
+      const selectedVenuePP = isMultiPkg ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0);
       const venuePP = baseVenuePP + selectedVenuePP;
       const venueLabelParts = [
         ...(hasFixedHybridVenue && proposal.venue_name ? [proposal.venue_name] : []),
         ...includedVenuePackages.map(({ pkg }) => pkg.name),
-        ...(isKalsu ? selectedPkgsList.map((p) => p.name) : (selectedPkg ? [selectedPkg.name] : [])),
+        ...(isMultiPkg ? selectedPkgsList.map((p) => p.name) : (selectedPkg ? [selectedPkg.name] : [])),
       ];
       const venueLabel = venueLabelParts.length > 0 ? venueLabelParts.join(" + ") : "Venue";
       const totalPerPerson = Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100;
@@ -800,6 +800,8 @@ export default function ProposalPage() {
   const isBingpike = slug === "bingpike";
   const isBoisepike = slug === "boisepike";
   const isKalsu = slug === "kalsu";
+  const isLambdaChiFsu = slug === "lambdachifsu";
+  const isMultiPkg = isKalsu || isLambdaChiFsu;
   const isDeltaChiSyracuse = slug === "deltachisyracuse";
   const isSigChiWM = slug === "sigchiwm";
 
@@ -818,13 +820,22 @@ export default function ProposalPage() {
   const selectedDestHotelObj =
     selectedDestPkg && selectedDestHotelIdx !== undefined ? selectedDestPkg.hotels[selectedDestHotelIdx] ?? null : null;
   const selectedPkg = selectedPackage !== null ? venuePackages[selectedPackage] : null;
-  const selectedPkgsList = isKalsu
+  const selectedPkgsList = isMultiPkg
     ? selectedPackages.map((i) => venuePackages[i]).filter((p): p is VenuePackage => !!p)
     : [];
   const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => sum + p.pricePerPerson, 0);
-  const isPkgSelected = (idx: number) => (isKalsu ? selectedPackages.includes(idx) : selectedPackage === idx);
+  const isPkgSelected = (idx: number) => (isMultiPkg ? selectedPackages.includes(idx) : selectedPackage === idx);
+  // lambdachifsu: one Bourbon Heat open bar package + one April 10th dinner package
+  const lambdaPkgGroup = (pkg: VenuePackage | undefined) => (pkg?.name.includes("April 10") ? "dinner" : "bar");
   const togglePackage = (idx: number) => {
-    if (isKalsu) {
+    if (isLambdaChiFsu) {
+      const group = lambdaPkgGroup(venuePackages[idx]);
+      setSelectedPackages((prev) =>
+        prev.includes(idx)
+          ? prev.filter((i) => i !== idx)
+          : [...prev.filter((i) => lambdaPkgGroup(venuePackages[i]) !== group), idx]
+      );
+    } else if (isKalsu) {
       setSelectedPackages((prev) => (prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]));
     } else {
       setSelectedPackage(idx);
@@ -841,7 +852,14 @@ export default function ProposalPage() {
   const hasSelectableVenuePackages = selectableVenuePackages.length > 0;
   const includedVenuePackagesTotalPP = includedVenuePackages.reduce((sum, { pkg }) => sum + pkg.pricePerPerson, 0);
   const venueSelectionSatisfied =
-    hasFixedHybridVenue || !hasSelectableVenuePackages || (isKalsu ? selectedPackages.length > 0 : selectedPackage !== null);
+    hasFixedHybridVenue ||
+    !hasSelectableVenuePackages ||
+    (isLambdaChiFsu
+      ? selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "bar").length === 1 &&
+        selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "dinner").length === 1
+      : isKalsu
+        ? selectedPackages.length > 0
+        : selectedPackage !== null);
   const canConfirm = isFixed
     ? agreed
     : isHybrid
@@ -1651,6 +1669,11 @@ export default function ProposalPage() {
                       </div>
                     </div>
                   )}
+                  {isLambdaChiFsu && (
+                    <p className="mt-8 text-center text-sm text-ink/60">
+                      Select one Bourbon Heat open bar package and one April 10th dinner.
+                    </p>
+                  )}
                   <div className="mt-8 grid gap-6 sm:grid-cols-2">
                     {selectableVenuePackages.map(({ pkg, idx }) => {
                       const pkgActive = isPkgSelected(idx);
@@ -2244,7 +2267,7 @@ export default function ProposalPage() {
               </div>
             ))}
             {hasSelectableVenuePackages && (
-              isKalsu ? (
+              isMultiPkg ? (
                 selectedPkgsList.length > 0 ? (
                   selectedPkgsList.map((pkg) => (
                     <div key={pkg.id} className="flex items-start justify-between gap-4 border-b border-ink/10 py-5">
@@ -2322,7 +2345,7 @@ export default function ProposalPage() {
                 </div>
               ))}
               {hasSelectableVenuePackages && (
-                isKalsu ? (
+                isMultiPkg ? (
                   selectedPkgsList.length > 0 ? (
                     selectedPkgsList.map((pkg) => (
                       <div key={pkg.id} className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
@@ -2355,7 +2378,7 @@ export default function ProposalPage() {
               {(() => {
                 const baseVenuePP = hasFixedHybridVenue ? proposal.venue_per_person : includedVenuePackagesTotalPP;
                 const venuePP = venueSelectionSatisfied && baseVenuePP != null
-                  ? baseVenuePP + (isKalsu ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0))
+                  ? baseVenuePP + (isMultiPkg ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0))
                   : null;
                 const hybridPP = dateOpt && hotel && venuePP != null
                   ? Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100
