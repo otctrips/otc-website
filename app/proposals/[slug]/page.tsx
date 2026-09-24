@@ -351,6 +351,8 @@ function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; unifor
   );
 }
 
+const SKI_PRICE_PER_PERSON = 100;
+
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
     style: "currency",
@@ -372,6 +374,7 @@ export default function ProposalPage() {
   const [venuePackages, setVenuePackages] = useState<VenuePackage[]>([]);
   const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
   const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
+  const [skiHeadcount, setSkiHeadcount] = useState("");
   const [existingSignature, setExistingSignature] = useState<{ full_name: string; signed_at: string } | null>(null);
 
   const [destinationPackages, setDestinationPackages] = useState<DestinationPackage[]>([]);
@@ -685,11 +688,17 @@ export default function ProposalPage() {
       const venueLabelParts = [
         ...(hasFixedHybridVenue && proposal.venue_name ? [proposal.venue_name] : []),
         ...includedVenuePackages.map(({ pkg }) => pkg.name),
-        ...(isMultiPkg ? selectedPkgsList.map((p) => p.name) : (selectedPkg ? [selectedPkg.name] : [])),
+        ...(isMultiPkg
+          ? selectedPkgsList.map((p) => (isSkiPkg(p) ? `${p.name} (${skiCount} skiing)` : p.name))
+          : (selectedPkg ? [selectedPkg.name] : [])),
       ];
       const venueLabel = venueLabelParts.length > 0 ? venueLabelParts.join(" + ") : "Venue";
-      const totalPerPerson = Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100;
-      const totalCostHybrid = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
+      let totalPerPerson = Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100;
+      let totalCostHybrid = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
+      if (skiExtraTotal > 0) {
+        totalCostHybrid = Math.round((totalCostHybrid + skiExtraTotal) * 100) / 100;
+        totalPerPerson = proposal.group_size > 0 ? Math.round((totalCostHybrid / proposal.group_size) * 100) / 100 : totalPerPerson;
+      }
       signaturePayload = {
         proposal_id: proposal.id,
         group_name: proposal.group_name,
@@ -824,7 +833,12 @@ export default function ProposalPage() {
   const selectedPkgsList = isMultiPkg
     ? selectedPackages.map((i) => venuePackages[i]).filter((p): p is VenuePackage => !!p)
     : [];
-  const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => sum + p.pricePerPerson, 0);
+  // pikefau: ski package is priced by ski headcount × $100 rather than per person for the whole group
+  const isSkiPkg = (pkg: VenuePackage) => isPikeFau && pkg.name === "Sommet Saint Sauveur Resort - December 20th";
+  const skiCount = Math.max(0, Math.floor(Number(skiHeadcount) || 0));
+  const skiTotal = skiCount * SKI_PRICE_PER_PERSON;
+  const skiExtraTotal = selectedPkgsList.some(isSkiPkg) ? skiTotal : 0;
+  const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => (isSkiPkg(p) ? sum : sum + p.pricePerPerson), 0);
   const isPkgSelected = (idx: number) => (isMultiPkg ? selectedPackages.includes(idx) : selectedPackage === idx);
   // lambdachifsu: one Bourbon Heat open bar package + one April 10th dinner package
   const lambdaPkgGroup = (pkg: VenuePackage | undefined) => (pkg?.name.includes("April 10") ? "dinner" : "bar");
@@ -1734,8 +1748,39 @@ export default function ProposalPage() {
                               ))}
                             </ul>
                             )}
+                            {isSkiPkg(pkg) && (
+                              <div className="mt-5" onClick={(e) => e.stopPropagation()}>
+                                <label htmlFor="ski-headcount" className="block text-xs font-semibold uppercase tracking-widest text-ink/40">
+                                  How many people are going skiing?
+                                </label>
+                                <input
+                                  id="ski-headcount"
+                                  type="number"
+                                  min={0}
+                                  step={1}
+                                  inputMode="numeric"
+                                  value={skiHeadcount}
+                                  onChange={(e) => setSkiHeadcount(e.target.value)}
+                                  placeholder="0"
+                                  className="mt-2 w-full rounded-xl border border-ink/15 px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+                                />
+                                {skiCount > 0 && (
+                                  <p className="mt-2 text-sm text-ink/70">
+                                    {skiCount} × {fmt(SKI_PRICE_PER_PERSON)} ={" "}
+                                    <span className="font-semibold text-ink">{fmt(skiTotal)}</span> total
+                                  </p>
+                                )}
+                              </div>
+                            )}
                             <div className="mt-6 border-t border-ink/10 pt-4">
-                              <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
+                              {isSkiPkg(pkg) ? (
+                                <p className="font-heading text-3xl font-bold text-ink">
+                                  {fmt(SKI_PRICE_PER_PERSON)}
+                                  <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
+                                </p>
+                              ) : (
+                                <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
+                              )}
                             </div>
                             <div className="mt-4">
                               <motion.button
@@ -2349,6 +2394,18 @@ export default function ProposalPage() {
                 isMultiPkg ? (
                   selectedPkgsList.length > 0 ? (
                     selectedPkgsList.map((pkg) => (
+                      isSkiPkg(pkg) ? (
+                        <div key={pkg.id} className="flex items-start justify-between gap-3 border-t border-ink/10 py-3">
+                          <div>
+                            <p className="text-sm font-medium text-ink">{pkg.name}</p>
+                            <p className="mt-0.5 text-xs text-ink/45">{skiCount} {skiCount === 1 ? "person" : "people"} skiing</p>
+                          </div>
+                          <div className="flex shrink-0 gap-4">
+                            <p className="w-[88px] text-right font-semibold text-ink">{fmt(SKI_PRICE_PER_PERSON)}</p>
+                            <p className="w-[100px] text-right font-semibold text-ink">{fmt(skiTotal)}</p>
+                          </div>
+                        </div>
+                      ) : (
                       <div key={pkg.id} className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
                         <p className="text-sm font-medium text-ink">{pkg.name}</p>
                         <div className="flex shrink-0 gap-4">
@@ -2356,6 +2413,7 @@ export default function ProposalPage() {
                           <p className="w-[100px] text-right font-semibold text-ink">{pkg.displayPrice ? pkg.displayPrice.trim().split(" ")[0] : fmt(Math.round(pkg.pricePerPerson * groupSize * 100) / 100)}</p>
                         </div>
                       </div>
+                      )
                     ))
                   ) : (
                     <div className="flex items-center justify-between gap-3 border-t border-ink/10 py-3">
@@ -2381,10 +2439,14 @@ export default function ProposalPage() {
                 const venuePP = venueSelectionSatisfied && baseVenuePP != null
                   ? baseVenuePP + (isMultiPkg ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0))
                   : null;
-                const hybridPP = dateOpt && hotel && venuePP != null
+                let hybridPP = dateOpt && hotel && venuePP != null
                   ? Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100
                   : null;
-                const hybridTotal = hybridPP !== null ? Math.round(hybridPP * groupSize * 100) / 100 : null;
+                let hybridTotal = hybridPP !== null ? Math.round(hybridPP * groupSize * 100) / 100 : null;
+                if (hybridTotal !== null && skiExtraTotal > 0) {
+                  hybridTotal = Math.round((hybridTotal + skiExtraTotal) * 100) / 100;
+                  if (groupSize > 0) hybridPP = Math.round((hybridTotal / groupSize) * 100) / 100;
+                }
                 return (
                   <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
                     <div className="flex items-center justify-between">
