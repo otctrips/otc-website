@@ -1841,7 +1841,7 @@ export default function ProposalPage() {
                               </div>
                             )}
                             {pkg.durationOptions ? (
-                              <div className="mt-6 flex overflow-hidden rounded-full border-2 border-brand">
+                              <div className="mt-6 flex min-h-[64px] flex-1 overflow-hidden rounded-3xl border-2 border-brand">
                                 {pkg.durationOptions.map((opt, optIdx) => {
                                   const optActive = pkgActive && (pkgOption[idx] ?? 0) === optIdx;
                                   return (
