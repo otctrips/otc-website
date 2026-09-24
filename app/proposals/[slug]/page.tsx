@@ -1774,7 +1774,7 @@ export default function ProposalPage() {
                                   inputMode="numeric"
                                   value={skiHeadcount}
                                   onChange={(e) => setSkiHeadcount(e.target.value)}
-                                  placeholder={String(SKI_MIN_ATTENDEES)}
+                                  placeholder="20 Minimum"
                                   aria-invalid={skiBelowMin}
                                   aria-describedby={skiBelowMin ? "ski-headcount-error" : undefined}
                                   className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm text-ink focus:outline-none focus:ring-1 ${
