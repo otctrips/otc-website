@@ -2359,7 +2359,7 @@ export default function ProposalPage() {
                   {hotel && <p className="mt-0.5 text-xs text-ink/45">{hotel.name}</p>}
                 </div>
                 <div className="flex shrink-0 gap-4">
-                  <p className="w-[88px] text-right font-semibold text-ink">{dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}</p>
+                  <p className="w-[88px] text-right font-semibold text-ink">{isPikeFau ? "" : dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}</p>
                   <p className="w-[100px] text-right font-semibold text-ink">{dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100) : "—"}</p>
                 </div>
               </div>
