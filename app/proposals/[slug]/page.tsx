@@ -1794,7 +1794,7 @@ export default function ProposalPage() {
                                 )}
                               </div>
                             )}
-                            {isPikeFau && pkg.name === "Maddhatter Bar - December 21st" && (
+                            {isPikeFau && (pkg.name === "Maddhatter Bar - December 21st" || pkg.name === "Venue TBD - December 21st") && (
                               <div className="mt-5" onClick={(e) => e.stopPropagation()}>
                                 <label htmlFor="maddhatter-headcount" className="block text-xs font-semibold uppercase tracking-widest text-ink/40">
                                   How many people are attending?
