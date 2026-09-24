@@ -353,6 +353,7 @@ function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; unifor
 
 const SKI_PRICE_PER_PERSON = 100;
 const SKI_MIN_ATTENDEES = 20;
+const MADDHATTER_ATTENDEES = 120;
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
@@ -1791,6 +1792,25 @@ export default function ProposalPage() {
                                     <span className="font-semibold text-ink">{fmt(skiTotal)}</span> total
                                   </p>
                                 )}
+                              </div>
+                            )}
+                            {isPikeFau && pkg.name === "Maddhatter Bar - December 21st" && (
+                              <div className="mt-5" onClick={(e) => e.stopPropagation()}>
+                                <label htmlFor="maddhatter-headcount" className="block text-xs font-semibold uppercase tracking-widest text-ink/40">
+                                  How many people are attending?
+                                </label>
+                                <input
+                                  id="maddhatter-headcount"
+                                  type="number"
+                                  value={MADDHATTER_ATTENDEES}
+                                  readOnly
+                                  tabIndex={-1}
+                                  className="mt-2 w-full cursor-not-allowed rounded-xl border border-ink/15 bg-ink/5 px-4 py-2.5 text-sm text-ink/70 focus:outline-none"
+                                />
+                                <p className="mt-2 text-sm text-ink/70">
+                                  {MADDHATTER_ATTENDEES} × {fmt(pkg.pricePerPerson)} ={" "}
+                                  <span className="font-semibold text-ink">{fmt(Math.round(MADDHATTER_ATTENDEES * pkg.pricePerPerson * 100) / 100)}</span> total
+                                </p>
                               </div>
                             )}
                             <div className="mt-6 border-t border-ink/10 pt-4">
