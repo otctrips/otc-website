@@ -1480,6 +1480,14 @@ export default function ProposalPage() {
 
                           {/* Price */}
                           <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
+                            {isPikeFau ? (
+                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                              <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Total Cost</span>
+                              <span className="font-heading text-3xl font-bold text-ink">
+                                {displayData ? fmt(Math.round(displayData.pricePerPerson * groupSize * 100) / 100) : "TBD"}
+                              </span>
+                            </div>
+                            ) : (
                             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                               {!activeDateData && displayData && (
                                 <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
@@ -1494,6 +1502,7 @@ export default function ProposalPage() {
                               </span>
                               )}
                             </div>
+                            )}
                           </div>
 
                           {/* Bus cost line */}
