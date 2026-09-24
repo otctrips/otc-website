@@ -1751,7 +1751,7 @@ export default function ProposalPage() {
                             {isSkiPkg(pkg) && (
                               <div className="mt-5" onClick={(e) => e.stopPropagation()}>
                                 <label htmlFor="ski-headcount" className="block text-xs font-semibold uppercase tracking-widest text-ink/40">
-                                  How many people are going skiing?
+                                  How many people are attending?
                                 </label>
                                 <input
                                   id="ski-headcount"
@@ -2398,7 +2398,7 @@ export default function ProposalPage() {
                         <div key={pkg.id} className="flex items-start justify-between gap-3 border-t border-ink/10 py-3">
                           <div>
                             <p className="text-sm font-medium text-ink">{pkg.name}</p>
-                            <p className="mt-0.5 text-xs text-ink/45">{skiCount} {skiCount === 1 ? "person" : "people"} skiing</p>
+                            <p className="mt-0.5 text-xs text-ink/45">{skiCount} {skiCount === 1 ? "person" : "people"} attending</p>
                           </div>
                           <div className="flex shrink-0 gap-4">
                             <p className="w-[88px] text-right font-semibold text-ink">{fmt(SKI_PRICE_PER_PERSON)}</p>
