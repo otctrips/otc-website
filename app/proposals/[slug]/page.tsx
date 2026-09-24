@@ -352,6 +352,7 @@ function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; unifor
 }
 
 const SKI_PRICE_PER_PERSON = 100;
+const SKI_MIN_ATTENDEES = 20;
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
@@ -837,7 +838,9 @@ export default function ProposalPage() {
   const isSkiPkg = (pkg: VenuePackage) => isPikeFau && pkg.name === "Sommet Saint Sauveur Resort - December 20th";
   const skiCount = Math.max(0, Math.floor(Number(skiHeadcount) || 0));
   const skiTotal = skiCount * SKI_PRICE_PER_PERSON;
-  const skiExtraTotal = selectedPkgsList.some(isSkiPkg) ? skiTotal : 0;
+  const skiSelected = selectedPkgsList.some(isSkiPkg);
+  const skiExtraTotal = skiSelected ? skiTotal : 0;
+  const skiBelowMin = skiHeadcount.trim() !== "" && skiCount < SKI_MIN_ATTENDEES;
   const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => (isSkiPkg(p) ? sum : sum + p.pricePerPerson), 0);
   const isPkgSelected = (idx: number) => (isMultiPkg ? selectedPackages.includes(idx) : selectedPackage === idx);
   // lambdachifsu: one Bourbon Heat open bar package + one April 10th dinner package
@@ -873,7 +876,7 @@ export default function ProposalPage() {
       ? selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "bar").length === 1 &&
         selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "dinner").length === 1
       : isMultiPkg
-        ? selectedPackages.length > 0
+        ? selectedPackages.length > 0 && (!skiSelected || skiCount >= SKI_MIN_ATTENDEES)
         : selectedPackage !== null);
   const canConfirm = isFixed
     ? agreed
@@ -1765,14 +1768,23 @@ export default function ProposalPage() {
                                 <input
                                   id="ski-headcount"
                                   type="number"
-                                  min={0}
+                                  min={SKI_MIN_ATTENDEES}
                                   step={1}
                                   inputMode="numeric"
                                   value={skiHeadcount}
                                   onChange={(e) => setSkiHeadcount(e.target.value)}
-                                  placeholder="0"
-                                  className="mt-2 w-full rounded-xl border border-ink/15 px-4 py-2.5 text-sm text-ink focus:border-brand focus:outline-none focus:ring-1 focus:ring-brand"
+                                  placeholder={String(SKI_MIN_ATTENDEES)}
+                                  aria-invalid={skiBelowMin}
+                                  aria-describedby={skiBelowMin ? "ski-headcount-error" : undefined}
+                                  className={`mt-2 w-full rounded-xl border px-4 py-2.5 text-sm text-ink focus:outline-none focus:ring-1 ${
+                                    skiBelowMin ? "border-red-500 focus:border-red-500 focus:ring-red-500" : "border-ink/15 focus:border-brand focus:ring-brand"
+                                  }`}
                                 />
+                                {skiBelowMin && (
+                                  <p id="ski-headcount-error" className="mt-2 text-sm font-medium text-red-600">
+                                    Minimum 20 people required
+                                  </p>
+                                )}
                                 {skiCount > 0 && (
                                   <p className="mt-2 text-sm text-ink/70">
                                     {skiCount} × {fmt(SKI_PRICE_PER_PERSON)} ={" "}
