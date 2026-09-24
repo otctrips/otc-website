@@ -1851,14 +1851,14 @@ export default function ProposalPage() {
                                       whileTap={{ scale: 0.97 }}
                                       aria-pressed={optActive}
                                       onClick={(e) => { e.stopPropagation(); choosePackageOption(idx, optIdx); }}
-                                      className={`flex flex-1 flex-col items-center justify-center py-2.5 transition-all duration-300 ${
+                                      className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1 px-3 py-3 text-center transition-all duration-300 ${
                                         optIdx > 0 ? "border-l-2 border-brand" : ""
                                       } ${optActive ? "bg-brand text-white" : "bg-white text-brand hover:bg-brand/10"}`}
                                     >
-                                      <span className="text-sm font-semibold uppercase tracking-widest">
-                                        {opt.label}{optActive ? " ✓" : ""}
+                                      <span className="text-balance text-lg font-bold leading-snug">
+                                        {opt.label}{optActive ? " ✓" : ""}
                                       </span>
-                                      <span className={`text-xs ${optActive ? "text-white/85" : "text-brand/80"}`}>
+                                      <span className={`whitespace-nowrap text-lg font-normal ${optActive ? "text-white/85" : "text-brand/80"}`}>
                                         ${Number.isInteger(opt.pricePerPerson) ? opt.pricePerPerson : opt.pricePerPerson.toFixed(2)}/person
                                       </span>
                                     </motion.button>
