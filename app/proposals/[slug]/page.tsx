@@ -40,6 +40,8 @@ type VenuePackage = {
   pricePerPerson: number;
   isIncluded: boolean;
   displayPrice: string | null;
+  // Optional: when set, the card shows a split pill and the chosen option sets the price
+  durationOptions: { label: string; pricePerPerson: number }[] | null;
 };
 
 type DestinationHotel = {
@@ -377,6 +379,7 @@ export default function ProposalPage() {
   const [selectedPackage, setSelectedPackage] = useState<number | null>(null);
   const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
   const [skiHeadcount, setSkiHeadcount] = useState("");
+  const [pkgOption, setPkgOption] = useState<Record<number, number>>({});
   const [existingSignature, setExistingSignature] = useState<{ full_name: string; signed_at: string } | null>(null);
 
   const [destinationPackages, setDestinationPackages] = useState<DestinationPackage[]>([]);
@@ -528,6 +531,12 @@ export default function ProposalPage() {
           pricePerPerson: p.price_per_person,
           isIncluded: p.is_included ?? false,
           displayPrice: p.display_price,
+          durationOptions: Array.isArray(p.duration_options)
+            ? (p.duration_options as { label: string; price_per_person: number }[]).map((o) => ({
+                label: o.label,
+                pricePerPerson: Number(o.price_per_person),
+              }))
+            : null,
         }));
         setVenuePackages(builtPackages);
 
@@ -831,9 +840,16 @@ export default function ProposalPage() {
   const selectedDestHotelIdx = selectedDestination !== null ? destHotelChoice[selectedDestination] : undefined;
   const selectedDestHotelObj =
     selectedDestPkg && selectedDestHotelIdx !== undefined ? selectedDestPkg.hotels[selectedDestHotelIdx] ?? null : null;
-  const selectedPkg = selectedPackage !== null ? venuePackages[selectedPackage] : null;
+  // Packages with durationOptions are priced and labeled by the chosen option
+  const withChosenOption = (idx: number): VenuePackage | null => {
+    const pkg = venuePackages[idx];
+    if (!pkg) return null;
+    const opt = pkg.durationOptions?.[pkgOption[idx] ?? 0];
+    return opt ? { ...pkg, name: `${pkg.name} (${opt.label})`, pricePerPerson: opt.pricePerPerson } : pkg;
+  };
+  const selectedPkg = selectedPackage !== null ? withChosenOption(selectedPackage) : null;
   const selectedPkgsList = isMultiPkg
-    ? selectedPackages.map((i) => venuePackages[i]).filter((p): p is VenuePackage => !!p)
+    ? selectedPackages.map(withChosenOption).filter((p): p is VenuePackage => !!p)
     : [];
   // pikefau: ski package is priced by ski headcount × $100 rather than per person for the whole group
   const isSkiPkg = (pkg: VenuePackage) => isPikeFau && pkg.name === "Sommet Saint Sauveur Resort - December 20th";
@@ -859,6 +875,17 @@ export default function ProposalPage() {
     } else {
       setSelectedPackage(idx);
     }
+  };
+  // Split pill: clicking a half selects the package with that option; clicking the active half deselects it
+  const choosePackageOption = (idx: number, optIdx: number) => {
+    const selected = isPkgSelected(idx);
+    if (selected && (pkgOption[idx] ?? 0) === optIdx) {
+      if (isMultiPkg) togglePackage(idx);
+      else setSelectedPackage(null);
+      return;
+    }
+    setPkgOption((prev) => ({ ...prev, [idx]: optIdx }));
+    if (!selected) togglePackage(idx);
   };
   const showVenuePackages = !hotel || !proposal?.venue_city || hotel.city === proposal.venue_city;
   const hasFixedHybridVenue = isHybrid && venuePackages.length === 0 && proposal?.venue_per_person != null;
@@ -1813,6 +1840,33 @@ export default function ProposalPage() {
                                 </p>
                               </div>
                             )}
+                            {pkg.durationOptions ? (
+                              <div className="mt-6 flex overflow-hidden rounded-full border-2 border-brand">
+                                {pkg.durationOptions.map((opt, optIdx) => {
+                                  const optActive = pkgActive && (pkgOption[idx] ?? 0) === optIdx;
+                                  return (
+                                    <motion.button
+                                      key={opt.label}
+                                      type="button"
+                                      whileTap={{ scale: 0.97 }}
+                                      aria-pressed={optActive}
+                                      onClick={(e) => { e.stopPropagation(); choosePackageOption(idx, optIdx); }}
+                                      className={`flex flex-1 flex-col items-center justify-center py-2.5 transition-all duration-300 ${
+                                        optIdx > 0 ? "border-l-2 border-brand" : ""
+                                      } ${optActive ? "bg-brand text-white" : "bg-white text-brand hover:bg-brand/10"}`}
+                                    >
+                                      <span className="text-sm font-semibold uppercase tracking-widest">
+                                        {opt.label}{optActive ? " ✓" : ""}
+                                      </span>
+                                      <span className={`text-xs ${optActive ? "text-white/85" : "text-brand/80"}`}>
+                                        ${Number.isInteger(opt.pricePerPerson) ? opt.pricePerPerson : opt.pricePerPerson.toFixed(2)}/person
+                                      </span>
+                                    </motion.button>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                            <>
                             <div className="mt-6 border-t border-ink/10 pt-4">
                               {isSkiPkg(pkg) ? (
                                 <p className="font-heading text-3xl font-bold text-ink">
@@ -1836,6 +1890,8 @@ export default function ProposalPage() {
                                 {pkgActive ? "Selected ✓" : "Select This Package"}
                               </motion.button>
                             </div>
+                            </>
+                            )}
                           </div>
                         </motion.div>
                       );
