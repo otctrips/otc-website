@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { GALLERY, type GalleryItem } from "@/lib/data";
 import Link from "next/link";
 
-const FILTERS = ["All", "Formals", "Spring Break", "Retreats", "International", "Domestic", "Corporate"];
+const FILTERS = ["All", "🔥 Most Popular", "⭐ OTC Favorite", "💵 Affordable", "🍹 All Inclusive", "🎓 Formals", "🏖️ Spring Break", "✈️ International", "💼 Corporate"];
 
 export default function TripGallery() {
   const [filter, setFilter] = useState("All");

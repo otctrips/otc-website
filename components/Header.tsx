@@ -53,11 +53,7 @@ export default function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-        scrolled || isGuidePage
-          ? "border-b border-white/20 bg-[#4D8397]"
-          : "border-b border-transparent bg-gradient-to-b from-night/60 to-transparent"
-      }`}
+      className={`fixed inset-x-0 top-[40px] z-50 transition-all duration-300 border-b border-white/20 bg-[#4D8397]`}
     >
       <div className="container-site flex h-20 items-center justify-between">
         <Link href="https://otctrips.com">
