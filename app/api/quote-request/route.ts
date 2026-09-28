@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -46,23 +47,63 @@ export async function POST(request: Request) {
   const organization = value("organization");
   const email = value("email");
 
-  const { data, error } = await resend.emails.send({
-    from: "notifications@otctrips.com",
-    to: "tdmvofficial@otctrips.com",
-    ...(email ? { replyTo: email } : {}),
-    subject: `New Quote Request - ${name}${organization ? ` (${organization})` : ""}`,
-    html: `
-      <h2>New Quote Request</h2>
-      <table style="border-collapse:collapse;width:100%;max-width:500px">
-        ${rows}
-      </table>
-    `,
+  // Save the lead first so it survives an email failure. The id is generated here
+  // because the anon key can't read rows back from quote_requests.
+  const requestId = crypto.randomUUID();
+  const { error: insertError } = await supabase.from("quote_requests").insert({
+    id: requestId,
+    first_name: value("firstName"),
+    last_name: value("lastName"),
+    email,
+    phone: value("phone"),
+    organization,
+    trip_type: value("tripType"),
+    group_size: value("groupSize"),
+    destination: value("destination"),
+    start_date: value("startDate"),
+    end_date: value("endDate"),
+    notes: value("notes"),
+    email_sent: false,
   });
-
-  if (error) {
-    console.error("[quote-request] resend error:", JSON.stringify(error));
-    return NextResponse.json({ error }, { status: 500 });
+  const saved = !insertError;
+  if (insertError) {
+    console.error("[quote-request] supabase insert error:", JSON.stringify(insertError));
   }
 
-  return NextResponse.json({ ok: true, data });
+  let emailError: unknown = null;
+  try {
+    const { error } = await resend.emails.send({
+      from: "notifications@otctrips.com",
+      to: "tdmvofficial@otctrips.com",
+      ...(email ? { replyTo: email } : {}),
+      subject: `New Quote Request - ${name}${organization ? ` (${organization})` : ""}`,
+      html: `
+        <h2>New Quote Request</h2>
+        <table style="border-collapse:collapse;width:100%;max-width:500px">
+          ${rows}
+        </table>
+      `,
+    });
+    emailError = error;
+  } catch (err) {
+    emailError = err instanceof Error ? err.message : err;
+  }
+  const emailSent = !emailError;
+  if (emailError) {
+    console.error("[quote-request] resend error:", JSON.stringify(emailError));
+  }
+
+  if (saved && emailSent) {
+    const { error: markError } = await supabase.rpc("mark_quote_request_email_sent", { request_id: requestId });
+    if (markError) {
+      console.error("[quote-request] failed to mark email_sent:", JSON.stringify(markError));
+    }
+  }
+
+  // The lead is safe as long as it was either saved or emailed
+  if (!saved && !emailSent) {
+    return NextResponse.json({ error: "Could not save or send quote request" }, { status: 500 });
+  }
+
+  return NextResponse.json({ ok: true, saved, emailSent });
 }
