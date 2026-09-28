@@ -29,6 +29,7 @@ export default function QuoteForm() {
     groupSize: params.get("groupSize") ?? "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const update =
     (field: keyof typeof initialState) =>
@@ -39,12 +40,23 @@ export default function QuoteForm() {
       ) =>
         setForm({ ...form, [field]: e.target.value });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    // No backend yet, so log the lead and hand off to the thank-you page.
-    console.log("Trip request:", form);
-    router.push("/thank-you");
+    setError(null);
+    try {
+      const res = await fetch("/api/quote-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error(`Quote request failed: ${res.status}`);
+      router.push("/thank-you");
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong sending your request. Please try again.");
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -211,6 +223,11 @@ export default function QuoteForm() {
           >
             {submitting ? "Sending..." : "Send It Over"}
           </button>
+          {error && (
+            <p role="alert" className="mt-4 text-center text-sm font-medium text-red-600">
+              {error}
+            </p>
+          )}
           <p className="mt-4 text-center text-xs text-ink/40">
             No commitment, no spam. A real person reads every one of these.
           </p>
