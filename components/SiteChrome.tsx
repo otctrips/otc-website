@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
-import DiscountBanner from "./DiscountBanner";
 
 export default function SiteChrome({
   children,
@@ -21,7 +20,7 @@ export default function SiteChrome({
   return (
     <>
       <div className="relative z-[60]">
-        <DiscountBanner />
+        
       </div>
       <Header />
       <main className="min-h-screen pt-[40px]">{children}</main>
