@@ -858,7 +858,16 @@ export default function ProposalPage() {
   const skiSelected = selectedPkgsList.some(isSkiPkg);
   const skiExtraTotal = skiSelected ? skiTotal : 0;
   const skiBelowMin = skiHeadcount.trim() !== "" && skiCount < SKI_MIN_ATTENDEES;
-  const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => (isSkiPkg(p) ? sum : sum + p.pricePerPerson), 0);
+  // kalsu: a flat display_price like "$1,300 Total" is spread across the group instead of using price_per_person
+  const pkgPerPerson = (p: VenuePackage) => {
+    if (isKalsu && p.displayPrice && groupSize > 0) {
+      const match = p.displayPrice.match(/\d[\d,]*(?:\.\d+)?/);
+      const flatTotal = match ? Number(match[0].replace(/,/g, "")) : NaN;
+      if (flatTotal > 0) return flatTotal / groupSize;
+    }
+    return p.pricePerPerson;
+  };
+  const selectedPkgsTotalPP = selectedPkgsList.reduce((sum, p) => (isSkiPkg(p) ? sum : sum + pkgPerPerson(p)), 0);
   const isPkgSelected = (idx: number) => (isMultiPkg ? selectedPackages.includes(idx) : selectedPackage === idx);
   // lambdachifsu: one Bourbon Heat open bar package + one April 10th dinner package
   const lambdaPkgGroup = (pkg: VenuePackage | undefined) => (pkg?.name.includes("April 10") ? "dinner" : "bar");
