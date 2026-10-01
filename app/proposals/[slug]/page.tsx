@@ -356,6 +356,7 @@ function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; unifor
 const SKI_PRICE_PER_PERSON = 100;
 const SKI_MIN_ATTENDEES = 20;
 const MADDHATTER_ATTENDEES = 120;
+const KALSU_TOTAL_TRIP_COST = 52300;
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
@@ -2564,7 +2565,7 @@ export default function ProposalPage() {
                         Total Trip Cost
                         <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
                       </p>
-                      <p className="font-heading text-2xl font-bold text-brand">{hybridTotal !== null ? fmt(hybridTotal) : "—"}</p>
+                      <p className="font-heading text-2xl font-bold text-brand">{isKalsu ? fmt(KALSU_TOTAL_TRIP_COST) : hybridTotal !== null ? fmt(hybridTotal) : "—"}</p>
                     </div>
                   </div>
                 );
