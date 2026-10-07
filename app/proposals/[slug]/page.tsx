@@ -1021,6 +1021,7 @@ export default function ProposalPage() {
 
   return (
     <div className="min-h-screen">
+      <AppAnnouncementPopup />
 
       {/* ════════════════════════ HERO ════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-night">
