@@ -33,7 +33,7 @@ export default function AppAnnouncementPopup() {
                     ✕
                 </button>
                 <Image
-                    src="/myOTClogo.png"
+                    src="https://otctrips.com/myOTClogo.png"
                     alt="myOTC"
                     width={280}
                     height={120}
