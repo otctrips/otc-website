@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 
 export default function AppAnnouncementPopup() {
     const [visible, setVisible] = useState(false);
@@ -32,12 +31,10 @@ export default function AppAnnouncementPopup() {
                 >
                     ✕
                 </button>
-                <Image
-                    src="https://otctrips.com/myOTClogo.png"
+                <img
+                    src="/myOTClogo.png"
                     alt="myOTC"
-                    width={280}
-                    height={120}
-                    className="mx-auto"
+                    className="mx-auto h-auto w-64"
                 />
                 <p className="mt-6 text-base text-white font-bold leading-relaxed">
                     Your group trips, all in one app. Itineraries, payments, room selections, group chat, and more.
