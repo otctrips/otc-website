@@ -16,30 +16,30 @@ export default function AppAnnouncementPopup() {
 
     return (
         <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-3 sm:px-4"
             onClick={close}
         >
             <div
-                className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl flex"
+                className="relative w-full max-w-2xl rounded-xl sm:rounded-2xl overflow-hidden shadow-2xl flex"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Left panel */}
-                <div className="bg-[#4D8397] w-80 p-10">
+                <div className="bg-[#4D8397] w-[58%] p-4 sm:w-80 sm:p-10">
                     <button
                         onClick={close}
-                        className="absolute right-4 top-4 text-white text-xl leading-none z-10"
+                        className="absolute right-2 top-2 sm:right-4 sm:top-4 text-white text-base sm:text-xl leading-none z-10"
                     >
                         ✕
                     </button>
-                    <div className="inline-block bg-white/20 text-white text-sm font-bold uppercase tracking-[0.2em] px-5 py-2 rounded-full mb-4">
+                    <div className="inline-block bg-white/20 text-white text-[9px] sm:text-sm font-bold uppercase tracking-[0.15em] sm:tracking-[0.2em] px-3 py-1 sm:px-5 sm:py-2 rounded-full mb-2 sm:mb-4">
                         Coming Soon
                     </div>
                     <img
                         src="https://fybjvcnworlikfxfkeer.supabase.co/storage/v1/object/public/partners/myOTClogo.png"
                         alt="myOTC"
-                        className="h-14 w-auto mb-6"
+                        className="h-8 sm:h-14 w-auto mb-3 sm:mb-6"
                     />
-                    <ul className="space-y-3">
+                    <ul className="space-y-1.5 sm:space-y-3">
                         {[
                             { icon: "ti-map-pin", text: "Your entire trip in one app" },
                             { icon: "ti-credit-card", text: "Easy payments and balance tracking" },
@@ -47,9 +47,9 @@ export default function AppAnnouncementPopup() {
                             { icon: "ti-message-circle", text: "Group chats and shared photos" },
                             { icon: "ti-plus", text: "Much More" },
                         ].map((item) => (
-                            <li key={item.text} className="flex items-center gap-3 text-sm text-white">
-                                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20">
-                                    <i className={`ti ${item.icon} text-white`} style={{ fontSize: 16 }} aria-hidden="true" />
+                            <li key={item.text} className="flex items-center gap-1.5 sm:gap-3 text-[10px] leading-tight sm:text-sm sm:leading-normal text-white">
+                                <span className="flex h-5 w-5 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-white/20">
+                                    <i className={`ti ${item.icon} text-white !text-[11px] sm:!text-[16px]`} aria-hidden="true" />
                                 </span>
                                 {item.text}
                             </li>
@@ -58,7 +58,7 @@ export default function AppAnnouncementPopup() {
                 </div>
 
                 {/* Right panel */}
-                <div className="bg-[#4D8397] w-[400px] relative">
+                <div className="bg-[#4D8397] w-[42%] sm:w-[400px] relative">
                     <img
                         src="https://fybjvcnworlikfxfkeer.supabase.co/storage/v1/object/public/partners/myOTCphone.png"
                         alt="myOTC app"
