@@ -15,7 +15,6 @@ export default function WhatWeDoPage() {
   return (
     <>
       <PageHero
-        eyebrow="What We Do"
         title="Full-Service Group Travel. Built Around You."
         image={IMAGES.resortPool}
       />
@@ -33,15 +32,15 @@ export default function WhatWeDoPage() {
                 <div className="relative h-80 overflow-hidden rounded-2xl shadow-lg shadow-ink/10 sm:h-[28rem]">
                   <Image
                     src={service.image}
-                    alt={service.title}
+                    alt=""
                     fill
                     sizes="(max-width: 1024px) 100vw, 50vw"
                     className="object-cover transition-transform duration-700 hover:scale-105"
                   />
                 </div>
                 <div>
-                  <p className="eyebrow">{service.title}</p>
-                  <h2 className="heading-md mt-3">{service.headline}</h2>
+                  
+                  <h2 className="heading-md mt-3 font-bold">{service.headline}</h2>
                   {service.copy.map((paragraph, j) => (
                     <p key={j} className="mt-4 leading-relaxed text-ink/65">
                       {paragraph}

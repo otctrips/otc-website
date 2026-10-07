@@ -4,6 +4,8 @@ import Link from "next/link";
 import HomeHero from "@/components/HomeHero";
 import FadeIn from "@/components/FadeIn";
 import PartnerLogos from "@/components/PartnerLogos";
+import AppAnnouncementPopup from "@/components/AppAnnouncementPopup";
+
 import {
   SITE,
   TESTIMONIALS,
@@ -19,11 +21,12 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <AppAnnouncementPopup />    
       <HomeHero />
 
       {/* Social proof */}
       <section className="py-24 overflow-hidden">
-        <FadeIn className="text-center container-site">
+        <FadeIn className="text-center font-bold container-site">
           <h2 className="heading-lg">
             Trusted By Groups Across the World
           </h2>
@@ -48,7 +51,7 @@ export default function HomePage() {
           </div>
         </div>
         <FadeIn delay={0.3}>
-          <p className="mt-12 text-center font-heading text-2xl text-ink/70 container-site">
+          <p className="mt-12 text-center font-bold font-heading text-2xl text-ink/70 container-site">
             {SITE.tripsPlanned} trips planned and counting
           </p>
         </FadeIn>
@@ -59,7 +62,7 @@ export default function HomePage() {
         <div className="container-site">
         <FadeIn className="text-center mb-10">
           
-            <h2 className="heading-lg mt-3 text-white">Hottest Destinations This Year</h2>
+            <h2 className="heading-lg mt-3 text-white font-bold">Hottest Destinations This Year</h2>
         </FadeIn>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             {[
@@ -95,8 +98,8 @@ export default function HomePage() {
       {/* Trip types */}
       <section className="container-site py-24">
         <FadeIn className="text-center">
-          <p className="eyebrow">Trip Types</p>
-          <h2 className="heading-lg mt-3">What Are You Planning?</h2>
+          
+          <h2 className="heading-lg mt-3 font-bold">What Are You Planning?</h2>
         </FadeIn>
         <div className="mt-14 grid gap-5 sm:grid-cols-2">
           {TRIP_TYPE_CARDS.map((card, i) => (

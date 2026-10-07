@@ -1,45 +1,24 @@
 import type { Metadata } from "next";
-import PageHero from "@/components/PageHero";
-import FadeIn from "@/components/FadeIn";
-import DestinationCard from "@/components/DestinationCard";
-import { DESTINATION_CATEGORIES, IMAGES } from "@/lib/data";
+import TripGallery from "@/components/TripGallery";
 
 export const metadata: Metadata = {
   title: "Destinations",
   description:
-    "Beach escapes, formal-ready cities, international getaways, and mountain retreats. The destinations OTC Trips plans most, and the trips each one does best.",
+    "Formals in Nashville, spring break in Punta Cana, retreats in Tahoe. A look at the destinations OTC has built trips for across the country.",
 };
 
-export default function DestinationsPage() {
+export default function OurTripsPage() {
   return (
     <>
-      <PageHero
-        eyebrow="Destinations"
-        title="Where Do You Want to Go?"
-        subtitle="We'll take your group anywhere. Here are some of our most popular destinations."
-        image={IMAGES.beachWide}
-        tall
-      />
-
-      <section className="container-site py-24">
-        <div className="space-y-20">
-          {DESTINATION_CATEGORIES.map((category) => (
-            <div key={category.title}>
-              <FadeIn>
-                <h2 className="heading-md">{category.title}</h2>
-              </FadeIn>
-              <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {category.destinations.map((destination, i) => (
-                  <FadeIn key={destination.name} delay={(i % 3) * 0.08}>
-                    <DestinationCard destination={destination} />
-                  </FadeIn>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
+      
+      
+      <div className="container-site pt-48 pb-0 text-center">
+        <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Where Do You Want To Go?</h1>
+        <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
+          We&apos;ll take your group anywhere. Here are some of our most popular destinations.
+        </p>
+      </div>
+      <TripGallery />
       
     </>
   );

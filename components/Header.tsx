@@ -9,7 +9,6 @@ import { AnimatePresence, motion } from "framer-motion";
 const NAV_LINKS = [
   { href: "https://otctrips.com/what-we-do", label: "What We Do" },
   { href: "https://otctrips.com/destinations", label: "Destinations" },
-  { href: "https://otctrips.com/our-trips", label: "Our Trips" },
 ];
 
 const DRAWER_LINKS = [
@@ -48,12 +47,12 @@ export default function Header() {
     return path === "/" ? pathname === "/" : pathname.startsWith(path);
   };
 
-  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote" || pathname === "/" || pathname === "/our-trips";
+  const isGuidePage = pathname === "/guide" || pathname.startsWith("/guide/") || pathname === "/about" || pathname === "/privacy" || pathname === "/faqs" || pathname === "/referral" || pathname === "/get-a-quote" || pathname === "/" || pathname === "/destinations";
   const onDark = !scrolled && !open && !isGuidePage;
 
   return (
     <header
-      className={`fixed inset-x-0 top-[40px] z-50 transition-all duration-300 border-b border-white/20 bg-[#4D8397]`}
+      className={`fixed inset-x-0 top-[0px] z-50 transition-all duration-300 border-b border-white/20 bg-[#4D8397]`}
     >
       <div className="container-site flex h-20 items-center justify-between">
         <Link href="https://otctrips.com">
@@ -76,8 +75,8 @@ export default function Header() {
                 isActive(link.href)
                   ? "font-bold text-white underline underline-offset-4"
                   : onDark
-                    ? "font-medium text-white/90"
-                    : "font-medium text-white/90"
+                    ? "font-bold text-white/90"
+                    : "font-bold text-white/90"
               }`}
             >
               {link.label}

@@ -6,7 +6,6 @@ const MAIN_LINKS = [
   { href: "/", label: "Home" },
   { href: "/what-we-do", label: "What We Do" },
   { href: "/destinations", label: "Destinations" },
-  { href: "/our-trips", label: "Our Trips" },
   { href: "/get-a-quote", label: "Plan Your Trip" },
 ];
 

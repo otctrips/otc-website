@@ -14,17 +14,15 @@ export default function SiteChrome({
   const pathname = usePathname();
   const standalone = isProposalSubdomain || pathname.startsWith("/proposals");
 
-  console.log("standalone:", standalone, "pathname:", pathname);
   if (standalone) return <>{children}</>;
 
   return (
     <>
-      <div className="relative z-[60]">
-        
-      </div>
+      
       <Header />
-      <main className="min-h-screen pt-[40px]">{children}</main>
+      <main className="min-h-screen">{children}</main>
       <Footer />
+      
     </>
   );
 }

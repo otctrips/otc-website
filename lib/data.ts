@@ -89,9 +89,9 @@ export const TRIP_TYPE_CARDS = [
     href: "/what-we-do#formals",
   },
   {
-    title: "Group Retreats",
+    title: "Group Vacation",
     image: u("photo-1529156069898-49953e39b3ac"),
-    href: "/what-we-do#retreats",
+    href: "/what-we-do#vacation",
   },
   {
     title: "Spring Break",
@@ -124,7 +124,7 @@ export const PARTNERS = [
 
 export type Service = {
   id: string;
-  title: string;
+  
   headline: string;
   copy: string[];
   bullets: string[];
@@ -135,76 +135,72 @@ export type Service = {
 export const SERVICES: Service[] = [
   {
     id: "formals",
-    title: "Greek Formals",
-    headline: "The Formal Your Chapter Will Talk About for Years.",
+    
+    headline: "Greek Formals",
     copy: [
-      "You got handed the formal. Congratulations, and condolences. A hundred guys and their dates, a venue that has to be perfect, buses that have to show up, and a budget the treasurer keeps asking about. Pull it off and nobody remembers it was hard. Miss one detail and that's the only thing anyone remembers.",
-      "Here's what we do: you tell us the city, the dates, and the headcount. We come back with venue options, hotel blocks, transportation, and group air if you're flying, all priced out per person. You pick, we book, your members pay us directly, and you go back to being a college student.",
+      "We plan fraternity and sorority formals around your chapter’s destination, group size, and budget. From hotel room blocks and private venues to transportation and weekend activities, we help bring the full trip together. Our team compares options, negotiates with vendors, and coordinates the booking details, with a dedicated contact to keep your chapter informed throughout the planning process."
     ],
     bullets: [
-      "Venue sourcing and negotiation",
-      "Group hotel room blocks",
-      "Ground transportation, from charter buses to party buses",
-      "Group flights through our carrier partnerships",
-      "On-site coordinator",
-      "Individual payment collection from members",
+      "Hotel accommodations and group room blocks",
+      "Private venues and formal event coordination",
+      "Charter buses, local transportation, and group flights",
+      "Weekend activities and nightlife options",
+      "Trip itineraries and booking coordination",
+      "Plus Much More",
     ],
     cta: "Plan Your Formal",
     image: u("photo-1511795409834-ef04bbd61622"),
   },
   {
     id: "retreats",
-    title: "Group Retreats",
-    headline: "Every Detail. Every Person. Every Moment.",
+    
+    headline: "Group Vacation",
     copy: [
-      "A retreat is only relaxing for the people who didn't plan it. Rooming lists, activity schedules, the member who's gluten-free and the one who can't do stairs, transportation timed so nobody's standing in a parking lot. It's a lot, and it all lands on one person's plate.",
-      "We take the plate. Every retreat we build is curated around what your chapter actually wants, whether that's a sisterhood weekend, an officer transition, or a big-little getaway, with an itinerary managed down to the minute and a coordinator who has already thought of the thing you were about to worry about.",
+      "Whether you're organizing a mountain weekend, beach getaway, or retreat, we handle the logistics: where you stay, how you get there, and what you do when you arrive. From arrival to departure, every detail is coordinated around what your group actually wants. You just show up.",
     ],
     bullets: [
-      "Retreat venue sourcing",
-      "Custom activity curation",
-      "Group lodging coordination",
-      "Transportation, door to door",
-      "Dietary and accessibility considerations",
-      "Full itinerary management",
+      "Hotel blocks at properties that actually want large groups",
+      "Transportation handled from departure to return",
+      "Group meals, activities, and nightlife coordination",
+      "Custom itinerary built around your group's vibe",
+      "Individual payment collection so you never front the money",
+      "Plus Much More",
     ],
-    cta: "Plan Your Retreat",
+    cta: "Plan Your Vacation",
     image: u("photo-1529156069898-49953e39b3ac"),
   },
   {
     id: "spring-break",
-    title: "Spring Break",
-    headline: "Zero Logistics. All Memories.",
+    
+    headline: "Spring Break",
     copy: [
-      "Right now your group chat has 30 people, 14 opinions, two people who 'already found a better deal,' and zero bookings. Every week you wait, flights get more expensive and the good resorts fill up. You know this. The chat does not.",
-      "Send us the chaos. We turn it into one plan: resort blocks at places that actually want big groups, group flights so everyone lands together, excursions and nightlife lined up before you arrive, and individual payment plans so you never front a dollar for anyone. You show up. That's the whole job.",
+      "We help student groups plan spring break trips around their school dates, preferred destination, and budget. Choose from hotel and resort options, then add the transportation, excursions, and nightlife experiences that fit your group. Whether you’re staying in the U.S. or heading abroad, we coordinate the arrangements and keep your trip details organized from booking through departure.",
     ],
     bullets: [
-      "International and domestic destinations",
-      "All-inclusive resort blocks",
-      "Group flights, so your whole group travels together",
-      "Excursions and nightlife coordination",
-      "Payment plans for individual members",
-      "On-trip support, the entire time",
+      "Hotel and resort accommodations",
+      "All-inclusive resort options",
+      "Group flights and airport transfers",
+      "Excursions, activities, and nightlife",
+      "Travel schedules and booking coordination",
+      "Plus Much More",
     ],
     cta: "Plan Spring Break",
     image: u("photo-1507525428034-b723cf961d3e"),
   },
   {
     id: "corporate",
-    title: "Corporate Travel",
-    headline: "Give Your Team a Trip They Actually Earn.",
+    
+    headline: "Corporate Travel",
     copy: [
-      "An incentive trip only works if it feels like a reward, not a conference with a beach view. And an offsite only works if your ops lead isn't buried in logistics for a quarter to make it happen.",
-      "We plan both like we plan everything: from scratch, around your team, your budget, and the outcome you're after. Flights, luxury properties, ground transfers, dinners, experiences. One coordinator, one invoice-ready budget, zero surprises. Your team comes back talking about the trip, not the travel.",
+      "We organize company retreats, team offsites, and incentive trips with a clear plan for accommodations, transportation, dining, and activities. We work with your organizer to understand the purpose of the trip and build a schedule around meetings, group activities, and time to unwind. Your team has a dedicated point of contact to coordinate bookings and keep the details organized.",
     ],
     bullets: [
-      "Incentive trip planning",
-      "Team offsite coordination",
-      "Luxury resort sourcing",
-      "Group flights and transfers",
-      "Full itinerary, end to end",
-      "Budget management and reporting",
+      "Hotel accommodations and group room blocks",
+      "Meeting spaces and private event venues",
+      "Group transportation and airport transfers",
+      "Team dinners and group activities",
+      "Trip schedules and booking coordination",
+      "Plus Much More",
     ],
     cta: "Plan Your Team Trip",
     image: u("photo-1556761175-5973dc0f32e7"),

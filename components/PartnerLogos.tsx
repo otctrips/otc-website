@@ -17,8 +17,8 @@ const PARTNER_LOGOS = [
 
 export default function PartnerLogos() {
   return (
-    <section className="bg-[#4D8397] py-16 overflow-hidden">
-      <h2 className="text-center font-heading text-3xl font-bold text-white sm:text-4xl">
+    <section className="bg-cream py-16">
+      <h2 className="text-center font-heading text-3xl font-bold text-blacktext-4xl">
         Our Trusted Partners
       </h2>
 
@@ -54,7 +54,7 @@ export default function PartnerLogos() {
         ))}
       </div>
 
-      <h2 className="mt-10 font-heading text-center text-sm font-bold text-white/60">
+      <h2 className="mt-10 font-heading text-center text-sm font-bold text-black/60">
         Plus Many More
       </h2>
     </section>
