@@ -5,7 +5,7 @@ import HomeHero from "@/components/HomeHero";
 import FadeIn from "@/components/FadeIn";
 import PartnerLogos from "@/components/PartnerLogos";
 import AppAnnouncementPopup from "@/components/AppAnnouncementPopup";
-import PhotoCarousel from "@/components/PhotoCarousel";
+
 
 
 import {
