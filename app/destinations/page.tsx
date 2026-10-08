@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 export default function OurTripsPage() {
   return (
     <>
-      
-      
       <div className="container-site pt-48 pb-0 text-center">
         <h1 className="font-heading text-4xl font-bold text-brand sm:text-5xl">Where Do You Want To Go?</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-ink/60">
@@ -19,7 +17,6 @@ export default function OurTripsPage() {
         </p>
       </div>
       <TripGallery />
-      
     </>
   );
 }

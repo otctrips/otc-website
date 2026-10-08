@@ -31,7 +31,7 @@ export default function HomeHero() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
-          className="mt-[120px] mb-[70px] flex w-full max-w-4xl mx-auto"
+          className="mt-[90px] mb-[70px] flex w-full max-w-4xl mx-auto"
         >
           <QuoteBar />
         </motion.div>

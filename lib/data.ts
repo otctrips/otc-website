@@ -85,7 +85,7 @@ export const PAIN_POINTS = [
 export const TRIP_TYPE_CARDS = [
   {
     title: "Greek Formals",
-    image: u("photo-1511795409834-ef04bbd61622"),
+    image: "/greekformalcover.jpg",
     href: "/what-we-do#formals",
   },
   {
@@ -95,7 +95,7 @@ export const TRIP_TYPE_CARDS = [
   },
   {
     title: "Spring Break",
-    image: u("photo-1507525428034-b723cf961d3e"),
+    image: "/springbreakcover.jpg",
     href: "/what-we-do#spring-break",
   },
   {
@@ -149,7 +149,7 @@ export const SERVICES: Service[] = [
       "Plus Much More",
     ],
     cta: "Plan Your Formal",
-    image: u("photo-1511795409834-ef04bbd61622"),
+    image: "/greekformalcover.jpg",
   },
   {
     id: "retreats",

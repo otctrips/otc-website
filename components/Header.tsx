@@ -11,13 +11,7 @@ const NAV_LINKS = [
   { href: "https://otctrips.com/destinations", label: "Destinations" },
 ];
 
-const DRAWER_LINKS = [
-  ...NAV_LINKS,
-  { href: "https://otctrips.com/about", label: "About" },
-  { href: "https://otctrips.com/pricing", label: "Pricing" },
-  { href: "https://otctrips.com/faqs", label: "FAQs" },
-  { href: "https://otctrips.com/guide", label: "Travel Tips" },
-];
+
 
 export default function Header() {
   const pathname = usePathname();
@@ -94,9 +88,7 @@ export default function Header() {
           <button
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen(!open)}
-            className={`flex h-11 w-11 items-center justify-center rounded-full transition-colors lg:hidden ${
-              onDark ? "text-white" : "text-ink"
-            } ${open ? "text-white" : ""}`}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors lg:hidden"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               {open ? (
@@ -123,28 +115,10 @@ export default function Header() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 240 }}
-            className="fixed inset-0 top-0 -z-10 flex h-screen flex-col justify-center bg-night px-8 lg:hidden"
+            className="fixed inset-0 top-0 -z-10 flex h-screen flex-col justify-center bg-[#4D8397] px-8 lg:hidden"
           >
             <div className="flex flex-col gap-2">
-              {DRAWER_LINKS.map((link, i) => (
-                <motion.div
-                  key={link.href}
-                  initial={{ opacity: 0, x: 32 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.1 + i * 0.06 }}
-                >
-                  <Link
-                    href={link.href}
-                    className={`block py-2 font-heading text-3xl transition-colors ${
-                      isActive(link.href)
-                        ? "text-brand-light"
-                        : "text-cream hover:text-brand-light"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                </motion.div>
-              ))}
+              
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}

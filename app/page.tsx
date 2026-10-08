@@ -5,6 +5,8 @@ import HomeHero from "@/components/HomeHero";
 import FadeIn from "@/components/FadeIn";
 import PartnerLogos from "@/components/PartnerLogos";
 import AppAnnouncementPopup from "@/components/AppAnnouncementPopup";
+import PhotoCarousel from "@/components/PhotoCarousel";
+
 
 import {
   SITE,
@@ -23,6 +25,8 @@ export default function HomePage() {
     <>
       <AppAnnouncementPopup />    
       <HomeHero />
+      
+
 
       {/* Social proof */}
       <section className="py-24 overflow-hidden">
@@ -116,7 +120,7 @@ export default function HomePage() {
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 transition-colors duration-300 group-hover:bg-brand/25" />
-                <div className="card-overlay-gradient absolute inset-x-0 bottom-0 h-3/5" />
+                <div className="card-overlay-gradient absolute inset-x-0 bottom-0 h-2/5" />
                 <div className="absolute bottom-0 left-0 right-0 p-7">
                   <h3 className="card-text-shadow font-heading text-3xl font-bold text-white">
                     {card.title}
