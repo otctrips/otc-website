@@ -357,7 +357,6 @@ function VenuePackagePrice({ pkg, uniform = false }: { pkg: VenuePackage; unifor
 const SKI_PRICE_PER_PERSON = 100;
 const SKI_MIN_ATTENDEES = 20;
 const MADDHATTER_ATTENDEES = 120;
-const KALSU_TOTAL_TRIP_COST = 52300;
 // kalsu: JW Marriott Houston Downtown card shows a flat total and a room breakdown
 const KALSU_JW_HOTEL_NAME = "JW Marriott Houston Downtown";
 const KALSU_JW_TOTAL_COST = 55800;
@@ -712,6 +711,11 @@ export default function ProposalPage() {
       const venueLabel = venueLabelParts.length > 0 ? venueLabelParts.join(" + ") : "Venue";
       let totalPerPerson = Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100;
       let totalCostHybrid = Math.round(totalPerPerson * proposal.group_size * 100) / 100;
+      if (isKalsu) {
+        // kalsu: hotel is a flat total; everything else is per person × group, then spread back across the group
+        totalCostHybrid = Math.round((KALSU_JW_TOTAL_COST + (hotel.busPerPerson + venuePP) * proposal.group_size) * 100) / 100;
+        totalPerPerson = proposal.group_size > 0 ? Math.round((totalCostHybrid / proposal.group_size) * 100) / 100 : totalPerPerson;
+      }
       if (skiExtraTotal > 0) {
         totalCostHybrid = Math.round((totalCostHybrid + skiExtraTotal) * 100) / 100;
         totalPerPerson = proposal.group_size > 0 ? Math.round((totalCostHybrid / proposal.group_size) * 100) / 100 : totalPerPerson;
@@ -2582,6 +2586,11 @@ export default function ProposalPage() {
                   ? Math.round((dateOpt.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100
                   : null;
                 let hybridTotal = hybridPP !== null ? Math.round(hybridPP * groupSize * 100) / 100 : null;
+                if (isKalsu && hybridTotal !== null && hotel && venuePP != null) {
+                  // kalsu: hotel is a flat total; everything else is per person × group, then spread back across the group
+                  hybridTotal = Math.round((KALSU_JW_TOTAL_COST + (hotel.busPerPerson + venuePP) * groupSize) * 100) / 100;
+                  if (groupSize > 0) hybridPP = Math.round((hybridTotal / groupSize) * 100) / 100;
+                }
                 if (hybridTotal !== null && skiExtraTotal > 0) {
                   hybridTotal = Math.round((hybridTotal + skiExtraTotal) * 100) / 100;
                   if (groupSize > 0) hybridPP = Math.round((hybridTotal / groupSize) * 100) / 100;
@@ -2597,7 +2606,7 @@ export default function ProposalPage() {
                         Total Trip Cost
                         <span className="ml-1 font-normal text-ink/50">({groupSize} people)</span>
                       </p>
-                      <p className="font-heading text-2xl font-bold text-brand">{isKalsu ? fmt(KALSU_TOTAL_TRIP_COST) : hybridTotal !== null ? fmt(hybridTotal) : "—"}</p>
+                      <p className="font-heading text-2xl font-bold text-brand">{hybridTotal !== null ? fmt(hybridTotal) : "—"}</p>
                     </div>
                   </div>
                 );
