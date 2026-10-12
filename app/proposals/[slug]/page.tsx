@@ -358,6 +358,10 @@ const SKI_PRICE_PER_PERSON = 100;
 const SKI_MIN_ATTENDEES = 20;
 const MADDHATTER_ATTENDEES = 120;
 const KALSU_TOTAL_TRIP_COST = 52300;
+// kalsu: JW Marriott Houston Downtown card shows a flat total and a room breakdown
+const KALSU_JW_HOTEL_NAME = "JW Marriott Houston Downtown";
+const KALSU_JW_TOTAL_COST = 55800;
+const KALSU_JW_ROOM_DETAILS = ["16 Single Room: $320 per person", "67 Double Room: $170 per person"];
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
@@ -1445,6 +1449,7 @@ export default function ProposalPage() {
                       ? h.dates.reduce((a, b) => (a.pricePerPerson < b.pricePerPerson ? a : b))
                       : null;
                     const displayData = activeDateData ?? lowestDate;
+                    const isKalsuJw = isKalsu && h.name.trim() === KALSU_JW_HOTEL_NAME;
 
                     return (
                       <motion.div
@@ -1521,9 +1526,30 @@ export default function ProposalPage() {
                             </div>
                           )}
 
+                          {isKalsuJw && (
+                            <div className="mt-2 border-t border-ink/10 pt-2">
+                              <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">Room Details</p>
+                              <ul className="space-y-1.5">
+                                {KALSU_JW_ROOM_DETAILS.map((item) => (
+                                  <li key={item} className="flex items-center gap-2 text-sm text-ink/70">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
                           {/* Price */}
                           <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
-                            {isPikeFau ? (
+                            {isKalsuJw ? (
+                            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                              <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Total Cost</span>
+                              <span className="font-heading text-3xl font-bold text-ink">{fmt(KALSU_JW_TOTAL_COST)}</span>
+                            </div>
+                            ) : isPikeFau ? (
                             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                               <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Total Cost</span>
                               <span className="font-heading text-3xl font-bold text-ink">
