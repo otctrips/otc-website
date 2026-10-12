@@ -2491,11 +2491,15 @@ export default function ProposalPage() {
               <div className="flex items-start justify-between gap-3 border-t border-ink/10 py-3">
                 <div>
                   <p className="text-sm font-medium text-ink">Hotel</p>
-                  {hotel && <p className="mt-0.5 text-xs text-ink/45">{hotel.name}</p>}
+                  {isKalsu ? (
+                    <p className="mt-0.5 text-xs text-ink/45">{KALSU_JW_HOTEL_NAME}</p>
+                  ) : (
+                    hotel && <p className="mt-0.5 text-xs text-ink/45">{hotel.name}</p>
+                  )}
                 </div>
                 <div className="flex shrink-0 gap-4">
-                  <p className="w-[88px] text-right font-semibold text-ink">{isPikeFau ? "" : dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}</p>
-                  <p className="w-[100px] text-right font-semibold text-ink">{dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100) : "—"}</p>
+                  <p className="w-[88px] text-right font-semibold text-ink">{isPikeFau || isKalsu ? "" : dateOpt ? fmt(dateOpt.pricePerPerson) : "—"}</p>
+                  <p className="w-[100px] text-right font-semibold text-ink">{isKalsu ? fmt(KALSU_JW_TOTAL_COST) : dateOpt ? fmt(Math.round(dateOpt.pricePerPerson * groupSize * 100) / 100) : "—"}</p>
                 </div>
               </div>
               {hotel && hotel.busPerPerson > 0 && (
