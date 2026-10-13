@@ -361,6 +361,7 @@ const MADDHATTER_ATTENDEES = 120;
 const KALSU_JW_HOTEL_NAME = "JW Marriott Houston Downtown";
 const KALSU_JW_TOTAL_COST = 55800;
 const KALSU_JW_ROOM_DETAILS = ["16 Single Room: $320 per person", "67 Double Room: $170 per person"];
+const KALSU_JW_ROOM_RATES = [{ label: "Single Room", pricePerPerson: 320 }, { label: "Double Room", pricePerPerson: 170 }];
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", {
@@ -2597,10 +2598,23 @@ export default function ProposalPage() {
                 }
                 return (
                   <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                    {isKalsu ? (
+                      KALSU_JW_ROOM_RATES.map((room) => (
+                        <div key={room.label} className="flex items-center justify-between">
+                          <p className="text-sm text-ink/65">{room.label}</p>
+                          <p className="font-heading font-bold text-ink">
+                            {hotel && venuePP != null
+                              ? <>{fmt(Math.round((room.pricePerPerson + hotel.busPerPerson + venuePP) * 100) / 100)}<span className="ml-1 text-sm font-normal text-ink/50">per person</span></>
+                              : "—"}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
                     <div className="flex items-center justify-between">
                       <p className="text-sm text-ink/65">Total Per Person</p>
                       <p className="font-heading font-bold text-ink">{hybridPP !== null ? fmt(hybridPP) : "—"}</p>
                     </div>
+                    )}
                     <div className="flex items-center justify-between rounded-xl bg-brand/10 px-4 py-3">
                       <p className="text-sm font-semibold text-ink">
                         Total Trip Cost
