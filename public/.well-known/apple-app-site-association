@@ -1,0 +1,20 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "9MPZ2SDB7B.com.otctrips.otcapp",
+          "9MPZ2SDB7B.com.otctrips.myotc"
+        ],
+        "components": [
+          {
+            "/": "/invite.html",
+            "?": {
+              "token": "*"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
