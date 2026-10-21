@@ -70,11 +70,11 @@ export default function HomePage() {
         </FadeIn>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             {[
-              { city: "Nashville, TN", photo: "https://images.unsplash.com/photo-1514924013411-cbf25faa35bb?w=800&auto=format&fit=crop", badge: "🔥 22 groups this year" },
-              { city: "New Orleans, LA", photo: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop", badge: "🔥 19 groups this year" },
-              { city: "Austin, TX", photo: "https://images.unsplash.com/photo-1531218150217-54595bc2b934?w=800&auto=format&fit=crop", badge: "🔥 13 groups this year" },
-              { city: "Toronto, ON", photo: "https://images.unsplash.com/photo-1582902281758-a4f26e3e0f61?w=800&auto=format&fit=crop", badge: "🔥 12 groups this year" },
-              { city: "Miami, FL", photo: "https://images.unsplash.com/photo-1506966953602-c20cc11f75e3?w=800&auto=format&fit=crop", badge: "🔥 8 groups this year" },
+              { city: "Nashville, TN", photo: "/nashville.jpg", badge: "🔥 22 groups this year" },
+              { city: "New Orleans, LA", photo: "/neworleans.jpg", badge: "🔥 19 groups this year" },
+              { city: "Austin, TX", photo: "/austin.jpg", badge: "🔥 13 groups this year" },
+              { city: "Toronto, ON", photo: "/toronto.jpg", badge: "🔥 12 groups this year" },
+              { city: "Miami, FL", photo: "/miami.jpg", badge: "🔥 8 groups this year" },
             ].map((dest) => (
               <Link key={dest.city} href="/get-a-quote" className="group relative h-64 overflow-hidden rounded-2xl block">
                 <Image

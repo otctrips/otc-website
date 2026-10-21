@@ -90,7 +90,7 @@ export const TRIP_TYPE_CARDS = [
   },
   {
     title: "Group Vacation",
-    image: u("photo-1529156069898-49953e39b3ac"),
+    image: "/000390.jpg",
     href: "/what-we-do#vacation",
   },
   {
@@ -167,7 +167,7 @@ export const SERVICES: Service[] = [
       "Plus Much More",
     ],
     cta: "Plan Your Vacation",
-    image: u("photo-1529156069898-49953e39b3ac"),
+    image: "/000390.jpg",
   },
   {
     id: "spring-break",
@@ -185,7 +185,7 @@ export const SERVICES: Service[] = [
       "Plus Much More",
     ],
     cta: "Plan Spring Break",
-    image: u("photo-1507525428034-b723cf961d3e"),
+    image: "/springbreakcover.jpg",
   },
   {
     id: "corporate",
@@ -230,63 +230,9 @@ export const WHY_OTC = [
   },
 ];
 
+
+
 // ---------- Destinations ----------
-
-export type Destination = {
-  name: string;
-  bestFor: string;
-  image: string;
-};
-
-export type DestinationCategory = {
-  title: string;
-  destinations: Destination[];
-};
-
-export const DESTINATION_CATEGORIES: DestinationCategory[] = [
-  {
-    title: "Beach Escapes",
-    destinations: [
-      { name: "Miami, FL", bestFor: "Spring Break & Formals", image: u("photo-1506966953602-c20cc11f75e3") },
-      { name: "Myrtle Beach, SC", bestFor: "Beach Weekends & Big Groups", image: u("photo-1507525428034-b723cf961d3e") },
-      { name: "Key West, FL", bestFor: "Senior Trips & Retreats", image: u("photo-1519046904884-53103b34b206") },
-      { name: "Punta Cana, DR", bestFor: "All-Inclusive Spring Break", image: u("photo-1505228395891-9a51e7e86bf6") },
-      { name: "Cancun, MX", bestFor: "Spring Break", image: u("photo-1510414842594-a61c69b5ae57") },
-    ],
-  },
-  {
-    title: "City Adventures",
-    destinations: [
-      { name: "Nashville, TN", bestFor: "Formals", image: u("photo-1514924013411-cbf25faa35bb") },
-      { name: "New Orleans, LA", bestFor: "Formals & Big Weekends", image: u("photo-1449824913935-59a10b8d2000") },
-      { name: "Las Vegas, NV", bestFor: "Corporate & Celebrations", image: u("photo-1496442226666-8d4d0e62e6e9") },
-      { name: "Charleston, SC", bestFor: "Formals & Retreats", image: u("photo-1444723121867-7a241cacace9") },
-      { name: "Austin, TX", bestFor: "Retreats & Big Weekends", image: u("photo-1480714378408-67cf0d13bc1b") },
-    ],
-  },
-  {
-    title: "International",
-    destinations: [
-      { name: "Ibiza, Spain", bestFor: "Once-in-a-Lifetime Spring Break", image: u("photo-1473116763249-2faaef81ccda") },
-      { name: "Bahamas", bestFor: "Spring Break & Quick Getaways", image: u("photo-1544551763-46a013bb70d5") },
-      { name: "Florence, Italy", bestFor: "Sorority Trips & Culture", image: u("photo-1523906834658-6e24ef2386f9") },
-      { name: "Turks & Caicos", bestFor: "Luxury Retreats", image: u("photo-1506929562872-bb421503ef21") },
-      { name: "Costa Rica", bestFor: "Adventure Retreats", image: u("photo-1502082553048-f009c37129b9") },
-    ],
-  },
-  {
-    title: "Outdoors & Retreats",
-    destinations: [
-      { name: "Aspen, CO", bestFor: "Winter Formals & Ski Trips", image: u("photo-1551524559-8af4e6624178") },
-      { name: "Lake Tahoe, NV", bestFor: "Ski Trips & Retreats", image: u("photo-1476514525535-07fb3b4ae5f1") },
-      { name: "Denver, CO", bestFor: "Retreats & Offsites", image: u("photo-1506905925346-21bda4d32df4") },
-      { name: "Park City, UT", bestFor: "Ski Weekends", image: u("photo-1464822759023-fed622ff2c3b") },
-      { name: "Savannah, GA", bestFor: "Formals & Retreats", image: u("photo-1551632811-561732d1e306") },
-    ],
-  },
-];
-
-// ---------- Our Trips Gallery ----------
 
 export type GalleryItem = {
   src: string;
@@ -298,7 +244,7 @@ export type GalleryItem = {
 };
 
 export const GALLERY: GalleryItem[] = [
-  { src: u("photo-1514924013411-cbf25faa35bb"), destination: "Nashville, TN", tripType: "Fraternity Formal", tags: ["🔥 Most Popular", "⭐ OTC Favorite", "🎓 Formals" ], description: "Broadway, rooftop bars, live music, and a hotel block right in the heart of downtown. Nashville is one of our most popular formal destinations for a reason.", avgPrice: "$100" },
+  { src: "/nashville.jpg", destination: "Nashville, TN", tripType: "Fraternity Formal", tags: ["🔥 Most Popular", "⭐ OTC Favorite", "🎓 Formals" ], description: "Broadway, rooftop bars, live music, and a hotel block right in the heart of downtown. Nashville is one of our most popular formal destinations for a reason.", avgPrice: "$100" },
   { src: u("photo-1511795409834-ef04bbd61622"), destination: "Charleston, SC", tripType: "Sorority Formal", tags: ["🎓 Formals", ], description: "Historic streets, waterfront venues, and Southern charm. Charleston is the perfect backdrop for a formal your chapter will be talking about for years.", avgPrice: "$120" },
   { src: u("photo-1492684223066-81342ee5ff30"), destination: "New Orleans, LA", tripType: "Fraternity Formal", tags: ["⭐ OTC Favorite", "🔥 Most Popular", "💵 Affordable",  "🎓 Formals"], description: "Bourbon Street, private venues, and a city that was built for a good time. New Orleans delivers an experience no other formal destination can match.", avgPrice: "$100" },
   { src: u("photo-1510414842594-a61c69b5ae57"), destination: "Cancun, MX", tripType: "Spring Break", tags: ["🏖️ Spring Break", "✈️ International","🍹 All Inclusive", "🎓 Formals"], description: "All-inclusive resorts, white sand beaches, and the best hotel deals in the Caribbean. Cancun is spring break done right.", avgPrice: "$120" },
@@ -435,7 +381,6 @@ export type Article = {
   title: string;
   category: string;
   excerpt: string;
-  image: string;
   readTime: string;
   body: string[];
 };
@@ -448,7 +393,6 @@ export const ARTICLES = [
       "Planning a spring formal starts earlier than you might think. Learn when to secure your destination, hotel, transportation, events, and final trip details to give your group the most options.",
     category: "Planning",
     readTime: "3 min read",
-    image: u("photo-1511795409834-ef04bbd61622"),
     body: [
       "Spring formal might not be until March or April, but waiting until spring to start planning it is one of the easiest ways to limit your options. For most groups, the best time to start planning is during the fall semester. That doesn't mean every detail needs to be finalized months in advance. It means getting the important pieces dates, budget, destination, and hotel moving early enough that your chapter still has choices.",
       "5–7 Months Out: Start With the Big Decisions",
@@ -474,8 +418,8 @@ export const ARTICLES = [
 // ---------- Quote Form ----------
 
 export const TRIP_TYPES = [
-  "Fraternity Formal",
-  "Sorority Retreat",
+  "Greek Formal",
+  "Group Vacation",
   "Spring Break",
   "Corporate/Sales Team",
   "Other",

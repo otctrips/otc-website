@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import FadeIn from "@/components/FadeIn";
@@ -22,7 +21,7 @@ export function generateMetadata({
     openGraph: {
       title: article.title,
       description: article.excerpt,
-      images: [{ url: article.image }],
+      
     },
   };
 }
@@ -39,16 +38,9 @@ export default function ArticlePage({
 
   return (
     <>
-      <article className="pt-20">
-        <div className="relative h-[45vh] min-h-[320px] overflow-hidden">
-          <Image
-            src={article.image}
-            alt={article.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
+      <article className="pt-0">
+        <div className="relative h-[4vh] min-h-[320px] overflow-hidden">
+          
           <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-ink/20" />
         </div>
 

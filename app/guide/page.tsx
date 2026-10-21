@@ -25,14 +25,8 @@ export default function TravelTipsPage() {
           {ARTICLES.map((article, i) => (
             <FadeIn key={article.slug} delay={(i % 3) * 0.1}>
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm shadow-ink/5 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-ink/10">
-                <Link href={`/guide/${article.slug}`} className="relative block h-52 overflow-hidden">
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                <Link href={`/guide/${article.slug}`} className="relative block h-10 overflow-hidden">
+                  
                   <span className="absolute left-4 top-4 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold uppercase tracking-widest text-white">
                     {article.category}
                   </span>
