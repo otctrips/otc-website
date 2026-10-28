@@ -359,8 +359,8 @@ const SKI_MIN_ATTENDEES = 20;
 const MADDHATTER_ATTENDEES = 120;
 // kalsu: JW Marriott Houston Downtown card shows a flat total and a room breakdown
 const KALSU_JW_HOTEL_NAME = "JW Marriott Houston Downtown";
-const KALSU_JW_TOTAL_COST = 55800;
-const KALSU_JW_ROOM_DETAILS = ["16 Single Room: $320 per person", "67 Double Room: $170 per person"];
+const KALSU_JW_TOTAL_COST = 27000;
+const KALSU_JW_ROOM_DETAILS = ["5 Single Room: $320 per person", "35 Double Room: $170 per person"];
 const KALSU_JW_ROOM_RATES = [{ label: "Single Room", pricePerPerson: 320 }, { label: "Double Room", pricePerPerson: 170 }];
 
 const fmt = (n: number) =>
