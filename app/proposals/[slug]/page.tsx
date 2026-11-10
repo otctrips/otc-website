@@ -877,6 +877,7 @@ export default function ProposalPage() {
   const isBingpike = slug === "bingpike";
   const isBoisepike = slug === "boisepike";
   const isKalsu = slug === "kalsu";
+  const isLsuka = slug === "lsuka";
   const isLambdaChiFsu = slug === "lambdachifsu";
   const isPikeFau = slug === "pikefau";
   const isMultiPkg = isKalsu || isLambdaChiFsu || isPikeFau || proposal?.version === 2;  const isDeltaChiSyracuse = slug === "deltachisyracuse";
@@ -2850,9 +2851,34 @@ export default function ProposalPage() {
                   hybridTotal = Math.round((hybridTotal + skiExtraTotal) * 100) / 100;
                   if (groupSize > 0) hybridPP = Math.round((hybridTotal / groupSize) * 100) / 100;
                 }
-                return (
-                  <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
-                    {isKalsu ? (
+                            // lsuka: per-room-type totals, read from the hotel's "Room Details" section,
+                            // e.g. "70 Double Rooms ($107.26 per person)" -> Double Room, 107.26
+                            const lsukaRooms = isLsuka && hotel
+                              ? (hotel.sections.find((s) => s.title.trim().toLowerCase() === "room details")?.items ?? [])
+                                .map((item) => {
+                                  const m = item.match(/\$([\d,]+(?:\.\d+)?)\s*per person/i);
+                                  if (!m) return null;
+                                  const label = item.replace(/\(.*$/, "").trim().replace(/^\d+\s*/, "").replace(/s$/i, "");
+                                  return { label, pricePerPerson: Number(m[1].replace(/,/g, "")) };
+                                })
+                                .filter((r): r is { label: string; pricePerPerson: number } => r !== null)
+                              : [];
+                            // venues added live as they're selected (0 until they pick one)
+                            const liveVenuePP =
+                              (baseVenuePP ?? 0) + (isMultiPkg ? selectedPkgsTotalPP : (selectedPkg ? selectedPkg.pricePerPerson : 0));
+                            return (
+                              <div className="mt-1 space-y-3 border-t-2 border-ink/15 pt-4">
+                                {isLsuka && hotel && lsukaRooms.length > 0 ? (
+                                  lsukaRooms.map((room) => (
+                                    <div key={room.label} className="flex items-center justify-between">
+                                      <p className="text-sm text-ink/65">Total Per Person · {room.label}</p>
+                                      <p className="font-heading font-bold text-ink">
+                                        {fmt(Math.round((room.pricePerPerson + hotel.busPerPerson + liveVenuePP) * 100) / 100)}
+                                        <span className="ml-1 text-sm font-normal text-ink/50">per person</span>
+                                      </p>
+                                    </div>
+                                  ))
+                                ) : isKalsu ? (
                       KALSU_JW_ROOM_RATES.map((room) => (
                         <div key={room.label} className="flex items-center justify-between">
                           <p className="text-sm text-ink/65">{room.label}</p>
