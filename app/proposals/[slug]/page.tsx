@@ -1041,8 +1041,7 @@ export default function ProposalPage() {
         return pkg ? pkg.clientSchedule.map((p) => ({ ...p, text: scheduleLabel(pkg.name, p.label) })) : [];
       }),
     ].filter((p) => p.label || p.amount);
-  const v2ScheduleDates = [...new Set(v2ScheduleLines.map((p) => p.date))].sort((a, b) =>
-    a === b ? 0 : a === "" ? -1 : b === "" ? 1 : a.localeCompare(b)
+  const v2ScheduleDates = Array.from(new Set(v2ScheduleLines.map((p) => p.date))).sort((a, b) =>    a === b ? 0 : a === "" ? -1 : b === "" ? 1 : a.localeCompare(b)
   );
   const v2HasSchedule =
     isV2 &&
