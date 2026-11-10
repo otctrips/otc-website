@@ -32,6 +32,8 @@ type Hotel = {
   busPerPerson: number;
   dates: DateOption[];
   inclusions: string | null;
+  sections: { title: string; items: string[] }[];
+  priceDisplay: "per_person" | "total";
 };
 
 type VenuePackage = {
@@ -42,7 +44,22 @@ type VenuePackage = {
   isIncluded: boolean;
   displayPrice: string | null;
   // Optional: when set, the card shows a split pill and the chosen option sets the price
-  durationOptions: { label: string; pricePerPerson: number }[] | null;
+  durationOptions: { label: string; pricePerPerson: number; detail?: string }[] | null;
+  address: string;
+  imageUrl: string;
+  design: "basic" | "options" | "menu";
+  sections: { title: string; items: string[] }[];
+  menu: VenueMenu | null;
+  priceDisplay: "per_person" | "total";
+};
+
+
+type VenueMenu = {
+  items: { name: string; price: number; qty: number }[];
+  feedsPer: number;
+  taxPct: number;
+  gratuityPct: number;
+  minSpend: number;
 };
 
 type DestinationHotel = {
@@ -101,6 +118,7 @@ type ProposalDB = {
   cruise_price_per_person: number | null;
   cruise_inclusions: string | null;
   cruise_exclusions: string | null;
+  version: number | null;
 };
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -386,6 +404,7 @@ export default function ProposalPage() {
   const [selectedPackages, setSelectedPackages] = useState<number[]>([]);
   const [skiHeadcount, setSkiHeadcount] = useState("");
   const [pkgOption, setPkgOption] = useState<Record<number, number>>({});
+  const [menuQty, setMenuQty] = useState<Record<number, number[]>>({});
   const [existingSignature, setExistingSignature] = useState<{ full_name: string; signed_at: string } | null>(null);
 
   const [destinationPackages, setDestinationPackages] = useState<DestinationPackage[]>([]);
@@ -514,6 +533,8 @@ export default function ProposalPage() {
           busPerPerson,
           dates,
           inclusions: h.hotel_inclusions,
+          sections: Array.isArray(h.sections) ? h.sections : [],
+          priceDisplay: h.price_display === "total" ? "total" : "per_person",
         });
       }
 
@@ -537,14 +558,32 @@ export default function ProposalPage() {
           pricePerPerson: p.price_per_person,
           isIncluded: p.is_included ?? false,
           displayPrice: p.display_price,
-          durationOptions: Array.isArray(p.duration_options)
-            ? (p.duration_options as { label: string; price_per_person: number }[]).map((o) => ({
+          durationOptions:
+            proposalData.version === 2 && p.design === "options" && Array.isArray(p.options) && p.options.length > 0
+              ? (p.options as { label: string; detail?: string; price: number }[]).map((o) => ({
                 label: o.label,
-                pricePerPerson: Number(o.price_per_person),
+                detail: o.detail || undefined,
+                pricePerPerson: Number(o.price),
               }))
-            : null,
+              : Array.isArray(p.duration_options)
+                ? (p.duration_options as { label: string; price_per_person: number }[]).map((o) => ({
+                  label: o.label,
+                  pricePerPerson: Number(o.price_per_person),
+                }))
+                : null,
+          address: p.address ?? "",
+          imageUrl: p.image_url ?? "",
+          design: (p.design ?? "basic") as VenuePackage["design"],
+          sections: Array.isArray(p.sections) ? p.sections : [],
+          menu: p.design === "menu" && p.menu ? (p.menu as VenueMenu) : null,
+          priceDisplay: (p.price_display === "total" ? "total" : "per_person") as VenuePackage["priceDisplay"],
         }));
         setVenuePackages(builtPackages);
+        const initialQty: Record<number, number[]> = {};
+        builtPackages.forEach((p, i) => {
+          if (p.menu) initialQty[i] = p.menu.items.map((it) => it.qty || 0);
+        });
+        setMenuQty(initialQty);
 
         if (slug === "boisepike") {
           const selectableIdx = builtPackages
@@ -836,6 +875,7 @@ export default function ProposalPage() {
   const isMultiPkg = isKalsu || isLambdaChiFsu || isPikeFau;
   const isDeltaChiSyracuse = slug === "deltachisyracuse";
   const isSigChiWM = slug === "sigchiwm";
+  const isV2 = proposal?.version === 2;
 
   const groupSize = proposal?.group_size ?? 0;
   const hotel = selectedHotel !== null ? hotels[selectedHotel] : null;
@@ -851,10 +891,38 @@ export default function ProposalPage() {
   const selectedDestHotelIdx = selectedDestination !== null ? destHotelChoice[selectedDestination] : undefined;
   const selectedDestHotelObj =
     selectedDestPkg && selectedDestHotelIdx !== undefined ? selectedDestPkg.hotels[selectedDestHotelIdx] ?? null : null;
+  // v2 menu packages: totals come from the client's chosen quantities
+  const menuTotals = (idx: number) => {
+    const pkg = venuePackages[idx];
+    if (!pkg?.menu) return null;
+    const qty = menuQty[idx] ?? pkg.menu.items.map(() => 0);
+    const subtotal = pkg.menu.items.reduce((s, it, i) => s + it.price * (qty[i] ?? 0), 0);
+    const tax = (subtotal * pkg.menu.taxPct) / 100;
+    const gratuity = (subtotal * pkg.menu.gratuityPct) / 100;
+    const total = Math.round((subtotal + tax + gratuity) * 100) / 100;
+    const count = qty.reduce((a, b) => a + b, 0);
+    return { qty, subtotal, tax, gratuity, total, count, minMet: subtotal >= (pkg.menu.minSpend || 0) };
+  };
+  const menuOk = (idx: number) => {
+    const t = isV2 ? menuTotals(idx) : null;
+    return !t || (t.count > 0 && t.minMet);
+  };
   // Packages with durationOptions are priced and labeled by the chosen option
   const withChosenOption = (idx: number): VenuePackage | null => {
     const pkg = venuePackages[idx];
     if (!pkg) return null;
+    if (isV2 && pkg.menu) {
+      const t = menuTotals(idx);
+      const picked = pkg.menu.items
+        .map((it, i) => (t && (t.qty[i] ?? 0) > 0 ? `${t.qty[i]}× ${it.name}` : null))
+        .filter(Boolean)
+        .join(", ");
+      return {
+        ...pkg,
+        name: picked ? `${pkg.name} (${picked})` : pkg.name,
+        pricePerPerson: t && groupSize > 0 ? t.total / groupSize : 0,
+      };
+    }
     const opt = pkg.durationOptions?.[pkgOption[idx] ?? 0];
     return opt ? { ...pkg, name: `${pkg.name} (${opt.label})`, pricePerPerson: opt.pricePerPerson } : pkg;
   };
@@ -925,7 +993,7 @@ export default function ProposalPage() {
         selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "dinner").length === 1
       : isMultiPkg
         ? selectedPackages.length > 0 && (!skiSelected || skiCount >= SKI_MIN_ATTENDEES)
-        : selectedPackage !== null);
+        : selectedPackage !== null && menuOk(selectedPackage));
   const canConfirm = isFixed
     ? agreed
     : isHybrid
@@ -1505,17 +1573,45 @@ export default function ProposalPage() {
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#4D8397" stroke="#4D8397" strokeWidth="1.5">
                                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                                 </svg>
-                                <span className="text-sm font-semibold text-ink">4 Stars</span>
+                                <span className="text-sm font-semibold text-ink">{isV2 ? h.stars : 4} Stars</span>
                               </div>
                               <span className="text-ink/25">·</span>
                               <span className="text-sm text-ink/60">{h.distance}</span>
                             </div>
                             <p className="text-sm text-ink/50">{h.address}</p>
                           </div>
+                          {isV2 && h.busPerPerson > 0 && (
+                            <div className="mt-1 flex items-center gap-1.5">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
+                                <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
+                                <circle cx="7" cy="18" r="2" />
+                                <path d="M9 18h5" />
+                                <circle cx="16" cy="18" r="2" />
+                              </svg>
+                              <span className="text-sm text-ink/60">Charter Bus: +{fmt(h.busPerPerson)}/person</span>
+                            </div>
+                          )}
+                          {isV2 && h.sections.map((s, si) => (
+                            <div key={si} className="mt-2 border-t border-ink/10 pt-2">
+                              {s.title && (
+                                <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">{s.title}</p>
+                              )}
+                              <ul className="space-y-1.5">
+                                {s.items.map((item, ii) => (
+                                  <li key={ii} className="flex items-center gap-2 text-sm text-ink/70">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    {item}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
                           {isBingpike && h.dates.length === 1 && (
                             <p className="mt-0.5 text-sm text-ink/50">{h.dates[0].range}</p>
                           )}
-                          {h.inclusions && (
+                          {!isV2 && h.inclusions && (
                             <div className="mt-2 border-t border-ink/10 pt-2">
                               <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">{isSigChiWM || isPikeFau ? "Room Details" : isDeltaChiSyracuse ? "Room Types" : "Dining & Drinks"}</p>
                               <ul className="space-y-1.5">
@@ -1549,7 +1645,14 @@ export default function ProposalPage() {
 
                           {/* Price */}
                           <div className="flex h-[64px] items-center overflow-hidden border-t border-ink/10 mt-1">
-                            {isKalsuJw ? (
+                            {isV2 && h.priceDisplay === "total" ? (
+                              <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                                <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Total Cost</span>
+                                <span className="font-heading text-3xl font-bold text-ink">
+                                  {displayData ? fmt(Math.round(displayData.pricePerPerson * groupSize * 100) / 100) : "TBD"}
+                                </span>
+                              </div>
+                            ) : isKalsuJw ? (
                             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                               <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Total Cost</span>
                               <span className="font-heading text-3xl font-bold text-ink">{fmt(KALSU_JW_TOTAL_COST)}</span>
@@ -1563,7 +1666,7 @@ export default function ProposalPage() {
                             </div>
                             ) : (
                             <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-                              {!activeDateData && displayData && (
+                                      {!activeDateData && displayData && (!isV2 || new Set(h.dates.map((d) => d.pricePerPerson)).size > 1) && (
                                 <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Starting At</span>
                               )}
                               <span className="font-heading text-3xl font-bold text-ink">
@@ -1572,7 +1675,7 @@ export default function ProposalPage() {
                               </span>
                               {displayData && (
                               <span className="text-sm text-ink/45">
-                                (Total: {fmt(displayData.totalCost)})
+                                (Total: {fmt(isV2 ? Math.round(displayData.pricePerPerson * groupSize * 100) / 100 : displayData.totalCost)})
                               </span>
                               )}
                             </div>
@@ -1580,7 +1683,7 @@ export default function ProposalPage() {
                           </div>
 
                           {/* Bus cost line */}
-                          {proposal?.has_bus && (
+                          {!isV2 && proposal?.has_bus && (
                           <div className="flex items-center gap-1.5 pb-3">
                             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-ink/35">
                               <path d="M8 6v6M15 6v6M2 12h19.6M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2l-1.4-5C20.1 6.8 19.1 6 18 6H4a2 2 0 0 0-2 2v10h3" />
@@ -1802,10 +1905,14 @@ export default function ProposalPage() {
                               </motion.div>
                             )}
                           </AnimatePresence>
-                          <div className="flex flex-1 flex-col px-6 pb-6 pt-6">
+                          {isV2 && pkg.imageUrl && <HotelImageCarousel images={[pkg.imageUrl]} alt={pkg.name} />}
+                          <div className={`flex flex-1 flex-col px-6 pb-6 ${isV2 && pkg.imageUrl ? "pt-4" : "pt-6"}`}>
                             <h3 className="font-heading text-xl font-bold text-ink pr-10">
                               {isBoisepike ? proposal.venue_name : pkg.name}
                             </h3>
+                            {isV2 && pkg.address && (
+                              <p className="mt-1 text-sm text-ink/50">{pkg.address}</p>
+                            )}
                             {isBoisepike && (proposal.venue_stars != null && proposal.venue_distance) && (
                               <div className="mt-1 flex items-center gap-3">
                                 <div className="flex items-center gap-1.5">
@@ -1819,7 +1926,24 @@ export default function ProposalPage() {
                             {isBoisepike && proposal.venue_address && (
                               <p className="mt-1 text-sm text-ink/50">{proposal.venue_address}</p>
                             )}
-                            {pkg.inclusions && (
+                            {isV2 && pkg.sections.map((s, si) => (
+                              <div key={si} className="mt-4 border-t border-ink/10 pt-3">
+                                {s.title && (
+                                  <p className="text-xs font-semibold uppercase tracking-widest text-ink/40 mb-1.5">{s.title}</p>
+                                )}
+                                <ul className="space-y-2">
+                                  {s.items.map((item, ii) => (
+                                    <li key={ii} className="flex items-center gap-2 text-sm text-ink/70">
+                                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4D8397" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0">
+                                        <polyline points="20 6 9 17 4 12" />
+                                      </svg>
+                                      {item}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                            {!isV2 && pkg.inclusions && (
                             <ul className={isBoisepike ? "mt-4 space-y-2 border-t border-ink/10 pt-4" : "mt-4 space-y-2"}>
                               {pkg.inclusions.split(",").map((item) => (
                                 <li key={item.trim()} className="flex items-center gap-2 text-sm text-ink/70">
@@ -1883,6 +2007,82 @@ export default function ProposalPage() {
                                 </p>
                               </div>
                             )}
+                            {isV2 && pkg.menu && (() => {
+                              const menu = pkg.menu;
+                              const t = menuTotals(idx)!;
+                              const setQty = (i: number, q: number) => {
+                                setMenuQty((prev) => {
+                                  const cur = [...(prev[idx] ?? menu.items.map(() => 0))];
+                                  cur[i] = Math.max(0, q);
+                                  return { ...prev, [idx]: cur };
+                                });
+                                if (!pkgActive) togglePackage(idx);
+                              };
+                              const minLabel = fmt(menu.minSpend).replace(".00", "");
+                              return (
+                                <div className="mt-4 border-t border-ink/10 pt-4 cursor-default" onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex items-center justify-between gap-3">
+                                    <p className="text-xs font-semibold uppercase tracking-widest text-ink/40">Menu</p>
+                                    {menu.feedsPer > 0 && (
+                                      <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand">
+                                        <i className="ti ti-users" aria-hidden="true" /> 1 item feeds {menu.feedsPer}
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <div className="mt-3 space-y-4">
+                                    {menu.items.map((it, i) => (
+                                      <div key={i}>
+                                        <div className="flex items-center justify-between gap-3">
+                                          <p className="text-base font-bold text-ink">{it.name}</p>
+                                          <p className="text-base font-bold text-ink">{fmt(it.price * (t.qty[i] ?? 0))}</p>
+                                        </div>
+                                        <div className="mt-1.5 flex items-center justify-between gap-3">
+                                          <p className="text-sm text-ink/50">{fmt(it.price)} / each</p>
+                                          <div className="flex items-center rounded-full border border-ink/15">
+                                            <button type="button" aria-label={`Fewer ${it.name}`}
+                                              onClick={() => setQty(i, (t.qty[i] ?? 0) - 1)}
+                                              className="flex h-9 w-9 items-center justify-center text-lg text-brand hover:bg-brand/10 rounded-full">−</button>
+                                            <span className="w-7 text-center text-base font-bold text-ink">{t.qty[i] ?? 0}</span>
+                                            <button type="button" aria-label={`More ${it.name}`}
+                                              onClick={() => setQty(i, (t.qty[i] ?? 0) + 1)}
+                                              className="flex h-9 w-9 items-center justify-center text-lg text-brand hover:bg-brand/10 rounded-full">+</button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+
+                                  <div className="mt-4 space-y-2 border-t border-ink/10 pt-4 text-sm">
+                                    <div className="flex justify-between"><span className="text-ink/50">Items</span><span className="font-semibold text-ink">{t.count}</span></div>
+                                    <div className="flex justify-between"><span className="text-ink/50">Subtotal</span><span className="font-semibold text-ink">{fmt(t.subtotal)}</span></div>
+                                    {menu.taxPct > 0 && (
+                                      <div className="flex justify-between"><span className="text-ink/50">Tax ({menu.taxPct}%)</span><span className="font-semibold text-ink">{fmt(t.tax)}</span></div>
+                                    )}
+                                    {menu.gratuityPct > 0 && (
+                                      <div className="flex justify-between"><span className="text-ink/50">Gratuity ({menu.gratuityPct}%)</span><span className="font-semibold text-ink">{fmt(t.gratuity)}</span></div>
+                                    )}
+                                  </div>
+
+                                  {menu.minSpend > 0 && (
+                                    t.minMet ? (
+                                      <div className="mt-3 flex items-center gap-2 rounded-lg bg-brand/10 px-3 py-2.5 text-sm font-semibold text-brand">
+                                        <Check size={13} /> {minLabel} minimum spend met
+                                      </div>
+                                    ) : (
+                                      <div className="mt-3 rounded-lg bg-amber-50 px-3 py-2.5 text-sm font-semibold text-amber-700">
+                                        {fmt(menu.minSpend - t.subtotal)} more to reach the {minLabel} minimum
+                                      </div>
+                                    )
+                                  )}
+
+                                  <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-ink/10 pt-4">
+                                    <span className="text-xs font-semibold uppercase tracking-widest text-ink/40">Grand Total</span>
+                                    <span className="font-heading text-3xl font-bold text-ink">{fmt(t.total)}</span>
+                                  </div>
+                                </div>
+                              );
+                            })()}
                             {pkg.durationOptions ? (
                               <div className="mt-6 flex min-h-[64px] flex-1 overflow-hidden rounded-3xl border-2 border-brand">
                                 {pkg.durationOptions.map((opt, optIdx) => {
@@ -1901,8 +2101,13 @@ export default function ProposalPage() {
                                       <span className="text-balance text-lg font-bold leading-snug">
                                         {opt.label}{optActive ? " ✓" : ""}
                                       </span>
+                                      {opt.detail && (
+                                        <span className={`text-xs ${optActive ? "text-white/75" : "text-brand/70"}`}>{opt.detail}</span>
+                                      )}
                                       <span className={`whitespace-nowrap text-lg font-normal ${optActive ? "text-white/85" : "text-brand/80"}`}>
-                                        ${Number.isInteger(opt.pricePerPerson) ? opt.pricePerPerson : opt.pricePerPerson.toFixed(2)}/person
+                                        {isV2 && pkg.priceDisplay === "total"
+                                          ? `${fmt(opt.pricePerPerson * groupSize)} total`
+                                          : `$${Number.isInteger(opt.pricePerPerson) ? opt.pricePerPerson : opt.pricePerPerson.toFixed(2)}/person`}
                                       </span>
                                     </motion.button>
                                   );
@@ -1910,14 +2115,21 @@ export default function ProposalPage() {
                               </div>
                             ) : (
                             <>
-                            <div className="mt-6 border-t border-ink/10 pt-4">
-                              {isSkiPkg(pkg) ? (
+                                  <div className={`mt-6 border-t border-ink/10 pt-4 ${isV2 && pkg.menu ? "hidden" : ""}`}>
+                                    {isSkiPkg(pkg) ? (
                                 <p className="font-heading text-3xl font-bold text-ink">
                                   {fmt(SKI_PRICE_PER_PERSON)}
                                   <span className="ml-0.5 text-base font-normal text-ink/50">/person</span>
                                 </p>
                               ) : (
-                                <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
+                                        isV2 && pkg.priceDisplay === "total" ? (
+                                          <p className="font-heading text-3xl font-bold text-ink">
+                                            {fmt(pkg.pricePerPerson * groupSize)}
+                                            <span className="ml-1.5 text-base font-normal text-ink/50">total</span>
+                                          </p>
+                                        ) : (
+                                          <VenuePackagePrice pkg={pkg} uniform={isKalsu && pkg.name === "The Heights Social"} />
+                                        )
                               )}
                             </div>
                             <div className="mt-4">
