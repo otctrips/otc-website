@@ -34,7 +34,11 @@ type Hotel = {
   inclusions: string | null;
   sections: { title: string; items: string[] }[];
   priceDisplay: "per_person" | "total";
+  clientSchedule: SchedulePayment[];
+  busClientSchedule: SchedulePayment[];
 };
+
+type SchedulePayment = { label: string; amount: number; date: string };
 
 type VenuePackage = {
   id: string;
@@ -51,6 +55,7 @@ type VenuePackage = {
   sections: { title: string; items: string[] }[];
   menu: VenueMenu | null;
   priceDisplay: "per_person" | "total";
+  clientSchedule: SchedulePayment[];
 };
 
 
@@ -535,6 +540,8 @@ export default function ProposalPage() {
           inclusions: h.hotel_inclusions,
           sections: Array.isArray(h.sections) ? h.sections : [],
           priceDisplay: h.price_display === "total" ? "total" : "per_person",
+          clientSchedule: Array.isArray(h.client_schedule) ? h.client_schedule : [],
+          busClientSchedule: Array.isArray(h.bus_client_schedule) ? h.bus_client_schedule : [],
         });
       }
 
@@ -577,7 +584,7 @@ export default function ProposalPage() {
           sections: Array.isArray(p.sections) ? p.sections : [],
           menu: p.design === "menu" && p.menu ? (p.menu as VenueMenu) : null,
           priceDisplay: (p.price_display === "total" ? "total" : "per_person") as VenuePackage["priceDisplay"],
-        }));
+          clientSchedule: Array.isArray(p.client_schedule) ? p.client_schedule : [],        }));
         setVenuePackages(builtPackages);
         const initialQty: Record<number, number[]> = {};
         builtPackages.forEach((p, i) => {
@@ -872,8 +879,7 @@ export default function ProposalPage() {
   const isKalsu = slug === "kalsu";
   const isLambdaChiFsu = slug === "lambdachifsu";
   const isPikeFau = slug === "pikefau";
-  const isMultiPkg = isKalsu || isLambdaChiFsu || isPikeFau;
-  const isDeltaChiSyracuse = slug === "deltachisyracuse";
+  const isMultiPkg = isKalsu || isLambdaChiFsu || isPikeFau || proposal?.version === 2;  const isDeltaChiSyracuse = slug === "deltachisyracuse";
   const isSigChiWM = slug === "sigchiwm";
   const isV2 = proposal?.version === 2;
 
@@ -992,7 +998,7 @@ export default function ProposalPage() {
       ? selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "bar").length === 1 &&
         selectedPkgsList.filter((p) => lambdaPkgGroup(p) === "dinner").length === 1
       : isMultiPkg
-        ? selectedPackages.length > 0 && (!skiSelected || skiCount >= SKI_MIN_ATTENDEES)
+        ? selectedPackages.length > 0 && selectedPackages.every(menuOk) && (!skiSelected || skiCount >= SKI_MIN_ATTENDEES)
         : selectedPackage !== null && menuOk(selectedPackage));
   const canConfirm = isFixed
     ? agreed
@@ -1010,6 +1016,43 @@ export default function ProposalPage() {
   const fixedTotalPP = fixedHotelPP + fixedBusPP + (proposal?.venue_per_person != null ? fixedVenuePP : 0);
   const fixedTotalCost = Math.round(fixedTotalPP * (proposal?.group_size ?? 0) * 100) / 100;
 
+  // v2: payment schedule built from what the client selected
+  // "Final Payment" -> "Hotel Final Payment" (no doubling if the name is already there)
+  const scheduleLabel = (prefix: string, label: string) => {
+    const l = (label || "").trim();
+    if (!l) return prefix;
+    return l.toLowerCase().startsWith(prefix.toLowerCase()) ? l : `${prefix} ${l}`;
+  };
+  const chosenPkgIdxs = isHybrid
+    ? [
+      ...includedVenuePackages.map(({ idx }) => idx),
+      ...(isMultiPkg ? selectedPackages : selectedPackage !== null ? [selectedPackage] : []),
+    ]
+    : [];
+  const v2ScheduleLines = !isV2
+    ? []
+    : [
+      ...(hotel ? hotel.clientSchedule.map((p) => ({ ...p, text: scheduleLabel("Hotel", p.label) })) : []),
+      ...(hotel && hotel.busPerPerson > 0
+        ? hotel.busClientSchedule.map((p) => ({ ...p, text: scheduleLabel("Charter Bus", p.label) }))
+        : []),
+      ...chosenPkgIdxs.flatMap((idx) => {
+        const pkg = venuePackages[idx];
+        return pkg ? pkg.clientSchedule.map((p) => ({ ...p, text: scheduleLabel(pkg.name, p.label) })) : [];
+      }),
+    ].filter((p) => p.label || p.amount);
+  const v2ScheduleDates = [...new Set(v2ScheduleLines.map((p) => p.date))].sort((a, b) =>
+    a === b ? 0 : a === "" ? -1 : b === "" ? 1 : a.localeCompare(b)
+  );
+  const v2HasSchedule =
+    isV2 &&
+    (hotels.some((h) => h.clientSchedule.length > 0 || h.busClientSchedule.length > 0) ||
+      venuePackages.some((p) => p.clientSchedule.length > 0));
+  const fmtLongDate = (d: string) => {
+    if (!d) return "Upon Signing";
+    const [y, m, day] = d.split("-").map(Number);
+    return new Date(y, m - 1, day).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  };
   // ── Loading ────────────────────────────────────────────────────────────────
   if (loading) {
     return (
@@ -2958,8 +3001,34 @@ export default function ProposalPage() {
             )}
           </div>
 
-          {(isFixed || isHybrid) && proposal.payment_notes && (
+          {v2HasSchedule && (
             <div className="mx-auto mt-6 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
+              <h3 className="font-heading text-xl font-bold text-ink">Payment Schedule</h3>
+              {v2ScheduleLines.length === 0 ? (
+                <p className="mt-4 text-sm leading-relaxed text-ink/50">
+                  Select your hotel{isHybrid ? " and venue" : ""} to see your payment schedule.
+                </p>
+              ) : (
+                <div className="mt-4 space-y-3">
+                  {v2ScheduleDates.map((d) => (
+                    <p key={d || "signing"} className="text-sm leading-relaxed text-ink/70">
+                      {fmtLongDate(d)}
+                      {v2ScheduleLines
+                        .filter((p) => p.date === d)
+                        .map((p, i) => (
+                          <span key={i}>
+                            <br />
+                            {p.text}: {fmt(p.amount)}
+                          </span>
+                        ))}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {!isV2 && (isFixed || isHybrid) && proposal.payment_notes && (            <div className="mx-auto mt-6 max-w-2xl rounded-3xl bg-white p-8 shadow-sm shadow-ink/5 sm:p-10">
               <h3 className="font-heading text-xl font-bold text-ink">Payment Schedule</h3>
               <div className="mt-4 space-y-3">
                 {proposal.payment_notes.split("\n\n").map((para, i) => (
