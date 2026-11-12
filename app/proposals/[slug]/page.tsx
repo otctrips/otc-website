@@ -65,7 +65,9 @@ type VenueMenu = {
   taxPct: number;
   gratuityPct: number;
   minSpend: number;
+  fees?: { label: string; type: "percent" | "flat"; value: number }[];
 };
+  
 
 type DestinationHotel = {
   id: string;
@@ -906,9 +908,15 @@ export default function ProposalPage() {
     const subtotal = pkg.menu.items.reduce((s, it, i) => s + it.price * (qty[i] ?? 0), 0);
     const tax = (subtotal * pkg.menu.taxPct) / 100;
     const gratuity = (subtotal * pkg.menu.gratuityPct) / 100;
-    const total = Math.round((subtotal + tax + gratuity) * 100) / 100;
+    const fees = (pkg.menu.fees || [])
+      .filter((f) => f.label || f.value)
+      .map((f) => ({
+        label: f.type === "percent" ? `${f.label || "Fee"} (${f.value}%)` : f.label || "Fee",
+        amount: subtotal > 0 ? (f.type === "percent" ? (subtotal * f.value) / 100 : f.value) : 0,
+      }));
+    const total = Math.round((subtotal + tax + gratuity + fees.reduce((s, f) => s + f.amount, 0)) * 100) / 100;
     const count = qty.reduce((a, b) => a + b, 0);
-    return { qty, subtotal, tax, gratuity, total, count, minMet: subtotal >= (pkg.menu.minSpend || 0) };
+    return { qty, subtotal, tax, gratuity, fees, total, count, minMet: subtotal >= (pkg.menu.minSpend || 0) };
   };
   const menuOk = (idx: number) => {
     const t = isV2 ? menuTotals(idx) : null;
@@ -2105,6 +2113,9 @@ export default function ProposalPage() {
                                     {menu.gratuityPct > 0 && (
                                       <div className="flex justify-between"><span className="text-ink/50">Gratuity ({menu.gratuityPct}%)</span><span className="font-semibold text-ink">{fmt(t.gratuity)}</span></div>
                                     )}
+                                    {t.fees.map((f, fi) => (
+                                      <div key={fi} className="flex justify-between"><span className="text-ink/50">{f.label}</span><span className="font-semibold text-ink">{fmt(f.amount)}</span></div>
+                                    ))}
                                   </div>
 
                                   {menu.minSpend > 0 && (
